@@ -8,16 +8,16 @@ video:
   id: JZDt-PRq0uo
 ---
 
-## Table of Contents
+## 目次
 
-- [Keyboard remapping](#keyboard-remapping)
-- [Daemons](#daemons)
+- [キーボード割り当て変更](#キーボード割り当て変更)
+- [デーモン](#デーモン)
 - [FUSE](#fuse)
-- [Backups](#backups)
-- [APIs](#apis)
+- [バックアップ](#バックアップ)
+- [API](#api)
 - [Common command-line flags/patterns](#common-command-line-flagspatterns)
 - [Window managers](#window-managers)
-- [VPNs](#vpns)
+- [VPN](#vpn)
 - [Markdown](#markdown)
 - [Hammerspoon (desktop automation on macOS)](#hammerspoon-desktop-automation-on-macos)
 - [Booting + Live USBs](#booting--live-usbs)
@@ -25,33 +25,33 @@ video:
 - [Notebook programming](#notebook-programming)
 - [GitHub](#github)
 
-## Keyboard remapping
+## キーボード割り当て変更
 
-As a programmer, your keyboard is your main input method. As with pretty much anything in your computer, it is configurable (and worth configuring).
+プログラマにとって、キーボードは主要な入力方法です。コンピュータについて様々なカスタマイズができるように、キーボードについても様々な設定ができます。（そして、それには設定する価値があります。）
 
-The most basic change is to remap keys.
-This usually involves some software that is listening and, whenever a certain key is pressed, it intercepts that event and replaces it with another event corresponding to a different key. Some examples:
-- Remap Caps Lock to Ctrl or Escape. We (the instructors) highly encourage this setting since Caps Lock has a very convenient location but is rarely used.
-- Remapping PrtSc to Play/Pause music. Most OSes have a play/pause key.
-- Swapping Ctrl and the Meta (Windows or Command) key.
+最も基本的な変更は、キーボードのキー割り当てを変更することです。
+この変更は、通常、あるキーが押されるたびに、このイベントに割り込み、別のキーに対応する別のイベントに置き換えます。例を以下に示します。
+- Caps LockをCtrlやEscapeに割り当て変更します。Caps Lockは非常に便利な位置にありますが、ほとんど使われていないので、私たち（インストラクター）はこの設定を強く推奨します。
+- PrtScを音楽の再生/一時停止キーに割り当て変更します。ほとんどのOSは再生/一時停止キーの機能を持っています。
+- CtrlとMeta（WindowsまたはCommand）を入れ替えます。
 
-You can also map keys to arbitrary commands of your choosing. This is useful for common tasks that you perform. Here, some software listens for a specific key combination and executes some script whenever that event is detected.
-- Open a new terminal or browser window.
-- Inserting some specific text, e.g. your long email address or your MIT ID number.
-- Sleeping the computer or the displays.
+また、キーを任意のコマンドに対応付けることもできます。これは、頻繁に行うタスクを実行させたい時に便利です。ここでは、何らかのソフトウェアが特定のキーの組み合わせを待ち受け、その入力イベントが検出されるたびに何らかのスクリプトを実行します。
+- 新しいターミナルやブラウザのウィンドウを開く。
+- 長いメールアドレスやMITのID番号など、特定のテキストを入力する。
+- コンピュータやディスプレイをスリープ状態にする。
 
-There are even more complex modifications you can configure:
-- Remapping sequences of keys, e.g. pressing shift five times toggles Caps Lock.
-- Remapping on tap vs on hold, e.g. Caps Lock key is remapped to Esc if you quickly tap it, but is remapped to Ctrl if you hold it and use it as a modifier.
-- Having remaps being keyboard or software specific.
+さらに複雑な割り当て変更も可能です。
+- 連続したキー入力の割り当てを変更できます。例えば、Shiftを5回押すとCaps Lockがトグルされる、といったように設定できます。
+- キーの「タップ」（押し離し）と「ホールド」（押しっぱなし）で割り当てを変更できます。例えば、Caps Lockを素早くタップするとEscに割り当てられ、ホールドして修飾キーとして使用するとCtrlに割り当てられる、といったことができます。
+- キーボードやソフトウェア固有の割り当て変更設定を持つこと。
 
-Some software resources to get started on the topic:
-- macOS - [karabiner-elements](https://pqrs.org/osx/karabiner/), [skhd](https://github.com/koekeishiya/skhd) or [BetterTouchTool](https://folivora.ai/)
-- Linux - [xmodmap](https://wiki.archlinux.org/index.php/Xmodmap) or [Autokey](https://github.com/autokey/autokey)
-- Windows - Builtin in Control Panel, [AutoHotkey](https://www.autohotkey.com/) or [SharpKeys](https://www.randyrants.com/category/sharpkeys/)
-- QMK - If your keyboard supports custom firmware you can use [QMK](https://docs.qmk.fm/) to configure the hardware device itself so the remaps works for any machine you use the keyboard with.
+このトピックを開始するためのいくつかのソフトウェアリソースを紹介します。
+- macOS - [karabiner-elements](https://pqrs.org/osx/karabiner/), [skhd](https://github.com/koekeishiya/skhd), [BetterTouchTool](https://folivora.ai/)
+- Linux - [xmodmap](https://wiki.archlinux.org/index.php/Xmodmap), [Autokey](https://github.com/autokey/autokey)
+- Windows - コントロールパネル, [AutoHotkey](https://www.autohotkey.com/), [SharpKeys](https://www.randyrants.com/category/sharpkeys/)
+- QMK - キーボードがカスタムファームウェアをサポートしている場合は、[QMK](https://docs.qmk.fm/)を使ってキーボードのハードウェア自体を設定し、そのキーボードを使用しているどのマシンでも割り当て変更を動作するようにできます。
 
-## Daemons
+## デーモン
 
 You are probably already familiar with the notion of daemons, even if the word seems new.
 Most computers have a series of processes that are always running in the background rather than waiting for a user to launch them and interact with them.
@@ -130,7 +130,7 @@ Having an offline copy of this information is the way to go, and you can find on
 For a more detailed explanation, see 2019's lecture notes on [Backups](/2019/backups).
 
 
-## APIs
+## API
 
 We've talked a lot in this class about using your computer more
 efficiently to accomplish _local_ tasks, but you will find that many of
@@ -218,7 +218,7 @@ windows with your keyboard, and you can resize them and move them
 around, all without touching the mouse. They are worth looking into!
 
 
-## VPNs
+## VPN
 
 VPNs are all the rage these days, but it's not clear that's for [any
 good reason](https://gist.github.com/joepie91/5a9909939e6ce7d09e29). You
