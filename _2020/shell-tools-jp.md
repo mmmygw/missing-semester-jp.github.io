@@ -8,7 +8,7 @@ video:
   id: kgII-YWo3Zw
 ---
 
-この講義では、bashを一つのスクリプト言語として扱い、コマンドラインで常日頃行っている一番よくある操作のいくつかに関連したシェルツールと併用する基礎を紹介します。
+この講義では、bashを一つのスクリプト言語として扱い、コマンドラインで常日頃一番行っている作業のいくつかに関連したシェルツールと併用する基礎を紹介します。
 
 # シェルスクリプトの書き方
 
@@ -17,7 +17,7 @@ video:
 
 シェルスクリプトはそういったより複雑な操作を実現してくれるのです。
 ほとんどのシェルにはそれら固有のスクリプト言語があり、変数や制御構造、そして固有の文法があります。
-他のスクリプト言語と異なるのは、シェルスクリプトはシェル関連の操作に特化しているという点でしょう。
+他のスクリプト言語と異なるのは、シェルスクリプトはシェル関連の作業に特化しているという点でしょう。
 故に、コマンドのパイプラインを作ったり、実行結果をファイルに保存したり、標準入力から読み込んだりするのはシェルスクリプトの本領なので、汎用的なスクリプト言語よりも使い勝手が良いのです。
 この章では、最もよく使われているbashのスクリプト言語に注目して学んでいきます。
 
@@ -31,9 +31,9 @@ bashでは文字列は`'`と`"`の区切り文字で定義できます。しか�
 ```bash
 foo=bar
 echo "$foo"
-# prints bar
+# barと出力する
 echo '$foo'
-# prints $foo
+# $fooと出力する
 ```
 
 ほとんどのプログラミング言語と同じように、bashは`if`、`case`、`while`や`for`などの制御構造の利用が可能です。
@@ -97,14 +97,14 @@ false ; echo "This will always run"
 ```bash
 #!/bin/bash
 
-echo "Starting program at $(date)" # Date will be substituted
+echo "Starting program at $(date)" # 日付が代入される
 
 echo "Running program $0 with $# arguments with pid $$"
 
 for file in "$@"; do
     grep foobar "$file" > /dev/null 2> /dev/null
-    # When pattern is not found, grep has exit status 1
-    # We redirect STDOUT and STDERR to a null register since we do not care about them
+	# パターンに一致するものがなかった場合、grepの終了ステータスは1
+	# ここでSTDOUTとSTDERRはどうでもいいので、nullレジスタにリダイレクト
     if [[ $? -ne 0 ]]; then
         echo "File $file does not have any foobar, adding one"
         echo "# foobar" >> "$file"
@@ -112,45 +112,45 @@ for file in "$@"; do
 done
 ```
 
-In the comparison we tested whether `$?` was not equal to 0.
-Bash implements many comparisons of this sort - you can find a detailed list in the manpage for [`test`](https://www.man7.org/linux/man-pages/man1/test.1.html).
-When performing comparisons in bash, try to use double brackets `[[ ]]` in favor of simple brackets `[ ]`. Chances of making mistakes are lower although it won't be portable to `sh`. A more detailed explanation can be found [here](http://mywiki.wooledge.org/BashFAQ/031).
+比較では`$?`が0と等しくないかどうかを調べました。
+bashではこのような比較演算が多数用意されています。詳細はマニュアルページ[`test`](https://www.man7.org/linux/man-pages/man1/test.1.html)を参照してください。
+bashにおいて比較を用いる際は、一重の角括弧`[ ]`ではなく二重の角括弧`[[ ]]`を使うようにしましょう。`sh`には移植できませんが、このほうが書き間違いは少ないです。より詳しい説明は[ここ](http://mywiki.wooledge.org/BashFAQ/031)を見てください。
 
-When launching scripts, you will often want to provide arguments that are similar. Bash has ways of making this easier, expanding expressions by carrying out filename expansion. These techniques are often referred to as shell _globbing_.
-- Wildcards - Whenever you want to perform some sort of wildcard matching, you can use `?` and `*` to match one or any amount of characters respectively. For instance, given files `foo`, `foo1`, `foo2`, `foo10` and `bar`, the command `rm foo?` will delete `foo1` and `foo2` whereas `rm foo*` will delete all but `bar`.
-- Curly braces `{}` - Whenever you have a common substring in a series of commands, you can use curly braces for bash to expand this automatically. This comes in very handy when moving or converting files.
+スクリプトを走らせる際には、似たような引数を指定することが多々あります。bashにはこれを簡便に行う方法があり、ファイル名展開を行い式を展開することができます。このテクニックはよくshell globbingと呼ばれます。
+- ワイルドカード - 何らかのワイルドカード検索をかけたい場合、`?`と`*`はそれぞれ1文字oおよび任意の文字数にマッチします。例えば、ファイル`foo`、`foo1`、`foo2`、`foo10`および`bar`があったとすると、コマンド`rm foo?`は`foo1`、`foo2`を削除しますが、一方で`rm foo*`は`bar`以外の全てのファイルを削除します。
+- 波括弧 `{}` - 複数のコマンドにおいて共通の部分文字列があった場合、波括弧を使ってbashに自動的に展開させることができます。これはファイルの移動や変換において非常に便利です。
 
 ```bash
 convert image.{png,jpg}
-# Will expand to
+# は下のように展開される
 convert image.png image.jpg
 
 cp /path/to/project/{foo,bar,baz}.sh /newpath
-# Will expand to
+# は下のように展開される
 cp /path/to/project/foo.sh /path/to/project/bar.sh /path/to/project/baz.sh /newpath
 
-# Globbing techniques can also be combined
+# glob手法も併用できる
 mv *{.py,.sh} folder
-# Will move all *.py and *.sh files
+# は全ての*.pyと*.shファイルを移動させる
 
 
 mkdir foo bar
-# This creates files foo/a, foo/b, ... foo/h, bar/a, bar/b, ... bar/h
+# これはfile/a、file/b、... file/a、bar/a、bar/b、... bar/hを生成する
 touch {foo,bar}/{a..h}
 touch foo/x bar/y
-# Show differences between files in foo and bar
+# fooとbarの違いを見てみる
 diff <(ls foo) <(ls bar)
-# Outputs
+# 出力
 # < x
 # ---
 # > y
 ```
 
-<!-- Lastly, pipes `|` are a core feature of scripting. Pipes connect one program's output to the next program's input. We will cover them more in detail in the data wrangling lecture. -->
+<!-- 最後に、パイプ`|`はスクリプトにおける重要な構文です。パイプは一つのプログラムの出力と次のプログラムの入力を繋げてくれます。これについてはデータラングリングの講義で詳細に扱います。 -->
 
-Writing `bash` scripts can be tricky and unintuitive. There are tools like [shellcheck](https://github.com/koalaman/shellcheck) that will help you find errors in your sh/bash scripts.
+`bash`スクリプトを書くのは難解で非直感的になるかもしれません。sh/bashスクリプトのエラーを検出する[shellcheck](https://github.com/koalaman/shellcheck)のようなツールを利用するのも良いでしょう。
 
-Note that scripts need not necessarily be written in bash to be called from the terminal. For instance, here's a simple Python script that outputs its arguments in reversed order:
+ここで、ターミナルで実行するスクリプトは必ずしもbashである必要はありません。例えば、以下は引数を逆順に出力する簡単なPythonのスクリプトです。
 
 ```python
 #!/usr/local/bin/python
@@ -159,57 +159,58 @@ for arg in reversed(sys.argv[1:]):
     print(arg)
 ```
 
-The kernel knows to execute this script with a python interpreter instead of a shell command because we included a [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)) line at the top of the script.
-It is good practice to write shebang lines using the [`env`](https://www.man7.org/linux/man-pages/man1/env.1.html) command that will resolve to wherever the command lives in the system, increasing the portability of your scripts. To resolve the location, `env` will make use of the `PATH` environment variable we introduced in the first lecture.
-For this example the shebang line would look like `#!/usr/bin/env python`.
+カーネルがこのスクリプトはshellコマンドではなくpythonインタプリタで実行するべきだと分かるのは、スクリプトの先頭に[シェバン](https://en.wikipedia.org/wiki/Shebang_(Unix))が書いてあるからです。
+シェバン行を[`env`](https://www.man7.org/linux/man-pages/man1/env.1.html)コマンドで書くのは良い練習になります。これはシステムの中でコマンドがどこにあるのかを探し当ててくれるので、スクリプトの移植性を高めます。位置を検索するのに、`env`は第一回の講義で紹介した`PATH`環境変数を利用しています。
+今回の例ではシェバン行は`#!/usr/bin/env python`のようになるでしょう。
 
-Some differences between shell functions and scripts that you should keep in mind are:
-- Functions have to be in the same language as the shell, while scripts can be written in any language. This is why including a shebang for scripts is important.
-- Functions are loaded once when their definition is read. Scripts are loaded every time they are executed. This makes functions slightly faster to load, but whenever you change them you will have to reload their definition.
-- Functions are executed in the current shell environment whereas scripts execute in their own process. Thus, functions can modify environment variables, e.g. change your current directory, whereas scripts can't. Scripts will be passed by value environment variables that have been exported using [`export`](https://www.man7.org/linux/man-pages/man1/export.1p.html)
-- As with any programming language, functions are a powerful construct to achieve modularity, code reuse, and clarity of shell code. Often shell scripts will include their own function definitions.
+シェル関数とスクリプトの違いで覚えるべきなのは:
+- 関数はシェルと同じ言語でなければならない。一方スクリプトはどの言語でも良い。これがスクリプトにおいてシェバンが重要である理由です。
+- 関数は一度定義が読み込まれればロードされる。スクリプトは実行するたびに毎回ロードされる。そのため関数はロードが僅かに早いが、変更されるたびに定義を再読込しなければいけない。
+- 関数は現在のシェル環境で実行されるのに対し、スクリプトは自分のプロセスの中で実行される。故に、関数は環境変数を変えることができる。つまり関数はカレントディレクトリを変えられるが、スクリプトはそれができない。スクリプトには[`export`](https://www.man7.org/linux/man-pages/man1/export.1p.html)でエクスポートされた環境変数の値が渡される。
+- どのプログラミング言語とも同様に、関数はモジュール性・再利用性・可読性を高めるのに強力な構造です。シェルスクリプトに固有の関数定義があることは珍しくありません。
 
-# Shell Tools
+# シェルツール
 
-## Finding how to use commands
+## コマンドの使い方
 
-At this point, you might be wondering how to find the flags for the commands in the aliasing section such as `ls -l`, `mv -i` and `mkdir -p`.
-More generally, given a command, how do you go about finding out what it does and its different options?
-You could always start googling, but since UNIX predates StackOverflow, there are built-in ways of getting this information.
+この時点で、エイリアスの章で紹介したコマンド、例えば`ls -l`、`mv -i`や`mkdir -p`を使うときに、どうやってフラグを見つけるのかが気になるかもしれません。
+より一般的に、あるコマンドが与えられたとすると、それが何をするコマンドでどんなオプションがあるのかをどう調べればいいのでしょうか？
+ググっても勿論いいのですが、UNIXはStackOverflowよりも昔に作られたので、こういった情報を得るための備え付けの方法があります。
 
-As we saw in the shell lecture, the first-order approach is to call said command with the `-h` or `--help` flags. A more detailed approach is to use the `man` command.
-Short for manual, [`man`](https://www.man7.org/linux/man-pages/man1/man.1.html) provides a manual page (called manpage) for a command you specify.
-For example, `man rm` will output the behavior of the `rm` command along with the flags that it takes, including the `-i` flag we showed earlier.
-In fact, what I have been linking so far for every command is the online version of the Linux manpages for the commands.
-Even non-native commands that you install will have manpage entries if the developer wrote them and included them as part of the installation process.
-For interactive tools such as the ones based on ncurses, help for the commands can often be accessed within the program using the `:help` command or typing `?`.
+シェルの講義で見てきたように、第一のアプローチとしてはコマンドを`-h`や`--help`フラグをつけて呼び出す方法です。より詳細に調べる方法は`man`コマンドを使う方法です。
+manualの略で、[`man`](https://www.man7.org/linux/man-pages/man1/man.1.html)は指定したコマンドのマニュアルページ（manpageという）を出してくれます。
+例えば、`man rm`は`rm`コマンドの動作と取りうるフラグを一緒に出力します。先に見せた`-i`フラグも含まれます。
+実は、今まで各コマンドについて参照してきたリンクはそれらのコマンドのLinuxマニュアルページのオンラインバージョンです。
+内部コマンドではなくインストールしたコマンドでさえ、開発者が書いていてインストールプロセスの一部として取り込まれていれば、マニュアルページの登録があります。
+対話式ツール、例えばncursesを基に作られたコマンドなどのヘルプには、プログラム内で`:help`コマンドや`?`コマンドを用いてアクセスできることが多いです。
 
-Sometimes manpages can provide overly detailed descriptions of the commands, making it hard to decipher what flags/syntax to use for common use cases.
-[TLDR pages](https://tldr.sh/) are a nifty complementary solution that focuses on giving example use cases of a command so you can quickly figure out which options to use.
-For instance, I find myself referring back to the tldr pages for [`tar`](https://tldr.ostera.io/tar) and [`ffmpeg`](https://tldr.ostera.io/ffmpeg) way more often than the manpages.
+時々、マニュアルページがコマンドについて詳しく説明すぎて、普通に使うのにどのフラグ/構文を使えばいいのか却って解読しづらいことがあります。
+[TLDRページ](https://tldr.sh/)はこれに対する素晴らしい補完策です。コマンドの使用例を重点的に教えてくれるので、どのオプションを使えば良いのかが即座にわかります。
+例えば、私なんかは[`tar`](https://tldr.ostera.io/tar)とか[`ffmpeg`](https://tldr.ostera.io/ffmpeg)を調べるときは、マニュアルページよりもtldrページの方を遥かに多く引いたりしますね。
 
 
-## Finding files
+## ファイル検索
 
-One of the most common repetitive tasks that every programmer faces is finding files or directories.
-All UNIX-like systems come packaged with [`find`](https://www.man7.org/linux/man-pages/man1/find.1.html), a great shell tool to find files. `find` will recursively search for files matching some criteria. Some examples:
+プログラマであれば誰しもが直面する、一番よくやる繰り返し作業の一つが、ファイルとディレクトリの検索です。
+UNIX系のシステムは全て[`find`](https://www.man7.org/linux/man-pages/man1/find.1.html)というファイルを検索するための素晴らしいシェルツールが付属しています。`find`はいくつかの条件にマッチするファイルを再帰的に検索してくれます。ちょっとした例は:
 
 ```bash
-# Find all directories named src
+# srcという名前の全てのディレクトリを検索
 find . -name src -type d
-# Find all python files that have a folder named test in their path
+# パスにtestという名前のフォルダがある全てのpythonファイルを検索
 find . -path '*/test/*.py' -type f
-# Find all files modified in the last day
+# 一日前に変更された全てのファイルを検索
 find . -mtime -1
-# Find all zip files with size in range 500k to 10M
+# サイズが500kから10Mの間にある全てのzipファイルを検索
 find . -size +500k -size -10M -name '*.tar.gz'
 ```
-Beyond listing files, find can also perform actions over files that match your query.
+ファイルを列挙する以外にも、findは一致したファイルに対して処理ができます。
 This property can be incredibly helpful to simplify what could be fairly monotonous tasks.
+この性質は、とにかく単調な作業の簡略化に驚くほど役に立ちます。
 ```bash
-# Delete all files with .tmp extension
+# .tmp拡張子のファイルを全て削除する
 find . -name '*.tmp' -exec rm {} \;
-# Find all PNG files and convert them to JPG
+# 全てのPNGファイルを検索し、JPGに変換する
 find . -name '*.png' -exec convert {} {}.jpg \;
 ```
 
