@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Metaprogramming"
+title: "メタプログラミング"
 details: build systems, dependency management, testing, CI
 date: 2020-01-27
 ready: true
@@ -9,53 +9,44 @@ video:
   id: _Ms1Z4xfqv4
 ---
 
-What do we mean by "metaprogramming"? Well, it was the best collective
-term we could come up with for the set of things that are more about
-_process_ than they are about writing code or working more efficiently.
-In this lecture, we will look at systems for building and testing your
-code, and for managing dependencies. These may seem like they are of
-limited importance in your day-to-day as a student, but the moment you
-interact with a larger code base through an internship or once you enter
-the "real world", you will see this everywhere. We should note that
-"metaprogramming" can also mean "[programs that operate on
-programs](https://en.wikipedia.org/wiki/Metaprogramming)", whereas that
-is not quite the definition we are using for the purposes of this
-lecture.
+「メタプログラミング」とは何のことでしょうか？
+これはコードを書くことやより効率よく仕事をするといったことよりも、
+むしろそれらの _手順_ のことを意味するために我々が思いついた総称です。
+この講義ではコードをビルド、テストし、また依存関係を管理するためのシステムについて見ていきます。
+日々の学生生活にこれらはあまり重要ではないように思えるかもしれませんが、
+インターンシップで大きなコードベースを扱うようになったりひとたび「実世界」に足を踏み入れると、これらを毎日目にすることになります。
+なお「メタプログラミング」とは「[プログラムを操作するプログラム](https://en.wikipedia.org/wiki/Metaprogramming)」
+を意味することもありますが、これは本講義で使う定義ではありません。
 
-# Build systems
+# ビルドシステム
 
-If you write a paper in LaTeX, what are the commands you need to run to
-produce your paper? What about the ones used to run your benchmarks,
-plot them, and then insert that plot into your paper? Or to compile the
-code provided in the class you're taking and then running the tests?
+LaTeX で論文を書くとき、論文を生成するために実行するコマンドはなんでしょうか？
+ベンチマークを実行し、プロットし、プロット結果を論文に挿入するためのコマンドは？
+あるいは受講している講義で与えられたコードをコンパイルしテストを実行するコマンドは？
 
-For most projects, whether they contain code or not, there is a "build
-process". Some sequence of operations you need to do to go from your
-inputs to your outputs. Often, that process might have many steps, and
-many branches. Run this to generate this plot, that to generate those
-results, and something else to produce the final paper. As with so many
-of the things we have seen in this class, you are not the first to
-encounter this annoyance, and luckily there exist many tools to help
-you!
+多くのプロジェクトにおいて、コードがあろうがなかろうが、「ビルド手順」があります。
+それは入力から出力へ至るために必要な一連の操作のことです。
+この手順にはしばしば多くのステップや分岐があります。
+例えばこのプロットを生成するためにこれし、あの結果を生成するためにあれをし、
+最終的な論文を生成するためにまた別のことをします。
+この講義でみた他の事柄と同じように、この面倒くささに出会うのはあなたが最初ではなく、
+ラッキーなことに既存の多くのツールが助けになります！
 
-These are usually called "build systems", and there are _many_ of them.
-Which one you use depends on the task at hand, your language of
-preference, and the size of the project. At their core, they are all
-very similar though. You define a number of _dependencies_, a number of
-_targets_, and _rules_ for going from one to the other. You tell the
-build system that you want a particular target, and its job is to find
-all the transitive dependencies of that target, and then apply the rules
-to produce intermediate targets all the way until the final target has
-been produced. Ideally, the build system does this without unnecessarily
-executing rules for targets whose dependencies haven't changed and where
-the result is available from a previous build.
+これらは普通「ビルドシステム」と呼ばれ _多くの_ ものがあります。
+どれを使うかは行うタスク、使いたい言語、またプロジェクトの大きさに依存します。
+しかし根本的な思想は全て似ています。
+あるものから次のものを生成するために _依存関係_ 、_ターゲット_ 、 _ルール_ を定義します。
+あなたはビルドシステムにあるターゲットを生成したいことを伝え、
+ビルドシステムはそのターゲットに必要な依存関係を辿り、
+最終的なターゲットが得られるまでルールを適用して中間ターゲットを生成します。
+素晴らしいことに、ビルドシステムはこれを依存関係が変化しておらず前回の実行結果を使い回せる
+ターゲットについてのルールは実行せずに実現します。
 
-`make` is one of the most common build systems out there, and you will
-usually find it installed on pretty much any UNIX-based computer. It has
-its warts, but works quite well for simple-to-moderate projects. When
-you run `make`, it consults a file called `Makefile` in the current
-directory. All the targets, their dependencies, and the rules are
-defined in that file. Let's take a look at one:
+`make` は最もよく使われるビルドシステムの一つで、通常はほぼ全ての UNIX ベースのコンピュータにインストールされています。
+多少欠点もありますが、小規模から中規模程度のプロジェクトには非常に有用です。
+`make` を実行すると、現在のディレクトリにある `Makefile` という名前のファイルが参照されます。
+全てのターゲット、それらの間の依存関係、そしてルールをそのファイルに定義します。
+例を見てみましょう。
 
 ```make
 paper.pdf: paper.tex plot-data.png
@@ -65,29 +56,25 @@ plot-%.png: %.dat plot.py
 	./plot.py -i $*.dat -o $@
 ```
 
-Each directive in this file is a rule for how to produce the left-hand
-side using the right-hand side. Or, phrased differently, the things
-named on the right-hand side are dependencies, and the left-hand side is
-the target. The indented block is a sequence of programs to produce the
-target from those dependencies. In `make`, the first directive also
-defines the default goal. If you run `make` with no arguments, this is
-the target it will build. Alternatively, you can run something like
-`make plot-data.png`, and it will build that target instead.
+このファイル内の各命例は右辺にあるものから左辺にあるものを生成するためのルールです。
+また別の言い方をすると、右辺に列挙されたものは依存関係で、左辺にあるものはターゲットです。
+字下げされたブロックは依存関係からターゲットを生成するためのプログラム列です。
+`make` では、一番最初の命令はまたデフォルトのゴールを定義します。
+`make` を引数なしで実行すると、このデフォルトのゴールがターゲットとしてビルドされます。
+また例えば `make plot-data.png` とすると、デフォルトのゴールの代わりに指定されたターゲットをビルドします。
 
-The `%` in a rule is a "pattern", and will match the same string on the
-left and on the right. For example, if the target `plot-foo.png` is
-requested, `make` will look for the dependencies `foo.dat` and
-`plot.py`. Now let's look at what happens if we run `make` with an empty
-source directory.
+ルールにある `%` は「パターン」と呼ばれ、左辺と右辺で同じ文字列にマッチします。
+例えばターゲット `plot-foo.png` が要求されたとき、
+`make` は依存関係として `foo.dat` と `plot.py` を探します。
+それでは空のディレクトリで `make` を実行すると何が起こるか見てみましょう。
 
 ```console
 $ make
 make: *** No rule to make target 'paper.tex', needed by 'paper.pdf'.  Stop.
 ```
 
-`make` is helpfully telling us that in order to build `paper.pdf`, it
-needs `paper.tex`, and it has no rule telling it how to make that file.
-Let's try making it!
+`make` は `paper.pdf` をビルドするには `paper.tex` が必要だがその作り方を指示するルールがない、と親切に教えてくれています。
+それでは `paper.tex` を作ってみましょう！
 
 ```console
 $ touch paper.tex
@@ -95,10 +82,9 @@ $ make
 make: *** No rule to make target 'plot-data.png', needed by 'paper.pdf'.  Stop.
 ```
 
-Hmm, interesting, there _is_ a rule to make `plot-data.png`, but it is a
-pattern rule. Since the source files do not exist (`foo.dat`), `make`
-simply states that it cannot make that file. Let's try creating all the
-files:
+なるほど面白い、`plot-data.png` を作るルールは _存在する_ のですが、それはパターンを持ったルールです。
+ソースファイル（`data.dat`）が存在しないため、`make` は単に `plot-data.png` を作れないと言っています。
+それでは必要なファイルを全て作ってみましょう。
 
 ```console
 $ cat paper.tex
@@ -130,7 +116,7 @@ $ cat data.dat
 5 8
 ```
 
-Now what happens if we run `make`?
+これで `make` を実行するとどうなるでしょうか？
 
 ```console
 $ make
@@ -139,18 +125,17 @@ pdflatex paper.tex
 ... lots of output ...
 ```
 
-And look, it made a PDF for us!
-What if we run `make` again?
+見てください、PDF が作成されました！
+ではもう一度 `make` を実行すると？
 
 ```console
 $ make
 make: 'paper.pdf' is up to date.
 ```
 
-It didn't do anything! Why not? Well, because it didn't need to. It
-checked that all of the previously-built targets were still up to date
-with respect to their listed dependencies. We can test this by modifying
-`paper.tex` and then re-running `make`:
+何も起こりません！なぜでしょう？なぜなら必要ないからです。
+`make` は前回ビルドしたターゲットがそれぞれの依存関係に対し最新であることをチェックしました。
+これを確かめるため、`paper.tex` を編集して `make` を再実行してみます。
 
 ```console
 $ vim paper.tex
@@ -159,168 +144,133 @@ pdflatex paper.tex
 ...
 ```
 
-Notice that `make` did _not_ re-run `plot.py` because that was not
-necessary; none of `plot-data.png`'s dependencies changed!
+`make` が不要な `plot.py` の再実行をして _いない_ ことに注意してください。
+`plot-data.png` の依存関係は何も変更されていません！
 
-# Dependency management
+# 依存関係管理
 
-At a more macro level, your software projects are likely to have
-dependencies that are themselves projects. You might depend on installed
-programs (like `python`), system packages (like `openssl`), or libraries
-within your programming language (like `matplotlib`). These days, most
-dependencies will be available through a _repository_ that hosts a
-large number of such dependencies in a single place, and provides a
-convenient mechanism for installing them. Some examples include the
-Ubuntu package repositories for Ubuntu system packages, which you access
-through the `apt` tool, RubyGems for Ruby libraries, PyPi for Python
-libraries, or the Arch User Repository for Arch Linux user-contributed
-packages.
+大雑把にとらえると、あなたのソフトウェアプロジェクトは何かに依存しており、依存先はそれ自体がまたプロジェクトでしょう。
+インストールされたプログラム（例えば `python`）、システムパッケージ（例えば `openssl`）、
+または使っている言語のライブラリ（例えば `matplotlib`）に依存しているかもしれません。
+今日では依存関係は _リポジトリ_ によって提供されており、
+このような多くの依存関係が一箇所にまとめられ簡単にインストールする方法が提供されています。
+例えば Ubuntu のパッケージリポジトリは Ubuntu のシステムパッケージを提供し `apt` ツールでアクセスでき、
+RubyGems は Ruby のライブラリを提供し、PyPi は Python のライブラリを提供し、
+また Arch User Repository は Arch Linux のユーザが作成したパッケージを提供します。
 
-Since the exact mechanisms for interacting with these repositories vary
-a lot from repository to repository and from tool to tool, we won't go
-too much into the details of any specific one in this lecture. What we
-_will_ cover is some of the common terminology they all use. The first
-among these is _versioning_. Most projects that other projects depend on
-issue a _version number_ with every release. Usually something like
-8.1.3 or 64.1.20192004. They are often, but not always, numerical.
-Version numbers serve many purposes, and one of the most important of
-them is to ensure that software keeps working. Imagine, for example,
-that I release a new version of my library where I have renamed a
-particular function. If someone tried to build some software that
-depends on my library after I release that update, the build might fail
-because it calls a function that no longer exists! Versioning attempts
-to solve this problem by letting a project say that it depends on a
-particular version, or range of versions, of some other project. That
-way, even if the underlying library changes, dependent software
-continues building by using an older version of my library.
+個々のリポジトリを扱う方法についてはリポジトリごとやツールごとに大きく異なるため、
+この講義では特定のリポジトリやツールの詳細にはあまり立ち入りません。
+むしろこの講義では扱うのは、それらが共通で使う用語です。
+最初の用語は _バージョニング_ です。
+他のプロジェクトから依存されるほとんどのプロジェクトは、リリースごとに _バージョン番号_ を付与します。
+例えば 8.1.3 や 64.1.20192004 のようなものです。
+これらにはだいたい（必ずとは限りませんが）数字が使われます。
+バージョン番号の目的は様々ですが、最も重要なものの一つはソフトウェアがきちんと動き続けることを保証することです。
+例えば、私が自分のライブラリの新しいバージョンをリリースし、特定の関数の名前を変更したとしましょう。
+そのリリース後にもし誰かが私のライブラリに依存するソフトウェアをビルドしようとすると、
+そのソフトウェアはもはや存在しない関数を呼ぼうとしてビルドに失敗するかもしれません！
+バージョニングはプロジェクトに他のプロジェクトの特定のバージョンや
+特定の範囲のバージョンに依存すると明示させることでこの問題を解決しようとします。
+これにより、もしあるライブラリに変更があっても、それに依存したソフトウェアはライブラリの古いバージョンを使うことでビルドし続けることができます。
 
-That also isn't ideal though! What if I issue a security update which
-does _not_ change the public interface of my library (its "API"), and
-which any project that depended on the old version should immediately
-start using? This is where the different groups of numbers in a version
-come in. The exact meaning of each one varies between projects, but one
-relatively common standard is [_semantic
-versioning_](https://semver.org/). With semantic versioning, every
-version number is of the form: major.minor.patch. The rules are:
+しかしこれでもまだ完璧ではありません！
+例えば私がライブラリの公開されたインターフェース（ライブラリの "API"）を変更せずにセキュリティに関する更新を行い、
+古いバージョンに依存している全てのプロジェクトは即座に新しいバージョンを使うべきであるとき、どうなるでしょうか？
+ここでバージョンに含まれる番号のグループ分けが役に立ちます。
+それぞれのグループの詳細な意味はプロジェクトごとに異なりますが、
+比較的よく使われるのが [_セマンティックバージョンニング_](https://semver.org/)  です。
+セマンティックバージョンニングでは、全てのバージョン番号は major.minor.patch の形式をとり、以下のルールに従います。
 
- - If a new release does not change the API, increase the patch version.
- - If you _add_ to your API in a backwards-compatible way, increase the
-   minor version.
- - If you change the API in a non-backwards-compatible way, increase the
-   major version.
+ - もし新しいリリースが API を変更しないなら、patch バージョンを 1 上げる。
+ - もし API に後方互換性を保ったまま何かを _追加する_ なら、minor バージョンを 1 あげる。
+ - もし API に後方互換性を壊すような変更をするなら、major バージョンを 1 あげる。
 
-This already provides some major advantages. Now, if my project depends
-on your project, it _should_ be safe to use the latest release with the
-same major version as the one I built against when I developed it, as
-long as its minor version is at least what it was back then. In other
-words, if I depend on your library at version `1.3.7`, then it _should_
-be fine to build it with `1.3.8`, `1.6.1`, or even `1.3.0`. Version
-`2.2.4` would probably not be okay, because the major version was
-increased. We can see an example of semantic versioning in Python's
-version numbers. Many of you are probably aware that Python 2 and Python
-3 code do not mix very well, which is why that was a _major_ version
-bump. Similarly, code written for Python 3.5 might run fine on Python
-3.7, but possibly not on 3.4.
+これは大変有用です。いま私のプロジェクトがあなたのプロジェクトに依存しているとすると、
+私が開発時にビルドに使ったのと同じ major バージョンであれば、
+minor バージョンが開発時のもの以上である限り最新のライブラリをつかっても問題ない _はず_ です。
+言い換えると、もし私があなたのライブラリのバージョン `1.3.7` に依存しているとすると、
+`1.3.8` や `1.6.1` や `1.3.0` すらも問題なくビルドに使える _はず_ です。
+バージョン `2.2.4` はおそらくダメでしょう、なぜなら major バージョンが上がっているからです。
+セマンティックバージョニングの例を Python のバージョン番号に見ることができます。
+知っての通り Python 2 と Python 3 にはあまり互換性がありませんが、
+これが major バージョンが上がっている理由です。
+同様に、Python 3.5 用に書かれたコードはたぶん Python 3.7 では動きますが、
+おそらく Python 3.4 ではダメでしょう。
 
-When working with dependency management systems, you may also come
-across the notion of _lock files_. A lock file is simply a file that
-lists the exact version you are _currently_ depending on of each
-dependency. Usually, you need to explicitly run an update program to
-upgrade to newer versions of your dependencies. There are many reasons
-for this, such as avoiding unnecessary recompiles, having reproducible
-builds, or not automatically updating to the latest version (which may
-be broken). An extreme version of this kind of dependency locking is
-_vendoring_, which is where you copy all the code of your dependencies
-into your own project. That gives you total control over any changes to
-it, and lets you introduce your own changes to it, but also means you
-have to explicitly pull in any updates from the upstream maintainers
-over time.
+依存関係管理ツールを使っていると、_ロックファイル_ と呼ばれるものに出会うでしょう。
+ロックファイルとは単にそれぞれの依存関係に関しあなたが _現在_ 依存しているバージョン番号を並べたファイルです。
+通常、依存関係を新しいバージョンに更新するには更新プログラムを明示的に実行する必要があります。
+これには不要な再コンパイルを避ける、再現可能なビルドを行う、あるいは勝手に（壊れているかもしれない）最新バージョンに
+アップデートされるのを避ける、といった多くの理由があります。
+このような依存関係の固定の究極のものは _vendoring_ と呼ばれ、依存関係のコードを全て
+あなたのプロジェクトにコピーすることを言います。
+これによりあなたは依存関係のコードを完全にコントロールすることができ、
+また独自の変更を加えることもできますが、
+アップストリームのメンテナが加えた変更を明示的に持ってくる必要が生じます。
 
-# Continuous integration systems
+# 継続的インテグレーションシステム
 
-As you work on larger and larger projects, you'll find that there are
-often additional tasks you have to do whenever you make a change to it.
-You might have to upload a new version of the documentation, upload a
-compiled version somewhere, release the code to pypi, run your test
-suite, and all sort of other things. Maybe every time someone sends you
-a pull request on GitHub, you want their code to be style checked and
-you want some benchmarks to run? When these kinds of needs arise, it's
-time to take a look at continuous integration.
+より大きなプロジェクトを扱うようになるにつれ、プロジェクトに変更を加えるごとに
+追加で行わなければならないタスクがあることに気づくでしょう。
+例えばドキュメントの新しいバージョンをアップロードしたり、
+コンパイルされたバージョンをどこかにアップロードしたり、pypi にコードをリリースしたり、
+テストを実行したり、といった様々なことが必要になります。
+あるいは誰かが GitHub でプルリクエストを送るたびにコードのスタイルチェックをして
+ベンチマークを実行したいでしょうか？
+このような必要性が生じたときが、継続的インテグレーションについて見てみるべきときです。
 
-Continuous integration, or CI, is an umbrella term for "stuff that runs
-whenever your code changes", and there are many companies out there that
-provide various types of CI, often for free for open-source projects.
-Some of the big ones are Travis CI, Azure Pipelines, and GitHub Actions.
-They all work in roughly the same way: you add a file to your repository
-that describes what should happen when various things happen to that
-repository. By far the most common one is a rule like "when someone
-pushes code, run the test suite". When the event triggers, the CI
-provider spins up a virtual machines (or more), runs the commands in
-your "recipe", and then usually notes down the results somewhere. You
-might set it up so that you are notified if the test suite stops
-passing, or so that a little badge appears on your repository as long as
-the tests pass.
+継続的インテグレーション（CI とも呼ばれます）は「コードが変更されたときに実行されるもの」
+を表す総称で、多くの企業がオープンソースプロジェクト用には無料で様々な種類の CI を提供しています。
+有名なものには Travis CI、Azure Pipelines、そして GitHub Actions があります。
+これらは大雑把に言うと同じような動きをし、あなたは「リポジトリに何かが起こったときに
+何をすべきか」を書いたファイルをリポジトリに追加します。
+圧倒的によく使われるルールは、「誰かがコードをプッシュしたら、テストを実行せよ」です。
+このイベントが発生すると、CI プロバイダは仮想マシンを 1 つ（あるいは複数）立ち上げ、
+あなたの「レシピ」に書かれたコマンドを実行し、そしてたいていは結果をどこかに書き込みます。
+テストが途中で失敗したら通知を受けるように設定したり、
+テストが通っているときに限り小さなバッジがリポジトリに表示されるよう設定したりできます。
 
-As an example of a CI system, the class website is set up using GitHub
-Pages. Pages is a CI action that runs the Jekyll blog software on every
-push to `master` and makes the built site available on a particular
-GitHub domain. This makes it trivial for us to update the website! We
-just make our changes locally, commit them with git, and then push. CI
-takes care of the rest.
+この講義の web ページは GitHub Pages という CI システムを使って構築されています。
+Pages は CI のアクションの一つで、`master` にプッシュがあるたびに Jekyll ブログエンジンを
+起動し生成されたサイトを特定の GitHub ドメインで公開します。
+これによって web サイトの更新が簡単になります！
+手元で更新を行い、git でコミットしプッシュします。
+あとの作業は CI がやってくれます。
 
-## A brief aside on testing
+## テストについてちょっと余談
 
-Most large software projects come with a "test suite". You may already
-be familiar with the general concept of testing, but we thought we'd
-quickly mention some approaches to testing and testing terminology that
-you may encounter in the wild:
+大きなソフトウェアプロジェクトのほとんどには「テストスイート」がついています。
+テストの一般的な概念については知っていると思いますが、ここでは実世界で目にすることになる
+テスト手法とテストに関する用語について簡単に述べておきます。
 
- - Test suite: a collective term for all the tests
- - Unit test: a "micro-test" that tests a specific feature in isolation
- - Integration test: a "macro-test" that runs a larger part of the
-   system to check that different feature or components work _together_.
- - Regression test: a test that implements a particular pattern that
-   _previously_ caused a bug to ensure that the bug does not resurface.
- - Mocking: to replace a function, module, or type with a fake
-   implementation to avoid testing unrelated functionality. For example,
-   you might "mock the network" or "mock the disk".
+ - テストスイート：全てのテストを表す総称。
+ - ユニットテスト：特定の機能を他から分離しテストする「小さなテスト」。
+ - 結合テスト：システムの大きな部分を実行し異なる機能やコンポーネントが _一緒になって_ きちんと動くかをテストする「大きなテスト」。
+ - 回帰テスト：_以前の_ バージョンでバグを発生させていたパターンを実行し、そのバグが再発していないことを確認するテスト。
+ - モック：関係のない機能をテストすることを避けるために、ある関数、モジュール、型を置き換えるための偽の実装。
+ 例えば「ネットワークのモック」や「ディスクのモック」など。
 
-# Exercises
+# 練習問題
 
- 1. Most makefiles provide a target called `clean`. This isn't intended
-    to produce a file called `clean`, but instead to clean up any files
-    that can be re-built by make. Think of it as a way to "undo" all of
-    the build steps. Implement a `clean` target for the `paper.pdf`
-    `Makefile` above. You will have to make the target
-    [phony](https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html).
-    You may find the [`git
-    ls-files`](https://git-scm.com/docs/git-ls-files) subcommand useful.
-    A number of other very common make targets are listed
-    [here](https://www.gnu.org/software/make/manual/html_node/Standard-Targets.html#Standard-Targets).
- 2. Take a look at the various ways to specify version requirements for
-    dependencies in [Rust's build
-    system](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html).
-    Most package repositories support similar syntax. For each one
-    (caret, tilde, wildcard, comparison, and multiple), try to come up
-    with a use-case in which that particular kind of requirement makes
-    sense.
- 3. Git can act as a simple CI system all by itself. In `.git/hooks`
-    inside any git repository, you will find (currently inactive) files
-    that are run as scripts when a particular action happens. Write a
-    [`pre-commit`](https://git-scm.com/docs/githooks#_pre_commit) hook
-    that runs `make paper.pdf` and refuses the commit if the `make`
-    command fails. This should prevent any commit from having an
-    unbuildable version of the paper.
- 4. Set up a simple auto-published page using [GitHub
-    Pages](https://pages.github.com/).
-    Add a [GitHub Action](https://github.com/features/actions) to the
-    repository to run `shellcheck` on any shell files in that
-    repository (here is [one way to do
-    it](https://github.com/marketplace/actions/shellcheck)). Check that
-    it works!
- 5. [Build your
-    own](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/building-actions)
-    GitHub action to run [`proselint`](http://proselint.com/) or
-    [`write-good`](https://github.com/btford/write-good) on all the
-    `.md` files in the repository. Enable it in your repository, and
-    check that it works by filing a pull request with a typo in it.
+ 1. たいていの makefile は `clean` と呼ばれるターゲットを持っています。これは `clean` と呼ばれるファイルを生成することを
+    意図したものではなく、make で再生成可能な全てのファイルを削除することを目的としています。ビルドの手順を「元に戻す」
+    ようなものです。上記の `paper.pdf` のための `Makefile` に `clean` ターゲットを実装してください。
+    [phony](https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html) と呼ばれるターゲットを作る必要があります。
+    サブコマンド [`git ls-files`](https://git-scm.com/docs/git-ls-files) が役に立つでしょう。
+    その他のよく使われるターゲットは[ここ](https://www.gnu.org/software/make/manual/html_node/Standard-Targets.html#Standard-Targets)に載っています。
+ 2. [Rust のビルドシステム](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html)で依存関係の
+    バージョンを指定するための様々な方法を確認してください。たいていのパッケージリポジトリは似たような文法をサポートしています。
+    それぞれの文法（caret、tilde、wildcard、comparison、multiple）についてそれが役に立つようなユースケースを考えてみましょう。
+ 3. Git はそれ自体が簡単な CI システムとして利用できます。`.git/hooks` には特定の操作をしたときに実行される
+    ファイル（の実際には実行されないサンプル）があります。`make paper.pdf` を実行し失敗したらコミットを拒否するような
+    [`pre-commit`](https://git-scm.com/docs/githooks#_pre_commit) ファイルを書いてください。
+    これはあるコミットで論文がビルドできなくなることを防ぎます。
+ 4. [GitHub Pages](https://pages.github.com/) を使って自動更新される簡単なページを作ってください。
+    リポジトリ内の全てのシェルスクリプトに対して `shellcheck` を実行する
+    [GitHub Action](https://github.com/features/actions) を追加してください
+    （やり方は[ここ](https://github.com/marketplace/actions/shellcheck)にあります）。
+    ちゃんと動いていることを確認しましょう！
+ 5. [独自の GitHub action を作り](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/building-actions)
+    全ての `.md` ファイルに対し [`proselint`](http://proselint.com/) や [`write-good`](https://github.com/btford/write-good)
+    を実行してください。あなたのリポジトリでこれを有効にし、typo のあるプルリクエストを出すことで
+    ちゃんと動いていることを確認してください。
