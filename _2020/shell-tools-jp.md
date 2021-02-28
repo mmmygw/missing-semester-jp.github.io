@@ -165,7 +165,7 @@ for arg in reversed(sys.argv[1:]):
 
 シェル関数とスクリプトの違いで覚えるべきなのは:
 - 関数はシェルと同じ言語でなければならない。一方スクリプトはどの言語でも良い。これがスクリプトにおいてシェバンが重要である理由です。
-- 関数は一度定義が読み込まれればロードされる。スクリプトは実行するたびに毎回ロードされる。そのため関数はロードが僅かに早いが、変更されるたびに定義を再読込しなければいけない。
+- 関数は一度定義が読み込まれればロードされる。スクリプトは実行するたびに毎回ロードされる。そのため関数はロードが僅かに速いが、変更されるたびに定義を再読込しなければいけない。
 - 関数は現在のシェル環境で実行されるのに対し、スクリプトは自分のプロセスの中で実行される。故に、関数は環境変数を変えることができる。つまり関数はカレントディレクトリを変えられるが、スクリプトはそれができない。スクリプトには[`export`](https://www.man7.org/linux/man-pages/man1/export.1p.html)でエクスポートされた環境変数の値が渡される。
 - どのプログラミング言語とも同様に、関数はモジュール性・再利用性・可読性を高めるのに強力な構造です。シェルスクリプトに固有の関数定義があることは珍しくありません。
 
@@ -205,8 +205,7 @@ find . -mtime -1
 find . -size +500k -size -10M -name '*.tar.gz'
 ```
 ファイルを列挙する以外にも、findは一致したファイルに対して処理ができます。
-This property can be incredibly helpful to simplify what could be fairly monotonous tasks.
-この性質は、とにかく単調な作業の簡略化に驚くほど役に立ちます。
+この性質は、結構単調になりがちな作業の簡略化に驚くほど役に立ちます。
 ```bash
 # .tmp拡張子のファイルを全て削除する
 find . -name '*.tmp' -exec rm {} \;
@@ -214,87 +213,88 @@ find . -name '*.tmp' -exec rm {} \;
 find . -name '*.png' -exec convert {} {}.jpg \;
 ```
 
-Despite `find`'s ubiquitousness, its syntax can sometimes be tricky to remember.
-For instance, to simply find files that match some pattern `PATTERN` you have to execute `find -name '*PATTERN*'` (or `-iname` if you want the pattern matching to be case insensitive).
-You could start building aliases for those scenarios, but part of the shell philosophy is that it is good to explore alternatives.
-Remember, one of the best properties of the shell is that you are just calling programs, so you can find (or even write yourself) replacements for some.
-For instance, [`fd`](https://github.com/sharkdp/fd) is a simple, fast, and user-friendly alternative to `find`.
-It offers some nice defaults like colorized output, default regex matching, and Unicode support. It also has, in my opinion, a more intuitive syntax.
-For example, the syntax to find a pattern `PATTERN` is `fd PATTERN`.
+ありきたりな単語であるにもかかわらず、`find`の文法は覚えるのに苦労することが時々あります。
+例えば、ただ何らかのパターン`PATTERN`に一致するファイルを探すのにも、`find -name '*PATTERN*'`（大文字と小文字を区別しないためには`-iname`）を実行しなければなりません。
+こういった場合に備えてエイリアスを作るのも良いですが、シェルに関する知見の一つとしては、代替手段を探るのも悪くないということです。
+シェルの最良の性質の一つは、プログラムを呼び出している点にあることを覚えましょう。なので、一部のプログラムに対しては、代わりのものを探す（もしくは自分で書いてしまう）ことができます。
+例えば、`find`の代わりとして、シンプルで動作が速く使いやすいのが[`fd`](https://github.com/sharkdp/fd)です。
+このコマンドにはカラー出力、デフォルトの正規表現検索、そしてUnicode対応といった素晴らしいデフォルト設定があります。また私個人の意見として、こちらの方がより直感的な文法になっています。
+例として、パターン`PATTERN`を検索する文法は`fd PATTERN`になっています。
 
-Most would agree that `find` and `fd` are good, but some of you might be wondering about the efficiency of looking for files every time versus compiling some sort of index or database for quickly searching.
-That is what [`locate`](https://www.man7.org/linux/man-pages/man1/locate.1.html) is for.
-`locate` uses a database that is updated using [`updatedb`](https://www.man7.org/linux/man-pages/man1/updatedb.1.html).
-In most systems, `updatedb` is updated daily via [`cron`](https://www.man7.org/linux/man-pages/man8/cron.8.html).
-Therefore one trade-off between the two is speed vs freshness.
-Moreover `find` and similar tools can also find files using attributes such as file size, modification time, or file permissions, while `locate` just uses the file name.
-A more in-depth comparison can be found [here](https://unix.stackexchange.com/questions/60205/locate-vs-find-usage-pros-and-cons-of-each-other).
+多くの人は`find`よりも`fd`の方が良いという意見に賛成するでしょう。しかし、ファイルを毎回探しに行くのと、何らかの索引またはデータベースを構築して素早く検索するのと、どっちの効率が良いか悩む人もいるでしょう。
+そのために用意されたのが[`locate`](https://www.man7.org/linux/man-pages/man1/locate.1.html)です。
+`locate`は[`updatedb`](https://www.man7.org/linux/man-pages/man1/updatedb.1.html)によって更新されるデータベースを使っています。
+ほとんどのシステムでは、`updatedb`は[`cron`](https://www.man7.org/linux/man-pages/man8/cron.8.html)を通して毎日アップデートされています。
+そのためこの二者におけるトレードオフは実行の速さと情報の新しさです。
+また、`find`とそれに似たようなツールは、ファイルサイズ、変更日時、あるいはファイルのパーミッションなどの属性を使って検索できます。それに対し、`locate`はファイル名のみ使用します。
+より掘り下げた比較の議論は[ここ](https://unix.stackexchange.com/questions/60205/locate-vs-find-usage-pros-and-cons-of-each-other)を参照してください。
 
-## Finding code
+## コードの検索
 
-Finding files by name is useful, but quite often you want to search based on file *content*. 
-A common scenario is wanting to search for all files that contain some pattern, along with where in those files said pattern occurs.
-To achieve this, most UNIX-like systems provide [`grep`](https://www.man7.org/linux/man-pages/man1/grep.1.html), a generic tool for matching patterns from the input text.
-`grep` is an incredibly valuable shell tool that we will cover in greater detail during the data wrangling lecture.
+ファイルを名前で検索するのは有用です。しかし、ファイルの*内容*を検索したい場合も結構よくあります。
+よくあるのが何らかのパターンを含む全てのファイルを検索し、それが出現した箇所も一緒に出してほしいというケースです。
+この目的を実現するために、ほとんどのUNIX系のシステムは[`grep`](https://www.man7.org/linux/man-pages/man1/grep.1.html)という入力テキストから一致パターンを探す汎用ツールが備えられています。
+`grep`は驚くほど有用なシェルツールです。詳しい内容はデータラングリングの講義で触れます。
 
-For now, know that `grep` has many flags that make it a very versatile tool.
-Some I frequently use are `-C` for getting **C**ontext around the matching line and `-v` for in**v**erting the match, i.e. print all lines that do **not** match the pattern. For example, `grep -C 5` will print 5 lines before and after the match.
-When it comes to quickly searching through many files, you want to use `-R` since it will **R**ecursively go into directories and look for files for the matching string.
+今のところは、`grep`は色んななフラグがあって、使い方が多種多様なツールとだけ覚えておいてください。
+私がよく使うのは、一致した行周辺の**C**ontext（文脈）を出す`-C`と、一致をin**v**ert（反転）する、つまりパターンに一致**しない**行を全て出力する`-v`です。例えば、`grep -C 5`は一致した行の前の５行と後ろの５行を出力します。
+多くのファイルを一気に検索するときには、`-R`を使いましょう。これは**R**ecursively(再帰的に)ディレクトリの中まで行って一致する文字列を含むファイルを探してくれます。
 
-But `grep -R` can be improved in many ways, such as ignoring `.git` folders, using multi CPU support, &c.
-Many `grep` alternatives have been developed, including [ack](https://beyondgrep.com/), [ag](https://github.com/ggreer/the_silver_searcher) and [rg](https://github.com/BurntSushi/ripgrep).
-All of them are fantastic and pretty much provide the same functionality.
-For now I am sticking with ripgrep (`rg`), given how fast and intuitive it is. Some examples:
+ただし`grep -R`は他にもたくさんの使い方に発展できます。例としては`.git`フォルダを無視したり、マルチコア処理をしたり、等々。
+`grep`の代替ツールも色々作られています。例えば[ack](https://beyondgrep.com/)、[ag](https://github.com/ggreer/the_silver_searcher)、それから[rg](https://github.com/BurntSushi/ripgrep)などがあります。
+これらは皆優秀なツールで、割と同じ機能を持っていたりします。
+今回はripgrep（`rg`）に注目て、これがどれくらい速くて直感的なのかをお見せします。いくつかの例としては：
 ```bash
-# Find all python files where I used the requests library
+# requestsライブラリを使用した全てのpythonファイルを検索
 rg -t py 'import requests'
-# Find all files (including hidden files) without a shebang line
+# シェバン行がない全てのファイル（隠しファイルも含む）を検索
 rg -u --files-without-match "^#!"
-# Find all matches of foo and print the following 5 lines
+# 全てのfooを検索し、その後の５行を出力
 rg foo -A 5
-# Print statistics of matches (# of matched lines and files )
+# 一致した集計（一致した行とファイルの数）を出力
 rg --stats PATTERN
 ```
 
-Note that as with `find`/`fd`, it is important that you know that these problems can be quickly solved using one of these tools, while the specific tools you use are not as important.
+ここで注意してほしいですが、大事なのはこれらのツールのどれも`find`/`fd`と同じようにこの手問題を解決することができるのを知っていることで、具体的にどのツールを使うかはさほど重要ではないんです。
 
-## Finding shell commands
+## シェルコマンドの検索
 
-So far we have seen how to find files and code, but as you start spending more time in the shell, you may want to find specific commands you typed at some point.
-The first thing to know is that typing the up arrow will give you back your last command, and if you keep pressing it you will slowly go through your shell history.
+ここまではファイルやコードの検索の仕方について見てきました。しかし、シェルをもっと触ろうとすると、どこかで打ったコマンドをピンポイントで検索したくなったりするでしょう。
+まず最初に知っておくべきこととして、上矢印キーを押すと最後に打ったコマンドが出てきて、そのまま押し続けるとシェルの履歴をちょっとずつ遡ることができます。
 
-The `history` command will let you access your shell history programmatically.
-It will print your shell history to the standard output.
-If we want to search there we can pipe that output to `grep` and search for patterns.
-`history | grep find` will print commands that contain the substring "find".
+そこで、`history`コマンドはプログラム的にシェル履歴にアクセスできます。
+これはシェルの履歴を標準出力に出力するコマンドです。
+もしその履歴内で検索したいのなら、パイプで出力を`grep`に繋げてパターン検索をかけられます。
+`history | grep find`は"find"という部分文字列を含むコマンドを出力してくれます。
 
-In most shells, you can make use of `Ctrl+R` to perform backwards search through your history.
-After pressing `Ctrl+R`, you can type a substring you want to match for commands in your history.
-As you keep pressing it, you will cycle through the matches in your history.
-This can also be enabled with the UP/DOWN arrows in [zsh](https://github.com/zsh-users/zsh-history-substring-search).
-A nice addition on top of `Ctrl+R` comes with using [fzf](https://github.com/junegunn/fzf/wiki/Configuring-shell-key-bindings#ctrl-r) bindings.
-`fzf` is a general-purpose fuzzy finder that can be used with many commands.
-Here it is used to fuzzily match through your history and present results in a convenient and visually pleasing manner.
+ほとんどのシェルでは、`Ctrl+R`を使うことで履歴をさかのぼって検索できます。
+`Ctrl+R`を押したあと、履歴の中で検索したいコマンドの部分列を入力すれば良い訳です。
+`Ctrl+R`を押し続けると、履歴中で一致したものを巡回します。
+これは[zsh](https://github.com/zsh-users/zsh-history-substring-search)では上/下矢印キーでも有効にできます。
+`Ctrl+R`の更なる発展として便利なのが[fzf](https://github.com/junegunn/fzf/wiki/Configuring-shell-key-bindings#ctrl-r)バインディングです。
+`fzf`は様々なコマンドで利用できる汎用的な曖昧検索ツールです。
+ここでは履歴内を曖昧検索した結果を、手ごろで見やすい形に出力するのに使われています。
 
-Another cool history-related trick I really enjoy is **history-based autosuggestions**.
-First introduced by the [fish](https://fishshell.com/) shell, this feature dynamically autocompletes your current shell command with the most recent command that you typed that shares a common prefix with it.
-It can be enabled in [zsh](https://github.com/zsh-users/zsh-autosuggestions) and it is a great quality of life trick for your shell.
+履歴関連で私が気に入っているもう一つの凄い技は、**履歴による自動補完**です。
+[fish](https://fishshell.com/)シェルで初めて導入されたこの機能は、現在のシェルコマンドをそれと同じ書き出しである一番直近のコマンドで動的に自動保管してくれます。
+この機能は[zsh](https://github.com/zsh-users/zsh-autosuggestions)でも有効にできます。あなたの素敵なシェルライフの一助となるでしょう。
 
-You can modify your shell's history behavior, like preventing commands with a leading space from being included. This comes in handy when you are typing commands with passwords or other bits of sensitive information.
-To do this, add `HISTCONTROL=ignorespace` to your `.bashrc` or `setopt HIST_IGNORE_SPACE` to your `.zshrc`.
-If you make the mistake of not adding the leading space, you can always manually remove the entry by editing your `.bash_history` or `.zhistory`.
+シェル履歴の動作を変更することもできます。例えばスペースで始まるコマンドを履歴に含まない、など。これはパスワードや他の扱いに注意が必要な情報を含むコマンドを入力する場合ではお手ごろです。
+これを機能させるのには、`.bashrc`を`HISTCONTROL=ignorespace`に、あるいは`setopt HIST_IGNORE_SPACE`を`.zshrc`に追加すれば良いです。
+もし先頭のスペースを入れ忘れても、`.bash_history`や`.zhistory`を編集して手動で記録を削除するのはいつでもできます。
 
-## Directory Navigation
+## ディレクトリ移動
 
-So far, we have assumed that you are already where you need to be to perform these actions. But how do you go about quickly navigating directories?
-There are many simple ways that you could do this, such as writing shell aliases or creating symlinks with [ln -s](https://www.man7.org/linux/man-pages/man1/ln.1.html), but the truth is that developers have figured out quite clever and sophisticated solutions by now.
+さて、これまでの議論では、既に操作を実行する場所にいることを想定してきた訳ですが、それではディレクトリ間の移動を素早くこなすにはどうすればよいのでしょうか？
+簡単な方法はたくさんあります。例えばシェルエイリアスを書いたり、[ln -s](https://www.man7.org/linux/man-pages/man1/ln.1.html)を使ってシンボリックリンクを作ったり。でも実は開発者が既にとても賢くて精巧な解決策を用意してくれました。
 
-As with the theme of this course, you often want to optimize for the common case.
-Finding frequent and/or recent files and directories can be done through tools like [`fasd`](https://github.com/clvv/fasd) and [`autojump`](https://github.com/wting/autojump).
-Fasd ranks files and directories by [_frecency_](https://developer.mozilla.org/en-US/docs/Mozilla/Tech/Places/Frecency_algorithm), that is, by both _frequency_ and _recency_.
-By default, `fasd` adds a `z` command that you can use to quickly `cd` using a substring of a _frecent_ directory. For example, if you often go to `/home/user/files/cool_project` you can simply use `z cool` to jump there. Using autojump, this same change of directory could be accomplished using `j cool`.
+この講義のテーマに従って、一般的なケースを最適化する方法を考えていきましょう。
+頻繁に、かつ/または直近で使ったファイルとディレクトリの検索は、[`fasd`](https://github.com/clvv/fasd)や[`autojump`](https://github.com/wting/autojump)などのツールで行えます。
+fasdはファイルとディレクトリを[_frecency_](https://developer.mozilla.org/en-US/docs/Mozilla/Tech/Places/Frecency_algorithm)、つまり_frequency(頻度)_と_recency(新しさ)_の両方の基準を使ってランク付けします。
+デフォルトでは、`fasd`は追加として`z`というコマンドを使って、_frecent_なディレクトリの部分文字列をもとに素早くそこに`cd`できます。例として、`/home/user/files/cool_project`によく移動していたら、`z cool`と打つだけでそこへ飛べます。autojumpを使うなら、`j cool`で同じようなディレクトリ移動が可能です。
 
 More complex tools exist to quickly get an overview of a directory structure: [`tree`](https://linux.die.net/man/1/tree), [`broot`](https://github.com/Canop/broot) or even full fledged file managers like [`nnn`](https://github.com/jarun/nnn) or [`ranger`](https://github.com/ranger/ranger).
+もう少し複雑なツールとして、ディレクトリ構造の概観を手っ取り早く示してくれるもの：[`tree`](https://linux.die.net/man/1/tree)、[`broot`](https://github.com/Canop/broot)があります。もっというと、[`nnn`](https://github.com/jarun/nnn)や[`ranger`](https://github.com/ranger/ranger)などの本格的なファイルマネージャも挙げられます。
 
 # Exercises
 
