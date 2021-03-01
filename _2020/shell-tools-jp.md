@@ -1,4 +1,5 @@
---- <!-- 翻訳: logcpp -->
+<!-- 翻訳: logcpp -->
+---
 layout: lecture
 title: "Shell Tools and Scripting"
 date: 2020-01-14
