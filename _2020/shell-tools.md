@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Shell Tools and Scripting"
+title: "シェルツールとスクリプト"
 date: 2020-01-14
 ready: true
 video:
