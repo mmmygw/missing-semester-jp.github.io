@@ -314,15 +314,15 @@ fasdは[_frecency_](https://developer.mozilla.org/en-US/docs/Mozilla/Tech/Places
     drwx------+ 47 user group 1.5K Jan 12 18:08 ..
     ```
 
-{% コメント %}
+{% comment %}
 ls -lath --color=auto
-{% コメント終 %}
+{% endcomment %}
 
 1. 以下を行うbash関数`marco`および`polo`を書け。
 `marco`を実行する度にカレントディレクトリを何らかの形で記憶し、次に`polo`を実行すると、どのディレクトリに居るかによらず、`polo`は`marco`を実行したディレクトリに`cd`して戻る。
 デバッグし易いようにするために、コードを`marco.sh`というファイルの中に書いておき、`source marco.sh`を実行し定義をシェルに（リ）ロードするとよい。
 
-{% コメント %}
+{% comment %}
 marco() {
     export MARCO=$(pwd)
 }
@@ -330,7 +330,7 @@ marco() {
 polo() {
     cd "$MARCO"
 }
-{% コメント終 %}
+{% endcomment %}
 
 1. とても稀にエラーになるコマンドがあるとする。そのデバッグは出力をキャプチャする必要があるが実行エラーを出すには時間がかかる。
 以下のスクリプトをエラーが出るまで実行し、その標準出力およびエラーメッセージをファイルにキャプチャし、最後に全部表示するbashスクリプトを書け。
@@ -350,7 +350,7 @@ polo() {
     echo "Everything went according to plan"
     ```
 
-{% コメント %}
+{% comment %}
 #!/usr/bin/env bash
 
 count=0
@@ -362,7 +362,7 @@ done
 
 echo "found error after $count runs"
 cat out.txt
-{% コメント終 %}
+{% endcomment %}
 
 1. 講義で触れたように、`find`の`-exec`は探しているファイルを操作するのにとても強力である。
 しかし、**全ての**ファイルに対して、例えばzipファイルを作るなど何かしらの操作をしたい場合はどうすれば良いのだろう？
@@ -372,14 +372,14 @@ cat out.txt
 例として、`ls | xargs rm`はカレントディレクトリのファイルを削除する。
 
 	フォルダ内のHTMLファイルを再帰的に検索しzipでまとめるコマンドを書け。このコマンドは名前にスペースを含むファイルにも対応できるように注意せよ。（ヒント：`xargs`の`-d`フラグをチェック）
-    {% コメント %}
+    {% comment %}
     find . -type f -name "*.html" | xargs -d '\n'  tar -cvzf archive.tar.gz
-    {% コメント終 %}
+    {% endcomment %}
 
 	macOSの場合、デフォルトのBSDとしての`find`は[GNU coreutils](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilities_commands)に入っているものと異なることに注意せよ。`find`の`-print0`フラグおよび`xargs`の`-0`フラグを利用するとよい。macOSユーザーは、macOSに搭載されたコマンドラインユーティリティがGNUの同格製品と差異があることを認識しておくべきである。もしGNU版が欲しいのなら、[brewを利用](https://formulae.brew.sh/formula/coreutils)すればインストールできる。
 
 1. （発展）あるディレクトリ内の一番新しく変更されたファイルを再帰的に検索するコマンドまたはスクリプトを書け。より一般的に、全てのファイルを変更日時の順に列挙することはできるだろうか？
 
-    {% コメント %}
+    {% comment %}
 	find . -type f | xargs -d '\n' ls -l | sort -k6 -r | awk '{print $9}' | head -n1
-    {% コメント終 %}
+    {% endcomment %}
