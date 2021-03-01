@@ -379,6 +379,7 @@ cat out.txt
 	macOSの場合、デフォルトのBSDとしての`find`は[GNU coreutils](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilities_commands)に入っているものと異なることに注意せよ。`find`の`-print0`フラグおよび`xargs`の`-0`フラグを利用するとよい。macOSユーザーは、macOSに搭載されたコマンドラインユーティリティがGNUの同格製品と差異があることを認識しておくべきである。もしGNU版が欲しいのなら、[brewを利用](https://formulae.brew.sh/formula/coreutils)すればインストールできる。
 
 1. （発展）あるディレクトリ内の一番新しく変更されたファイルを再帰的に検索するコマンドまたはスクリプトを書け。より一般的に、全てのファイルを変更日時の順に列挙することはできるだろうか？
+
     {% コメント %}
 	find . -type f | xargs -d '\n' ls -l | sort -k6 -r | awk '{print $9}' | head -n1
     {% コメント終 %}
