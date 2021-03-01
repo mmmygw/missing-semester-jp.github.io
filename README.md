@@ -12,8 +12,6 @@ issues/PRによる貢献は歓迎です。実際に各セクションの翻訳�
 - 翻訳をしたい方は[@matsui528](https://github.com/matsui528)にgithubアカウントをお伝えください。
 - [issues](https://github.com/missing-semester-jp/missing-semester-jp.github.io/issues)にて、翻訳対象のファイルごとにissueが立っています。closeされているものはもう翻訳が終わっています。対象のissueにて自分自身をassignしてください（更新が被ることを防ぐため）。ちなみにissueで既に誰かがassignされていた場合は既にその人が翻訳中です。
 - ブランチを作り、翻訳を行い、PRを作ってください。PR中では上記issueをメンションしてください。
-- masterにマージされたあと、issueから自分をunassignしてください。
-
 
 
 ## Development
@@ -34,6 +32,8 @@ docker run --rm --volume="$PWD:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll jekyl
 - [@makotoshimazu](https://github.com/makotoshimazu) (organizer)
 - [@take1108](https://github.com/take1108) (organizer)
 - [@ikuehirata](https://github.com/ikuehirata) ([コマンドライン環境](https://missing-semester-jp.github.io/2020/command-line/))
+- [@soramichi](https://github.com/soramichi) ([メタプログラミング](https://missing-semester-jp.github.io/2020/metaprogramming/))
+- [@logcpp](https://github.com/logcpp) ([シェルツールとスクリプト](https://missing-semester-jp.github.io/2020/shell-tools/))
 
 ## License
 
