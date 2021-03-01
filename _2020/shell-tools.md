@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Shell Tools and Scripting"
+title: "シェルツールとスクリプト"
 date: 2020-01-14
 ready: true
 video:
@@ -8,36 +8,36 @@ video:
   id: kgII-YWo3Zw
 ---
 
-In this lecture, we will present some of the basics of using bash as a scripting language along with a number of shell tools that cover several of the most common tasks that you will be constantly performing in the command line.
+この講義では、bashを一つのスクリプト言語として扱い、それとコマンドラインで常時行う幾つかの最も一般的な作業を担うシェルツールとを併用する基礎を紹介します。
 
-# Shell Scripting
+# シェルスクリプトの書き方
 
-So far we have seen how to execute commands in the shell and pipe them together.
-However, in many scenarios you will want to perform a series of commands and make use of control flow expressions like conditionals or loops.
+これまでは、どのようにシェルでコマンドを実行し、それらをパイプで繋げるのかを学んできました。
+しかし、多くの場合では複数のコマンドを一遍に実行したり、条件分岐や繰り返しなどの制御構文を利用したりすることが必要になってきます。
 
-Shell scripts are the next step in complexity.
-Most shells have their own scripting language with variables, control flow and its own syntax.
-What makes shell scripting different from other scripting programming language is that it is optimized for performing shell-related tasks.
-Thus, creating command pipelines, saving results into files, and reading from standard input are primitives in shell scripting, which makes it easier to use than general purpose scripting languages.
-For this section we will focus on bash scripting since it is the most common.
+そういったより複雑な操作を実現してくれるのが、次のステップであるシェルスクリプトです。
+ほとんどのシェルには固有のスクリプト言語があり、変数や制御構造、そして固有の文法があります。
+他のスクリプト言語と異なる点は、シェルスクリプトはシェル関連の作業に特化しているということです。
+故に、コマンドのパイプラインを作ったり、実行結果をファイルに保存したり、標準入力から読み込んだりするのはシェルスクリプトの本領なので、汎用的なスクリプト言語よりも使い勝手が良いのです。
+この章では、最もよく使われているbashのスクリプト言語に注目していきます。
 
-To assign variables in bash, use the syntax `foo=bar` and access the value of the variable with `$foo`.
-Note that `foo = bar` will not work since it is interpreted as calling the `foo` program with arguments `=` and `bar`.
-In general, in shell scripts the space character will perform argument splitting. This behavior can be confusing to use at first, so always check for that.
+bashで変数に代入するには、`foo=bar`という構文を使います。変数の値にアクセスするには、`$foo`を用います。
+ここで注意して欲しいのですが、`foo = bar`ではうまく行きません。この構文だと`foo`というプログラムを呼び出して引数に`=`と`bar`を取ると解釈されてしまうからです。
+一般に、シェルスクリプトにおいてスペース記号は引数を分割する役割を果たします。この挙動は最初のうちは混乱しがちなので、常に注意を払うようにしましょう。
 
-Strings in bash can be defined with `'` and `"` delimiters, but they are not equivalent.
-Strings delimited with `'` are literal strings and will not substitute variable values whereas `"` delimited strings will.
+bashの文字列は`'`と`"`の区切り文字で定義できます。しかしこの２つは同等ではありません。
+`'`で区切った文字列はリテラルの文字列であり、`"`のように変数の値を代入してくれません。
 
 ```bash
 foo=bar
 echo "$foo"
-# prints bar
+# barと出力する
 echo '$foo'
-# prints $foo
+# $fooと出力する
 ```
 
-As with most programming languages, bash supports control flow techniques including `if`, `case`, `while` and `for`.
-Similarly, `bash` has functions that take arguments and can operate with them. Here is an example of a function that creates a directory and `cd`s into it.
+ほとんどのプログラミング言語と同じように、bashは`if`、`case`、`while`や`for`などの制御構造の使用が可能です。
+同様に、`bash`にも関数があり、引数を受け取って計算することができます。ここでは関数の一例として、ディレクトリを作り`cd`でその中に移動するものを示します。
 
 
 ```bash
@@ -47,24 +47,24 @@ mcd () {
 }
 ```
 
-Here `$1` is the first argument to the script/function.
-Unlike other scripting languages, bash uses a variety of special variables to refer to arguments, error codes, and other relevant variables. Below is a list of some of them. A more comprehensive list can be found [here](https://www.tldp.org/LDP/abs/html/special-chars.html).
-- `$0` - Name of the script
-- `$1` to `$9` - Arguments to the script. `$1` is the first argument and so on.
-- `$@` - All the arguments
-- `$#` - Number of arguments
-- `$?` - Return code of the previous command
-- `$$` - Process identification number (PID) for the current script
-- `!!` - Entire last command, including arguments. A common pattern is to execute a command only for it to fail due to missing permissions; you can quickly re-execute the command with sudo by doing `sudo !!`
-- `$_` - Last argument from the last command. If you are in an interactive shell, you can also quickly get this value by typing `Esc` followed by `.`
+ここで`$1`はこのスクリプト/関数へ渡される一番目の引数です。
+他のスクリプト言語と違って、bashは色んな変わった変数を使って引数、エラーコードや他の変数を指定します。以下はその一部を示したリストです。より詳しくまとめたリストは[ここ](https://www.tldp.org/LDP/abs/html/special-chars.html)にあります。
+- `$0` - スクリプト名
+- `$1` から `$9` - スクリプトに渡される引数。`$1`は一番目の引数で、以下同様。
+- `$@` - 全ての引数
+- `$#` - 引数の総数
+- `$?` - 直前のコマンドのリターンコード
+- `$$` - 現在のスクリプトのプロセス識別子（PID）
+- `!!` - 引数を含む直前のコマンド全体。よくあるパターンはパーミッションがなかっただけでコマンドを実行できなかったときで、`sudo !!`と打てばそのコマンドをsudoで速やかに再実行できます。
+- `$_` - 直前のコマンドの最後の引数。もしインタラクティブシェルを使っているなら、`Esc`からの`.`と打てば即座にこの値を取れます。
 
-Commands will often return output using `STDOUT`, errors through `STDERR`, and a Return Code to report errors in a more script-friendly manner.
-The return code or exit status is the way scripts/commands have to communicate how execution went.
-A value of 0 usually means everything went OK; anything different from 0 means an error occurred.
+コマンドはいつも出力を`STDOUT`で、エラーを`STDERR`で返し、そしてエラーを報告する返り値をよりスクリプトで使いやすい形で返します。
+リターンコードあるいは終了ステータスは、スクリプト/コマンドが有する実行状況をやり取りする手段です。
+値0は通常何も問題がなかったことを意味し、0以外の値はエラーが起こったことを意味します。
 
-Exit codes can be used to conditionally execute commands using `&&` (and operator) and `||` (or operator), both of which are [short-circuiting](https://en.wikipedia.org/wiki/Short-circuit_evaluation) operators. Commands can also be separated within the same line using a semicolon `;`.
-The `true` program will always have a 0 return code and the `false` command will always have a 1 return code.
-Let's see some examples
+終了ステータスはコマンドを条件付きで実行するためにも使われます。その際は`&&`（and演算子）と`||`（or演算子）の２つの[短絡評価](https://en.wikipedia.org/wiki/Short-circuit_evaluation)演算子を用います。また、コマンドは同じ行内で`;`を用いて分割することも可能です。
+`true`プログラムは常に0のリターンコードを返し、`false`コマンドは常に1のリターンコードを返します。
+いくつかの例を見てみましょう
 
 ```bash
 false || echo "Oops, fail"
@@ -86,25 +86,25 @@ false ; echo "This will always run"
 # This will always run
 ```
 
-Another common pattern is wanting to get the output of a command as a variable. This can be done with _command substitution_.
-Whenever you place `$( CMD )` it will execute `CMD`, get the output of the command and substitute it in place.
-For example, if you do `for file in $(ls)`, the shell will first call `ls` and then iterate over those values.
-A lesser known similar feature is _process substitution_, `<( CMD )` will execute `CMD` and place the output in a temporary file and substitute the `<()` with that file's name. This is useful when commands expect values to be passed by file instead of by STDIN. For example, `diff <(ls foo) <(ls bar)` will show differences between files in dirs  `foo` and `bar`.
+もう一つのよくあるパターンはコマンドの出力を変数として受け取りたい場合です。これは_コマンド代入_でできます。
+`$( CMD )`と書いた箇所は、`CMD`が実行され、そのコマンドの出力が渡されてその箇所に代入されます。
+例えば、`for file in $(ls)`を実行すると、シェルはまず`ls`を呼び出し、次にそれらの値について繰り返し処理する。
+これと似たものであまり知られていない_プロセス代入_という書き方があります。`<( CMD )`は`CMD`を実行してその出力を一時的なファイルに保存し、`<()`をそのファイルの名前で置換します。これは値がSTDINではなくファイルで受け渡されるコマンドを使うときに有用です。例えば、`diff <(ls foo) <(ls bar)`はディレクトリ`foo`と`bar`の中にあるファイルの違いを示してくれます。
 
 
-Since that was a huge information dump, let's see an example that showcases some of these features. It will iterate through the arguments we provide, `grep` for the string `foobar`, and append it to the file as a comment if it's not found.
+多くの内容を一気に説明してきたので、これらの書き方のいくつかを用いた例を見てみましょう。ここでは与えられた引数について繰り返し処理していき、文字列`foobar`を`grep`で抽出し、もし見つからなかったらコメントとして`foobar`を処理したファイルに追加します。
 
 ```bash
 #!/bin/bash
 
-echo "Starting program at $(date)" # Date will be substituted
+echo "Starting program at $(date)" # 日付が代入される
 
 echo "Running program $0 with $# arguments with pid $$"
 
 for file in "$@"; do
     grep foobar "$file" > /dev/null 2> /dev/null
-    # When pattern is not found, grep has exit status 1
-    # We redirect STDOUT and STDERR to a null register since we do not care about them
+	# パターンに一致するものがなかった場合、grepの終了ステータスは1
+	# ここでSTDOUTとSTDERRはどうでもいいので、nullレジスタにリダイレクト
     if [[ $? -ne 0 ]]; then
         echo "File $file does not have any foobar, adding one"
         echo "# foobar" >> "$file"
@@ -112,45 +112,45 @@ for file in "$@"; do
 done
 ```
 
-In the comparison we tested whether `$?` was not equal to 0.
-Bash implements many comparisons of this sort - you can find a detailed list in the manpage for [`test`](https://www.man7.org/linux/man-pages/man1/test.1.html).
-When performing comparisons in bash, try to use double brackets `[[ ]]` in favor of simple brackets `[ ]`. Chances of making mistakes are lower although it won't be portable to `sh`. A more detailed explanation can be found [here](http://mywiki.wooledge.org/BashFAQ/031).
+比較のところでは`$?`が0と等しくないかどうかを調べました。
+bashにはこのような比較演算が多数用意されています。詳細はマニュアルページ[`test`](https://www.man7.org/linux/man-pages/man1/test.1.html)を参照してください。
+bashにおいて比較を用いるときは、一重の角括弧`[ ]`ではなく二重の角括弧`[[ ]]`を使うようにしましょう。`sh`には移植できませんが、このほうが書き間違いは少ないです。より詳しい説明は[ここ](http://mywiki.wooledge.org/BashFAQ/031)に書いてあります。
 
-When launching scripts, you will often want to provide arguments that are similar. Bash has ways of making this easier, expanding expressions by carrying out filename expansion. These techniques are often referred to as shell _globbing_.
-- Wildcards - Whenever you want to perform some sort of wildcard matching, you can use `?` and `*` to match one or any amount of characters respectively. For instance, given files `foo`, `foo1`, `foo2`, `foo10` and `bar`, the command `rm foo?` will delete `foo1` and `foo2` whereas `rm foo*` will delete all but `bar`.
-- Curly braces `{}` - Whenever you have a common substring in a series of commands, you can use curly braces for bash to expand this automatically. This comes in very handy when moving or converting files.
+スクリプトを走らせるに際して、似たような引数を指定することが多々あります。bashにはこれを簡便に行う方法があり、式を展開するファイル名展開を行うことができます。このテクニックはよくshell _globbing_と呼ばれます。
+- ワイルドカード - 何らかのワイルドカード検索をかけたい場合、`?`と`*`はそれぞれ1文字および任意の文字数にマッチします。例として、ファイル`foo`、`foo1`、`foo2`、`foo10`および`bar`があったとすると、コマンド`rm foo?`は`foo1`、`foo2`を削除しますが、それに対し`rm foo*`は`bar`以外の全てのファイルを削除します。
+- 波括弧 `{}` - 複数のコマンドにおいて共通の部分文字列があった場合、波括弧を使ってbashに自動的に展開させることができます。これはファイルの移動や変換において非常に便利です。
 
 ```bash
 convert image.{png,jpg}
-# Will expand to
+# は下のように展開される
 convert image.png image.jpg
 
 cp /path/to/project/{foo,bar,baz}.sh /newpath
-# Will expand to
+# は下のように展開される
 cp /path/to/project/foo.sh /path/to/project/bar.sh /path/to/project/baz.sh /newpath
 
-# Globbing techniques can also be combined
+# globbing手法は組み合わせることもできる
 mv *{.py,.sh} folder
-# Will move all *.py and *.sh files
+# は全ての*.pyと*.shファイルを移動させる
 
 
 mkdir foo bar
-# This creates files foo/a, foo/b, ... foo/h, bar/a, bar/b, ... bar/h
+# これはfile/a、file/b、... file/h、bar/a、bar/b、... bar/hを生成する
 touch {foo,bar}/{a..h}
 touch foo/x bar/y
-# Show differences between files in foo and bar
+# fooとbarの違いを表示する
 diff <(ls foo) <(ls bar)
-# Outputs
+# 出力
 # < x
 # ---
 # > y
 ```
 
-<!-- Lastly, pipes `|` are a core feature of scripting. Pipes connect one program's output to the next program's input. We will cover them more in detail in the data wrangling lecture. -->
+<!-- 最後に、パイプ`|`はスクリプトにおける重要な構文です。パイプは一つのプログラムの出力と次のプログラムの入力を繋げてくれます。これについてはデータラングリングの講義で詳細に扱います。 -->
 
-Writing `bash` scripts can be tricky and unintuitive. There are tools like [shellcheck](https://github.com/koalaman/shellcheck) that will help you find errors in your sh/bash scripts.
+`bash`スクリプトを書くのは手強く分かりづらいかもしれません。sh/bashスクリプトのエラーを検出する[shellcheck](https://github.com/koalaman/shellcheck)などのツールを利用するのも良いでしょう。
 
-Note that scripts need not necessarily be written in bash to be called from the terminal. For instance, here's a simple Python script that outputs its arguments in reversed order:
+注意してほしいのは、ターミナルで実行するスクリプトは必ずしもbashである必要はありません。例えば、以下は引数を逆順に出力する簡単なPythonのスクリプトです。
 
 ```python
 #!/usr/local/bin/python
@@ -159,152 +159,152 @@ for arg in reversed(sys.argv[1:]):
     print(arg)
 ```
 
-The kernel knows to execute this script with a python interpreter instead of a shell command because we included a [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)) line at the top of the script.
-It is good practice to write shebang lines using the [`env`](https://www.man7.org/linux/man-pages/man1/env.1.html) command that will resolve to wherever the command lives in the system, increasing the portability of your scripts. To resolve the location, `env` will make use of the `PATH` environment variable we introduced in the first lecture.
-For this example the shebang line would look like `#!/usr/bin/env python`.
+カーネルがこのスクリプトはshellコマンドではなくpythonインタプリタで実行するべきだと分かるのは、スクリプトの先頭に[シェバン](https://en.wikipedia.org/wiki/Shebang_(Unix))が書いてあるからです。
+シェバン行を[`env`](https://www.man7.org/linux/man-pages/man1/env.1.html)コマンドで書くのは良い練習になります。これはシステムの中でコマンドがどこにあるのかを探し当ててくれるので、スクリプトの移植性を高めます。位置を検索するのに、`env`は第一回の講義で紹介した`PATH`環境変数を利用しています。
+今回の例ではシェバン行は`#!/usr/bin/env python`のようになるでしょう。
 
-Some differences between shell functions and scripts that you should keep in mind are:
-- Functions have to be in the same language as the shell, while scripts can be written in any language. This is why including a shebang for scripts is important.
-- Functions are loaded once when their definition is read. Scripts are loaded every time they are executed. This makes functions slightly faster to load, but whenever you change them you will have to reload their definition.
-- Functions are executed in the current shell environment whereas scripts execute in their own process. Thus, functions can modify environment variables, e.g. change your current directory, whereas scripts can't. Scripts will be passed by value environment variables that have been exported using [`export`](https://www.man7.org/linux/man-pages/man1/export.1p.html)
-- As with any programming language, functions are a powerful construct to achieve modularity, code reuse, and clarity of shell code. Often shell scripts will include their own function definitions.
+シェル関数とスクリプトの違いで覚えておくべきなのは:
+- 関数はシェルと同じ言語でなければならない。一方スクリプトはどの言語でも良い。これがスクリプトにおいてシェバンを書くのが重要である理由です。
+- 関数は一度定義が読み込まれればロードされる。スクリプトは実行するたびに毎回ロードされる。そのため関数はロードが僅かに速いが、変更されるたびに定義を再読込しなければいけない。
+- 関数は現在のシェル環境で実行されるのに対し、スクリプトは自身のプロセスの中で実行される。故に、関数は環境変数を変えることができる。例えば関数はカレントディレクトリを変えられるが、スクリプトはそれができない。スクリプトには[`export`](https://www.man7.org/linux/man-pages/man1/export.1p.html)でエクスポートされた環境変数の値が渡される。
+- どのプログラミング言語とも同様に、関数はシェルコードのモジュール性・再利用性・可読性を高めるのに強力な構造です。シェルスクリプトに固有の関数定義があることも珍しくありません。
 
-# Shell Tools
+# シェルツール
 
-## Finding how to use commands
+## コマンドの使い方
 
-At this point, you might be wondering how to find the flags for the commands in the aliasing section such as `ls -l`, `mv -i` and `mkdir -p`.
-More generally, given a command, how do you go about finding out what it does and its different options?
-You could always start googling, but since UNIX predates StackOverflow, there are built-in ways of getting this information.
+この時点で、エイリアスの章で紹介したコマンド、例えば`ls -l`、`mv -i`や`mkdir -p`を使うときに、どうやってフラグを見つけるのかが気になるかもしれません。
+より一般的に、あるコマンドが与えられたとすると、それが何をするコマンドでどんなオプションがあるのかをどう調べればいいのでしょうか？
+勿論ググってもいいのですが、UNIXはStackOverflowよりも前に作られたので、こういった情報を得るための搭載された方法があります。
 
-As we saw in the shell lecture, the first-order approach is to call said command with the `-h` or `--help` flags. A more detailed approach is to use the `man` command.
-Short for manual, [`man`](https://www.man7.org/linux/man-pages/man1/man.1.html) provides a manual page (called manpage) for a command you specify.
-For example, `man rm` will output the behavior of the `rm` command along with the flags that it takes, including the `-i` flag we showed earlier.
-In fact, what I have been linking so far for every command is the online version of the Linux manpages for the commands.
-Even non-native commands that you install will have manpage entries if the developer wrote them and included them as part of the installation process.
-For interactive tools such as the ones based on ncurses, help for the commands can often be accessed within the program using the `:help` command or typing `?`.
+シェルの講義で見てきたように、第一のアプローチとしてはコマンドを`-h`や`--help`フラグをつけて呼び出す方法です。さらに詳細に調べるのは`man`コマンドを使う方法です。
+manualの略で、[`man`](https://www.man7.org/linux/man-pages/man1/man.1.html)は指定されたコマンドのマニュアルページ（manpageという）を出してくれます。
+例えば、`man rm`は`rm`コマンドの動作と取りうるフラグを出力します。先に見せた`-i`フラグも含まれます。
+実は、今まで各コマンドについて参照してきたリンクは、それらのコマンドのLinuxマニュアルページのオンラインバージョンです。
+もっというと、内部コマンドではないインストールされたコマンドでさえ、開発者が書いてインストールプロセスの一部としていれば、マニュアルページの登録があります。
+対話式ツール、例えばncursesを基に作られたコマンドなどのヘルプの場合は、プログラム内で`:help`コマンドや`?`コマンドを用いてアクセスできることが多いです。
 
-Sometimes manpages can provide overly detailed descriptions of the commands, making it hard to decipher what flags/syntax to use for common use cases.
-[TLDR pages](https://tldr.sh/) are a nifty complementary solution that focuses on giving example use cases of a command so you can quickly figure out which options to use.
-For instance, I find myself referring back to the tldr pages for [`tar`](https://tldr.ostera.io/tar) and [`ffmpeg`](https://tldr.ostera.io/ffmpeg) way more often than the manpages.
+時々、マニュアルページがコマンドについて詳しく説明すぎて、普通に使うのにもどのフラグ/構文を使えばいいのか却って解読しづらいことがあります。
+[TLDRページ](https://tldr.sh/)はこれに対する素晴らしい補完策であり、コマンドの使用例を示すことに重きを置いているので、どのオプションを使えば良いのかが即座にわかります。
+例えば、私なんかは[`tar`](https://tldr.ostera.io/tar)とか[`ffmpeg`](https://tldr.ostera.io/ffmpeg)を調べるときは、マニュアルページよりもtldrページの方を遥かに多く引いたりします。
 
 
-## Finding files
+## ファイル検索
 
-One of the most common repetitive tasks that every programmer faces is finding files or directories.
-All UNIX-like systems come packaged with [`find`](https://www.man7.org/linux/man-pages/man1/find.1.html), a great shell tool to find files. `find` will recursively search for files matching some criteria. Some examples:
+プログラマであれば誰しもが出会う一番よく行う繰り返し作業の一つが、ファイルとディレクトリの検索です。
+全てのUNIX系のシステムには[`find`](https://www.man7.org/linux/man-pages/man1/find.1.html)というファイルを検索するための素晴らしいシェルツールが付属しています。`find`はいくつかの条件にマッチするファイルを再帰的に検索してくれます。ちょっとした例は:
 
 ```bash
-# Find all directories named src
+# srcという名前の全てのディレクトリを検索
 find . -name src -type d
-# Find all python files that have a folder named test in their path
+# パスにtestという名前のフォルダがある全てのpythonファイルを検索
 find . -path '*/test/*.py' -type f
-# Find all files modified in the last day
+# 一日前に変更された全てのファイルを検索
 find . -mtime -1
-# Find all zip files with size in range 500k to 10M
+# サイズが500kから10Mの間にある全てのzipファイルを検索
 find . -size +500k -size -10M -name '*.tar.gz'
 ```
-Beyond listing files, find can also perform actions over files that match your query.
-This property can be incredibly helpful to simplify what could be fairly monotonous tasks.
+ファイルを列挙する以外に、findは検索条件に一致したファイルに対する処理もできます。
+この性質は、得てして単調になりがちな作業を簡略化するのに驚くほど役に立ちます。
 ```bash
-# Delete all files with .tmp extension
+# .tmp拡張子のファイルを全て削除する
 find . -name '*.tmp' -exec rm {} \;
-# Find all PNG files and convert them to JPG
+# 全てのPNGファイルを検索し、JPGに変換する
 find . -name '*.png' -exec convert {} {}.jpg \;
 ```
 
-Despite `find`'s ubiquitousness, its syntax can sometimes be tricky to remember.
-For instance, to simply find files that match some pattern `PATTERN` you have to execute `find -name '*PATTERN*'` (or `-iname` if you want the pattern matching to be case insensitive).
-You could start building aliases for those scenarios, but part of the shell philosophy is that it is good to explore alternatives.
-Remember, one of the best properties of the shell is that you are just calling programs, so you can find (or even write yourself) replacements for some.
-For instance, [`fd`](https://github.com/sharkdp/fd) is a simple, fast, and user-friendly alternative to `find`.
-It offers some nice defaults like colorized output, default regex matching, and Unicode support. It also has, in my opinion, a more intuitive syntax.
-For example, the syntax to find a pattern `PATTERN` is `fd PATTERN`.
+`find`というありきたりな単語であるにもかかわらず、その文法は時々覚えるのに苦労します。
+例えば、単に何らかのパターン`PATTERN`に一致するファイルを探すのにも、`find -name '*PATTERN*'`（大文字と小文字を区別しないためには`-iname`）を実行しなければなりません。
+こういった場合に備えてエイリアスを作るのも良いですが、シェルに関する知見の一つとしては、代替手段を探してみるのも悪くないということです。
+シェル最良の性質の一つは、プログラムを呼び出しているだけだという点にあることを覚えましょう。なので、一部のプログラムに対しては、代わりのものを探す（もしくは自分で書いてしまう）ことができます。
+例えば、`find`の代わりとして、シンプルで動作が速く使いやすいのが[`fd`](https://github.com/sharkdp/fd)です。
+このコマンドにはカラー出力、デフォルトの正規表現検索、そしてUnicode対応といった素晴らしいデフォルト設定があります。また私個人の意見として、こちらの方が比較的分かりやすい文法になっています。
+例として、パターン`PATTERN`を検索する文法は`fd PATTERN`になっています。
 
-Most would agree that `find` and `fd` are good, but some of you might be wondering about the efficiency of looking for files every time versus compiling some sort of index or database for quickly searching.
-That is what [`locate`](https://www.man7.org/linux/man-pages/man1/locate.1.html) is for.
-`locate` uses a database that is updated using [`updatedb`](https://www.man7.org/linux/man-pages/man1/updatedb.1.html).
-In most systems, `updatedb` is updated daily via [`cron`](https://www.man7.org/linux/man-pages/man8/cron.8.html).
-Therefore one trade-off between the two is speed vs freshness.
-Moreover `find` and similar tools can also find files using attributes such as file size, modification time, or file permissions, while `locate` just uses the file name.
-A more in-depth comparison can be found [here](https://unix.stackexchange.com/questions/60205/locate-vs-find-usage-pros-and-cons-of-each-other).
+多くの人は`find`よりも`fd`の方が良いという意見に賛成するでしょう。しかし、ファイルを毎回探しに行くのと、何らかの索引またはデータベースを構築して素早く検索するのと、どっちの効率が良いか悩む人もいるでしょう。
+そのために用意されたのが[`locate`](https://www.man7.org/linux/man-pages/man1/locate.1.html)です。
+`locate`は[`updatedb`](https://www.man7.org/linux/man-pages/man1/updatedb.1.html)によって更新されるデータベースを使っています。
+ほとんどのシステムにおいて、`updatedb`は[`cron`](https://www.man7.org/linux/man-pages/man8/cron.8.html)を通して毎日アップデートされています。
+そのためこの二者におけるトレードオフは実行の速さと情報の新しさです。
+また、`find`とそれに似たようなツールは、ファイルサイズ、変更日時、またはファイルのパーミッションなどの属性を使って検索することもできます。それに対し、`locate`はファイル名のみ使用します。
+より掘り下げた比較の議論は[ここ](https://unix.stackexchange.com/questions/60205/locate-vs-find-usage-pros-and-cons-of-each-other)を参照してください。
 
-## Finding code
+## コードの検索
 
-Finding files by name is useful, but quite often you want to search based on file *content*. 
-A common scenario is wanting to search for all files that contain some pattern, along with where in those files said pattern occurs.
-To achieve this, most UNIX-like systems provide [`grep`](https://www.man7.org/linux/man-pages/man1/grep.1.html), a generic tool for matching patterns from the input text.
-`grep` is an incredibly valuable shell tool that we will cover in greater detail during the data wrangling lecture.
+ファイルを名前で検索するのは役に立ちます。しかし、ファイルの*内容*を検索したい場合も結構よくあります。
+よくあるのが何らかのパターンを含む全てのファイルを検索し、そのパターンが出現した箇所も一緒に出してほしいというケースです。
+これを実現するために、ほとんどのUNIX系システムは[`grep`](https://www.man7.org/linux/man-pages/man1/grep.1.html)という入力テキストから一致パターンを探す汎用ツールを備えています。
+`grep`はもの凄く有用なシェルツールで、データラングリングの講義で今回よりも遥かに詳しく触れる予定です。
 
-For now, know that `grep` has many flags that make it a very versatile tool.
-Some I frequently use are `-C` for getting **C**ontext around the matching line and `-v` for in**v**erting the match, i.e. print all lines that do **not** match the pattern. For example, `grep -C 5` will print 5 lines before and after the match.
-When it comes to quickly searching through many files, you want to use `-R` since it will **R**ecursively go into directories and look for files for the matching string.
+今のところは、`grep`は色んななフラグがあって、多種多様な使い方があるツールとだけ覚えておいてください。
+私がよく使うのは、一致した行周辺の**C**ontext（文脈）を出す`-C`と、一致をin**v**ert（反転）する、つまりパターンに一致**しない**行を全て出力する`-v`です。例えば、`grep -C 5`は一致した行の前の５行と後ろの５行を出力します。
+多くのファイルを一気に検索するときには、`-R`を使いましょう。これは**R**ecursively(再帰的に)ディレクトリの中まで行って一致する文字列を含むファイルを探してくれます。
 
-But `grep -R` can be improved in many ways, such as ignoring `.git` folders, using multi CPU support, &c.
-Many `grep` alternatives have been developed, including [ack](https://beyondgrep.com/), [ag](https://github.com/ggreer/the_silver_searcher) and [rg](https://github.com/BurntSushi/ripgrep).
-All of them are fantastic and pretty much provide the same functionality.
-For now I am sticking with ripgrep (`rg`), given how fast and intuitive it is. Some examples:
+ただし`grep -R`は他にもたくさんの使い方に発展できます。例としては`.git`フォルダを無視したり、マルチコア処理をしたり、等々。
+`grep`の代替ツールも色々作られています。例えば[ack](https://beyondgrep.com/)、[ag](https://github.com/ggreer/the_silver_searcher)、それから[rg](https://github.com/BurntSushi/ripgrep)などがあります。
+これらは皆優秀なツールで、結構同じような機能を持っていたりします。
+今回はripgrep（`rg`）に注目して、これがどれくらい速くて直感的なのかをお見せします。いくつかの例としては：
 ```bash
-# Find all python files where I used the requests library
+# requestsライブラリを使用した全てのpythonファイルを検索
 rg -t py 'import requests'
-# Find all files (including hidden files) without a shebang line
+# シェバン行がない全てのファイル（隠しファイルも含む）を検索
 rg -u --files-without-match "^#!"
-# Find all matches of foo and print the following 5 lines
+# 全てのfooを検索し、その後の５行を出力
 rg foo -A 5
-# Print statistics of matches (# of matched lines and files )
+# 一致した集計（一致した行とファイルの数）を出力
 rg --stats PATTERN
 ```
 
-Note that as with `find`/`fd`, it is important that you know that these problems can be quickly solved using one of these tools, while the specific tools you use are not as important.
+ここで注意してほしいですが、これらのツールのどれもが`find`/`fd`と同じようにこの手問題を解決することができるのを知っていることの方が大事で、具体的にどのツールを使うかはさほど重要ではありません。
 
-## Finding shell commands
+## シェルコマンドの検索
 
-So far we have seen how to find files and code, but as you start spending more time in the shell, you may want to find specific commands you typed at some point.
-The first thing to know is that typing the up arrow will give you back your last command, and if you keep pressing it you will slowly go through your shell history.
+ここまではファイルやコードの検索の仕方について見てきました。しかし、シェルをもっと使うようになると、どこかで打ったコマンドをピンポイントで検索したくなったりするでしょう。
+まず最初に知っておくべきこととして、上矢印キーを押すと最後に打ったコマンドが出てきて、そのまま押し続けるとシェルの履歴を少しずつ遡ることができます。
 
-The `history` command will let you access your shell history programmatically.
-It will print your shell history to the standard output.
-If we want to search there we can pipe that output to `grep` and search for patterns.
-`history | grep find` will print commands that contain the substring "find".
+また、`history`コマンドはプログラム的にシェル履歴にアクセスできます。
+これはシェルの履歴を標準出力に表示するコマンドです。
+もし履歴内で検索したいのなら、パイプで出力を`grep`に繋げてパターン検索をかけられます。
+`history | grep find`は"find"という部分文字列を含むコマンドを表示してくれます。
 
-In most shells, you can make use of `Ctrl+R` to perform backwards search through your history.
-After pressing `Ctrl+R`, you can type a substring you want to match for commands in your history.
-As you keep pressing it, you will cycle through the matches in your history.
-This can also be enabled with the UP/DOWN arrows in [zsh](https://github.com/zsh-users/zsh-history-substring-search).
-A nice addition on top of `Ctrl+R` comes with using [fzf](https://github.com/junegunn/fzf/wiki/Configuring-shell-key-bindings#ctrl-r) bindings.
-`fzf` is a general-purpose fuzzy finder that can be used with many commands.
-Here it is used to fuzzily match through your history and present results in a convenient and visually pleasing manner.
+ほとんどのシェルでは、`Ctrl+R`を使うことで履歴を遡って検索できます。
+`Ctrl+R`を押したあと、履歴の中で検索したいコマンドの部分列を入力すれば良い訳です。
+`Ctrl+R`を押し続けると、履歴中で一致したものを巡回します。
+これは[zsh](https://github.com/zsh-users/zsh-history-substring-search)では上/下矢印キーでも有効にできます。
+`Ctrl+R`の更なる発展として便利なのが[fzf](https://github.com/junegunn/fzf/wiki/Configuring-shell-key-bindings#ctrl-r)バインディングです。
+`fzf`は様々なコマンドで利用できる汎用的な曖昧検索ツールです。
+ここでは履歴内を曖昧検索して、結果を手ごろで見やすい形に表示するのに使われています。
 
-Another cool history-related trick I really enjoy is **history-based autosuggestions**.
-First introduced by the [fish](https://fishshell.com/) shell, this feature dynamically autocompletes your current shell command with the most recent command that you typed that shares a common prefix with it.
-It can be enabled in [zsh](https://github.com/zsh-users/zsh-autosuggestions) and it is a great quality of life trick for your shell.
+履歴関連で私が気に入っているもう一つの凄い技は、**履歴による自動補完**です。
+[fish](https://fishshell.com/)シェルで初めて導入されたこの機能は、現在のシェルコマンドをそれと同じ書き出しの一番直近に打ったコマンドで動的に自動補完してくれます。
+この機能は[zsh](https://github.com/zsh-users/zsh-autosuggestions)でも有効にできます。あなたの素敵なシェルライフの一助となるでしょう。
 
-You can modify your shell's history behavior, like preventing commands with a leading space from being included. This comes in handy when you are typing commands with passwords or other bits of sensitive information.
-To do this, add `HISTCONTROL=ignorespace` to your `.bashrc` or `setopt HIST_IGNORE_SPACE` to your `.zshrc`.
-If you make the mistake of not adding the leading space, you can always manually remove the entry by editing your `.bash_history` or `.zhistory`.
+シェル履歴の動作を変更することもできます。例えばスペースで始まるコマンドを履歴に含まない、など。これはパスワードやその他扱いに注意が必要な情報を含むコマンドを入力する場合に便利です。
+これを機能させるのには、`HISTCONTROL=ignorespace`を`.bashrc`に、あるいは`setopt HIST_IGNORE_SPACE`を`.zshrc`に追加しましょう。
+もし先頭のスペースを入れ忘れても、もちろん`.bash_history`や`.zhistory`を編集して手動で記録を削除できます。
 
-## Directory Navigation
+## ディレクトリ移動
 
-So far, we have assumed that you are already where you need to be to perform these actions. But how do you go about quickly navigating directories?
-There are many simple ways that you could do this, such as writing shell aliases or creating symlinks with [ln -s](https://www.man7.org/linux/man-pages/man1/ln.1.html), but the truth is that developers have figured out quite clever and sophisticated solutions by now.
+さて、これまでの議論では、既に操作を実行する場所にいると想定していた訳ですが、それではディレクトリ間の移動を素早くこなすにはどうすればよいのでしょうか？
+これについては簡単な方法はたくさんあります。例えばシェルエイリアスを書いたり、[ln -s](https://www.man7.org/linux/man-pages/man1/ln.1.html)を使ってシンボリックリンクを作ったり。でも実のところ、開発者によって既にとても賢くて緻密な解決策が用意されているのです。
 
-As with the theme of this course, you often want to optimize for the common case.
-Finding frequent and/or recent files and directories can be done through tools like [`fasd`](https://github.com/clvv/fasd) and [`autojump`](https://github.com/wting/autojump).
-Fasd ranks files and directories by [_frecency_](https://developer.mozilla.org/en-US/docs/Mozilla/Tech/Places/Frecency_algorithm), that is, by both _frequency_ and _recency_.
-By default, `fasd` adds a `z` command that you can use to quickly `cd` using a substring of a _frecent_ directory. For example, if you often go to `/home/user/files/cool_project` you can simply use `z cool` to jump there. Using autojump, this same change of directory could be accomplished using `j cool`.
+この講義のテーマに従って、一般的なケースを最適化する方法を考えていきましょう。
+頻繁に使う、かつ/または直近で使ったファイルとディレクトリの検索は、[`fasd`](https://github.com/clvv/fasd)や[`autojump`](https://github.com/wting/autojump)などのツールで行えます。
+fasdは[_frecency_](https://developer.mozilla.org/en-US/docs/Mozilla/Tech/Places/Frecency_algorithm)、つまり_frequency(頻度)_と_recency(新しさ)_の両方の基準を使ってファイルとディレクトリをランク付けします。
+デフォルトでは、`fasd`は追加として`z`というコマンドを使って、_frecent_なディレクトリの部分文字列をもとに素早くそこに`cd`できます。例として、`/home/user/files/cool_project`によく移動しているなら、`z cool`と打つだけでそこへ飛べます。autojumpを使うなら、`j cool`で同じようなディレクトリ移動が可能です。
 
-More complex tools exist to quickly get an overview of a directory structure: [`tree`](https://linux.die.net/man/1/tree), [`broot`](https://github.com/Canop/broot) or even full fledged file managers like [`nnn`](https://github.com/jarun/nnn) or [`ranger`](https://github.com/ranger/ranger).
+もう少し複雑なツールとして、ディレクトリ構造の概観を手っ取り早く示してくれるもの：[`tree`](https://linux.die.net/man/1/tree)、[`broot`](https://github.com/Canop/broot)があります。さらに、[`nnn`](https://github.com/jarun/nnn)や[`ranger`](https://github.com/ranger/ranger)などの本格的なファイルマネージャも挙げられます。
 
-# Exercises
+# 練習問題
 
-1. Read [`man ls`](https://www.man7.org/linux/man-pages/man1/ls.1.html) and write an `ls` command that lists files in the following manner
+1. [`man ls`](https://www.man7.org/linux/man-pages/man1/ls.1.html)を読んでファイルを以下のように列挙する`ls`コマンドを書け。
 
-    - Includes all files, including hidden files
-    - Sizes are listed in human readable format (e.g. 454M instead of 454279954)
-    - Files are ordered by recency
-    - Output is colorized
+	- 全てのファイルを列挙せよ。隠しファイルも含む
+	- サイズは人が読める形式で表せ（例えば、454279954の代わりに454Mと表示する）
+	- ファイルは新しい順で並べよ
+	- 出力は色付けせよ
 
-    A sample output would look like this
+	出力例はこのようになる。
 
     ```
     -rw-r--r--   1 user group 1.1M Jan 14 09:53 baz
@@ -318,9 +318,9 @@ More complex tools exist to quickly get an overview of a directory structure: [`
 ls -lath --color=auto
 {% endcomment %}
 
-1. Write bash functions  `marco` and `polo` that do the following.
-Whenever you execute `marco` the current working directory should be saved in some manner, then when you execute `polo`, no matter what directory you are in, `polo` should `cd` you back to the directory where you executed `marco`.
-For ease of debugging you can write the code in a file `marco.sh` and (re)load the definitions to your shell by executing `source marco.sh`.
+1. 以下を行うbash関数`marco`および`polo`を書け。
+`marco`を実行する度にカレントディレクトリを何らかの形で記憶し、次に`polo`を実行すると、どのディレクトリに居るかによらず、`polo`は`marco`を実行したディレクトリに`cd`して戻る。
+デバッグし易いようにするために、コードを`marco.sh`というファイルの中に書いておき、`source marco.sh`を実行し定義をシェルに（リ）ロードするとよい。
 
 {% comment %}
 marco() {
@@ -332,9 +332,9 @@ polo() {
 }
 {% endcomment %}
 
-1. Say you have a command that fails rarely. In order to debug it you need to capture its output but it can be time consuming to get a failure run.
-Write a bash script that runs the following script until it fails and captures its standard output and error streams to files and prints everything at the end.
-Bonus points if you can also report how many runs it took for the script to fail.
+1. とても稀にエラーになるコマンドがあるとする。そのデバッグは出力をキャプチャする必要があるが実行エラーを出すには時間がかかる。
+以下のスクリプトをエラーが出るまで実行し、その標準出力およびエラーメッセージをファイルにキャプチャし、最後に全部表示するbashスクリプトを書け。
+スクリプトがエラーになるまで何回実行されたかも示すと追加点が与えられる。
 
     ```bash
     #!/usr/bin/env bash
@@ -364,18 +364,18 @@ echo "found error after $count runs"
 cat out.txt
 {% endcomment %}
 
-1. As we covered in the lecture `find`'s `-exec` can be very powerful for performing operations over the files we are searching for.
-However, what if we want to do something with **all** the files, like creating a zip file?
-As you have seen so far commands will take input from both arguments and STDIN.
-When piping commands, we are connecting STDOUT to STDIN, but some commands like `tar` take inputs from arguments.
-To bridge this disconnect there's the [`xargs`](https://www.man7.org/linux/man-pages/man1/xargs.1.html) command which will execute a command using STDIN as arguments.
-For example `ls | xargs rm` will delete the files in the current directory.
+1. 講義で触れたように、`find`の`-exec`は探しているファイルを操作するのにとても強力である。
+しかし、**全ての**ファイルに対して、例えばzipファイルを作るなど何かしらの操作をしたい場合はどうすれば良いのだろう？
+これまで見てきてように、コマンドは引数と標準入力のどちらからも入力を受け取れる。
+コマンドをパイプで繋げるときは、標準出力と標準入力を繋げているわけだが、`tar`のような一部のコマンドは引数から入力を受け取る。
+この齟齬の橋渡しとなる、標準入力を引数にしてコマンドを実行してくれる、[`xargs`](https://www.man7.org/linux/man-pages/man1/xargs.1.html)コマンドがある。
+例として、`ls | xargs rm`はカレントディレクトリのファイルを削除する。
 
-    Your task is to write a command that recursively finds all HTML files in the folder and makes a zip with them. Note that your command should work even if the files have spaces (hint: check `-d` flag for `xargs`).
+	フォルダ内のHTMLファイルを再帰的に検索しzipでまとめるコマンドを書け。このコマンドは名前にスペースを含むファイルにも対応できるように注意せよ。（ヒント：`xargs`の`-d`フラグをチェック）
     {% comment %}
     find . -type f -name "*.html" | xargs -d '\n'  tar -cvzf archive.tar.gz
     {% endcomment %}
 
-    If you're on macOS, note that the default BSD `find` is different from the one included in [GNU coreutils](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilities_commands). You can use `-print0` on `find` and the `-0` flag on `xargs`. As a macOS user, you should be aware that command-line utilities shipped with macOS may differ from the GNU counterparts; you can install the GNU versions if you like by [using brew](https://formulae.brew.sh/formula/coreutils).
+	macOSの場合、デフォルトのBSDとしての`find`は[GNU coreutils](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilities_commands)に入っているものと異なることに注意せよ。`find`の`-print0`フラグおよび`xargs`の`-0`フラグを利用するとよい。macOSユーザーは、macOSに搭載されたコマンドラインユーティリティがGNUの同格製品と差異があることを認識しておくべきである。もしGNU版が欲しいのなら、[brewを利用](https://formulae.brew.sh/formula/coreutils)すればインストールできる。
 
-1. (Advanced) Write a command or script to recursively find the most recently modified file in a directory. More generally, can you list all files by recency?
+1. （発展）あるディレクトリ内の一番新しく変更されたファイルを再帰的に検索するコマンドまたはスクリプトを書け。より一般的に、全てのファイルを変更日時の順に列挙することはできるだろうか？
