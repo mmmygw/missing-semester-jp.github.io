@@ -53,18 +53,19 @@ video:
 
 ## デーモン
 
-You are probably already familiar with the notion of daemons, even if the word seems new.
-Most computers have a series of processes that are always running in the background rather than waiting for a user to launch them and interact with them.
-These processes are called daemons and the programs that run as daemons often end with a `d` to indicate so.
-For example `sshd`, the SSH daemon, is the program responsible for listening to incoming SSH requests and checking that the remote user has the necessary credentials to log in.
+デーモンという言葉は新しい言葉のように感じるかもしれませんが、あなたはすでにデーモンという概念になじんでいるでしょう。
+ほとんどのコンピュータには、ユーザが起動して操作するのを待つのではなく、常にバックグラウンドで実行されている一連のプロセスがあります。
+これらのプロセスはデーモンと呼ばれ、デーモンとして実行されるプログラムは、そのことを示すために `d` で終わることが多いです。
+例えば、SSHデーモンである `sshd` は SSHのリクエストを待ち受けて、リモートユーザがログインに必要な資格を持っているかどうかを確認するプログラムです。
 
-In Linux, `systemd` (the system daemon) is the most common solution for running and setting up daemon processes.
-You can run `systemctl status` to list the current running daemons. Most of them might sound unfamiliar but are responsible for core parts of the system such as managing the network, solving DNS queries or displaying the graphical interface for the system.
-Systemd can be interacted with the `systemctl` command in order to `enable`, `disable`, `start`, `stop`, `restart` or check the `status` of services (those are the `systemctl` commands).
+Linuxでは、`systemd`（システムデーモン）がデーモンプロセスを実行、設定するための最も一般的な方法です。
+現在実行中のデーモンを一覧表示するために `systemctl status` を実行することができます。
+ほとんどのデーモンはなじみがないように感じるかもしれませんが、ネットワークの管理、DNSクエリの解決、GUIの表示など、システムのコア部分を担当しています。
+Systemd は `enable`, `disable`, `start`, `stop`, `restart`, あるいはサービスの `status` をチェックするために `systemctl` コマンドとやりとりをすることができます（これらは `systemctl` コマンドです）。
 
-More interestingly, `systemd` has a fairly accessible interface for configuring and enabling new daemons (or services).
-Below is an example of a daemon for running a simple Python app.
-We won't go in the details but as you can see most of the fields are pretty self explanatory.
+さらに興味深いことに、`systemd` は新しいデーモン（またはサービス）を設定し、有効にするための、とても扱いやすいインタフェースを持っています。
+以下はシンプルなPythonアプリケーションを実行するためのデーモンの例です。
+詳細は省略しますが、ほとんどのフィールドは自己説明的なものです。
 
 ```ini
 # /etc/systemd/system/myapp.service
@@ -83,28 +84,28 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-Also, if you just want to run some program with a given frequency there is no need to build a custom daemon, you can use [`cron`](https://www.man7.org/linux/man-pages/man8/cron.8.html), a daemon your system already runs to perform scheduled tasks.
+また、特定の頻度でプログラムを実行したいだけならば、独自にデーモンを構築する必要はなく、システムがすでに実行しているデーモンである [`cron`](https://www.man7.org/linux/man-pages/man8/cron.8.html) を使うことで、スケジューリングされたタスクを実行することができます。
 
 ## FUSE
+現代のソフトウェアシステムは通常、小さなブロック構造を組み合わせて構成されています。
+オペレーティングシステムには、ファイルシステムがどのような操作をサポートするかという共通規格があるため、異なるファイルシステムのバックエンドの使用がサポートされます。
+例えば、ファイルを作成するために `touch` を実行すると、`touch` はそのファイルの作成のためにカーネルにシステムコールを発行し、カーネルは適切なファイルシステムコールを発行して指定されたファイルを作成します。
+注意点として、UNIXファイルシステムは伝統的にカーネルモジュールとして実装されており、カーネルのみがファイルシステムコールの発行を許されているということです。
 
-Modern software systems are usually composed of smaller building blocks that are composed together.
-Your operating system supports using different filesystem backends because there is a common language of what operations a filesystem supports.
-For instance, when you run `touch` to create a file, `touch` performs a system call to the kernel to create the file and the kernel performs the appropriate filesystem call to create the given file.
-A caveat is that UNIX filesystems are traditionally implemented as kernel modules and only the kernel is allowed to perform filesystem calls.
+[FUSE](https://en.wikipedia.org/wiki/Filesystem_in_Userspace) (Filesystem in User Space) を使うと、ファイルシステムをユーザプログラムで実装することができます。
+ユーザはファイルシステムコールのためにユーザ空間のコードを実行し、FUSEは必要なシステムコールをカーネルインタフェースへと「橋渡し」します。
+これは事実上、ユーザがファイルシステムコールに対して任意の機能を実装できることを意味します。
 
-[FUSE](https://en.wikipedia.org/wiki/Filesystem_in_Userspace) (Filesystem in User Space) allows filesystems to be implemented by a user program. FUSE lets users run user space code for filesystem calls and then bridges the necessary calls to the kernel interfaces.
-In practice, this means that users can implement arbitrary functionality for filesystem calls.
+例えば、FUSEを使うと、仮想ファイルシステムで操作を実行するときはいつでも、その操作をSSH経由でリモートマシンに転送し、そこで実行し、その出力を自分に返すことができます。
+このようにして、ローカルのプログラムは、実際にはリモートサーバにあるファイルを、あたかも自分のコンピュータにあるかのように扱えます。
+これは実質的に `sshfs` が行っていることです。
 
-For example, FUSE can be used so whenever you perform an operation in a virtual filesystem, that operation is forwarded through SSH to a remote machine, performed there, and the output is returned back to you.
-This way, local programs can see the file as if it was in your computer while in reality it's in a remote server.
-This is effectively what `sshfs` does.
-
-Some interesting examples of FUSE filesystems are:
-- [sshfs](https://github.com/libfuse/sshfs) - Open locally remote files/folder through an SSH connection.
-- [rclone](https://rclone.org/commands/rclone_mount/) - Mount cloud storage services like Dropbox, GDrive, Amazon S3 or Google Cloud Storage and open data locally.
-- [gocryptfs](https://nuetzlich.net/gocryptfs/) - Encrypted overlay system. Files are stored encrypted but once the FS is mounted they appear as plaintext in the mountpoint.
-- [kbfs](https://keybase.io/docs/kbfs) - Distributed filesystem with end-to-end encryption. You can have private, shared and public folders.
-- [borgbackup](https://borgbackup.readthedocs.io/en/stable/usage/mount.html) - Mount your deduplicated, compressed and encrypted backups for ease of browsing.
+FUSEファイルシステムの興味深い例をいくつか紹介します。
+- [sshfs](https://github.com/libfuse/sshfs) - SSH経由のリモートファイル/フォルダをローカルで開きます。
+- [rclone](https://rclone.org/commands/rclone_mount/) - DropboxやGoogle Drive、Amazon S3やGoogle Cloud Storageなどのクラウドストレージサービスをマウントして、ローカルでデータを開きます。
+- [gocryptfs](https://nuetzlich.net/gocryptfs/) - 暗号化オーバーレイファイルシステムです。ファイルは暗号化されて保存されますが、ファイルシステムがマウントされるとマウントポイントではプレーンテキストとして表示されます。
+- [kbfs](https://keybase.io/docs/kbfs) - End-to-endで暗号化された分散ファイルシステムです。個人フォルダ、共有フォルダ、パブリックフォルダを持つことができます。
+- [borgbackup](https://borgbackup.readthedocs.io/en/stable/usage/mount.html) - データ重複除去、圧縮、暗号化されたバックアップをマウントして、簡単に参照できるようにします。
 
 ## Backups
 
