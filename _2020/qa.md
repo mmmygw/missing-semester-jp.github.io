@@ -52,7 +52,7 @@ video:
 - ワークフローで、自動化、または繰り返しのタスクを単純化する方法を学ぶ。節約できる時間は膨大になるだろう…
 - Git のようなバージョン管理ツールについて、そして現代のソフトウェアプロジェクトで協働するために、 GitHub と組み合わせて使用する方法を学ぶ。
 
-## When do I use Python versus a Bash scripts versus some other language?
+## Python、Bashスクリプト、その他言語を使うのはどのような場合ですか？
 
 一般的に bash スクリプトは、特定の一連のコマンドを走らせたいだけという時など、短く単純な1回のみのスクリプトに便利です。
 bash にはいくつかの特殊性があり、より大きなプログラムやスクリプトでの作業はしにくくなっています。
@@ -74,13 +74,13 @@ bash にはいくつかの特殊性があり、より大きなプログラムや
 そのため、 `script.sh` がディレクトリを変更すると、新しい bash インスタンスはディレクトリを変更しますが、終了し、親の bash セッションに管理が戻ると、親セッションは同じ場所にあるままです。
 同様に、もし `script.sh` がターミナルでアクセスしたい関数を定義しているなら、現在の bash セッションで定義するためには `source` が必要です。そうでないと、実行した時、現在の shell ではなく新しい bash プロセスが関数定義を処理してしまいます。
 
-## What are the places where various packages and tools are stored and how does referencing them work? What even is `/bin` or `/lib`?
+## パッケージやツールが保存されているのはどこですか？ 使用するにはどうやって参照すればよいですか？ `/bin`や`/lib`とは何ですか？
 
-Regarding programs that you execute in your terminal, they are all found in the directories listed in your `PATH` environment variable and you can use the `which` command (or the `type` command) to check where your shell is finding a specific program.
-In general, there are some conventions about where specific types of files live. Here are some of the ones we talked about, check the [Filesystem, Hierarchy Standard](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard) for a more comprehensive list.  
+ターミナルで実行しているプログラムによりますが、これらは `PATH` 環境変数に保存されているディレクトリにあります。 `which` コマンド（または `type` コマンド）で、特定のプログラムをシェルがどこで見つけているかを確認できます。
+一般的には、特定の種類のファイルをどこに保存するかにはいくつかの慣習があります。以下には講義で取り扱ったものを挙げます。より包括的なリストは [Filesystem, Hierarchy Standard](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard) を参照してください。
 
-- `/bin` - Essential command binaries
-- `/sbin` - Essential system binaries, usually to be run by root
+- `/bin` - 重要なコマンドバイナリ
+- `/sbin` - 重要なシステムバイナリ、通常rootで実行する
 - `/dev` - Device files, special files that often are interfaces to hardware devices
 - `/etc` - Host-specific system-wide configuration files
 - `/home` - Home directories for users in the system
