@@ -249,7 +249,7 @@ alias ll
 カスタマイズに関して学ぶ更なる方法は、他の人のドットファイルを閲覧することです。 GitHub には大量の
 [ドットファイルリポジトリ](https://github.com/search?o=desc&q=dotfiles&s=stars&type=Repositories)
 があります --- 一番人気なのは
-[これ]](https://github.com/mathiasbynens/dotfiles) です（設定をむやみにコピーするのはお勧めしません）。
+[これ](https://github.com/mathiasbynens/dotfiles) です（設定をむやみにコピーするのはお勧めしません）。
 [これ](https://dotfiles.github.io/) も、このトピックに関する素晴らしいリソースです。
 
 講義の講師は全員、ドットファイルを GitHub で公開しています。
