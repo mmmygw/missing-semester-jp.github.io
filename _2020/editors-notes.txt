@@ -1,124 +1,123 @@
-I use these notes as a reference when teaching. If you're a student who ended
-up here, you probably want to look at editors.md instead.
+このメモは教える時の参考に使用しています。
+もしあなたが学生でここにたどり着いてしまったのなら、恐らく editors.md を見た方が良いでしょう。
 
-writing words (essays) vs programming
-- programming: more time spent reading, navigating, editing, than writing in a
-  long stream
-- different programs for different purposes
+文章（エッセイ）を書くこととプログラムの違い
+- プログラミング：長時間の執筆よりも、読み、移動、編集により時間を費やす
+- 異なる目的には異なるプログラム
 
-worth mastering an editor
-- it will save you hundreds of hours
-- worth investing time in this, unlike many other things
+エディタを習得する価値あり
+- 何百時間も節約できる
+- 他のことと異なり、習得に時間をかける価値がある
 
-how to learn
-- start with tutorial
-- stick with the editor for all code (and ideally word) editing tasks
-- avoid bad habits
-- look things up as you go
-- if it seems like there should be a better way, there probably is
-    - programmers care about their editors, so they're super powerful tools
-- timeline for learning
-    - in a couple hours: will learn basic editor functions (save, quit, ...)
-    - in 20 hours: will be as fast as you were with your old editor
-    - after that: benefits start
-    - you never stop learning (these are very fancy and powerful tools)
+学び方
+- チュートリアルから始める
+- コード（と理想的には文章）を編集するタスクでは全部必ずそのエディタを使う
+- 悪い習慣を避ける
+- 書きながら調べる
+- より良い方法がありそうなら、多分本当にある
+    - プログラマはエディタの手入れをする。なのでエディタは超強力なツール
+- 学習のタイムライン
+    - 数時間以内：基本的なエディタの機能を学ぶ（保存、終了…）
+    - 20時間以内：前に使っていたエディタと同じ速度で作業できる
+    - その後：メリットが始まる
+    - 学ぶのをやめない（とても便利で強力なツールがある）
 
-which editor to learn?
-- people have strong opinions: editor wars
+どのエディタを学ぶべきか？
+- みんな強いこだわりがある：エディタ戦争
 - https://insights.stackoverflow.com/survey/2019/#development-environments-and-tools
-- VS Code is most popular GUI-based tool
-- Vim is most popular CLI-based tool
-- we are teaching you Vim
-    - all the instructors use Vim
-    - originated from Vi editor (1976), still being developed today
-    - interesting ideas
-    - lots of tools support Vim bindings (e.g. Vim emulation for VS Code has
-      1.4m downloads)
-    - has a bit of a learning curve (compared to GUI editor), but worth it
-    - worth learning even if you finally choose to use another editor
+- VS Code は GUI ベースのツールで最も一般的
+- Vim は CLI ベースで最も一般的
+- この講義では Vim を教える
+    - 全講師が Vim を使用
+    - Vi エディタ （1976）が由来、今日でも開発されている
+    - 興味深い発想
+    - 多くのツールが Vim のキーバインドを使用
+      （例： VS Code の Vim エミュレーションは 1400万ダウンロード）
+    - （GUI エディタと比較して）少し成長曲線があるが、価値はある
+    - 最終的に他のエディタを選ぶにしても、学ぶ価値はある
 
-this lecture
-- philosophy of vim: the neat ideas of this editor
-- basics
-- demos
-- exercises, resources to learn more
-    - starting with vimtutor
-    - this lecture: focus on ideas, not details
+この講義では
+- vimの哲学：このエディタのさっぱりした発想
+- 基本
+- デモ
+- 演習、より学ぶためのリソース
+    - vimtutorで始める
+    - この講義：詳細ではなく思考法に集中する
 
-modal editing (modal ~ "modes")
-- designed around idea that a lot of time is spent reading/navigating/making small edits
-- simplified picture: normal mode <-> insert mode
-- more complex picture: normal <-> {insert, replace, visual, v-line, v-block, command-line}
-- mode shown in bottom left
-- keystrokes have different meanings in different modes: e.g. `x`
-- remapping caps lock to escape
+モーダルな編集（モーダル ~ "モード"）
+- 多くの時間が、読む/移動する/小さな編集をすることに費やされるという考えを元に設計
+- 簡潔な図式：ノーマルモード <-> 挿入モード
+- より複雑な図式：ノーマル <-> {挿入、置換、ビジュアル、v-ライン、v-ブロック、コマンドライン}
+- モードは左下に表示
+- それぞれのモードでキーストロークは異なる意味を持つ：例 `x`
+- caps lockをescapeにリマップ
 
-basics
-- switching between normal mode and insert mode
-- that's all you need to know to get started. insert mode works as you expect.
-- buffers vs tabs vs windows
-    - buffers ~ open files
-    - every tab has one or more windows
-    - a buffer can be open in 0 or more windows
-    - unlike e.g. web browser
-- command line
-    - `:` in normal mode
-    - :q, :w, :wq, :e {name of file}, :ls, :help {topic} (:help :w, :help w)
+基本
+- ノーマルモードと挿入モードの切り替え
+- 始めるのに必要な知識はこれだけ。挿入モードは予想通りに動く。
+- バッファ vs タブ vs ウィンドウ
+    - バッファ ~ 開いたファイル
+    - タブには1つ以上のウィンドウがある
+    - バッファは0以上のウィンドウで開ける
+    - ウェブブラウザなどとは違う
+- コマンドライン
+    - ノーマルモードで`:`
+    - :q, :w, :wq, :e {ファイル名}, :ls, :help {トピック} （:help :w, :help w）
 
-vim normal mode is a programming language (most important idea in vim)
-- once you learn the primitives, you can combine them in interesting ways
-- becomes muscle memory
-- movement
-- selection
-- edits
-- counts
-- modifiers
+vimのノーマルモードはプログラミング言語の一種（vimで一番重要な考え）
+- 原理を学べば、面白い方法で組み合わせられる
+- マッスルメモリーと化す
+- 移動
+- 選択
+- 編集
+- カウント
+- 修飾子
 
-demo (broken fizzbuzz)
-- main is never called
-  - `G` end of file
-  - `o` open new line below
-  - type in "if __name__ ..." thing
-- starts at 0 instead of 1
-  - search for `/range`
-  - `ww` to move forward 2 words
-  - `i` to insert text, "1, "
-  - `ea` to insert after limit, "+1"
-- newline for "fizzbuzz"
-  - `jj$i` to insert text at end of line
-  - add ", end=''"
-  - `jj.` to repeat for second print
-  - `jjo` to open line below if
-  - add "else: print()"
+デモ（壊れたfizzbuzz）
+- mainは決して呼ばれない
+  - `G` ファイルの終わり
+  - `o` 下に1行追加
+  - "if __name__ ..." の部分で打ってみる
+- 1の代わりに0から始まる
+  - `/range` を検索
+  - `ww` で2単語先に動く
+  - `i` でテキスト挿入、"1, "
+  - `ea` で単語の後ろに挿入"+1"
+- "fizzbuzz" の新しい行
+  - `jj$i` でファイルの終わりにテキスト挿入
+  - ", end=''" を追加
+  - `jj.` で直前のコマンドを繰り返し
+  - `jjo` で if の下に1行追加
+  - "else: print()" を追加
 - fizz fizz
-  - `ci'` to change fizz
-- command-line argument
-  - `ggO` to open above
+  - `ci'` でfizzを変更
+- コマンドライン引数
+  - `ggO` で上を開く
   - "import sys"
   - `/10`
-  - `ci(` to "int(sys.argv[1])"
+  - `ci(` で "int(sys.argv[1])"
 
-customizing vim
+vimのカスタマイズ
 - ~/.vimrc
-- start with our basic config
-- look online for inspiration
+- 基本設定で始める
+- ネットでインスピレーションを探す
 
-plugins
-- no plugin manager necessary: just put plugins in `~/.vim/pack/vendor/start/`
-- recommended plugins
-    - fuzzy file finder: ctrlp.vim
-    - code search: ack.vim
-    - directory navigation: nerdtree
-    - magic motions: vim-easymotion
-- see what your instructors use
-- find more: https://vimawesome.com/
+プラグイン
+- プラグインマネージャーは必要ない：プラグインを `~/.vim/pack/vendor/start/` に置くだけ
+- おすすめプラグイン
+    - 曖昧ファイル検索： ctrlp.vim
+    - コード検索: ack.vim
+    - ディレクトリ移動: nerdtree
+    - マジックオプション: vim-easymotion
+- 講師が使っているものを見よう
+- 詳細： https://vimawesome.com/
 
-vim bindings in other tools
+他のツールでの vim キーバインド
 - shell (set -o vi / bindkey -v)
 - $EDITOR
 - readline
 - Jupyter notebook
 
-advanced vim demos
+高度な vim デモ
 
-homework
+宿題
