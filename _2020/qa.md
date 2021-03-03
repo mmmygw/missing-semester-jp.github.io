@@ -1,5 +1,5 @@
 ---
-layout: lecture
+layout: 講義
 title: "Q&A"
 date: 2020-01-30
 ready: true
@@ -8,7 +8,7 @@ video:
   id: Wz50FvGG6xU
 ---
 
-For the last lecture, we answered questions that the students submitted:
+最後の講義では、学生から送られた質問に回答しました。
 
 - [Any recommendations on learning Operating Systems related topics like processes, virtual memory, interrupts, memory management, etc ](#any-recommendations-on-learning-operating-systems-related-topics-like-processes-virtual-memory-interrupts-memory-management-etc)
 - [What are some of the tools you'd prioritize learning first?](#what-are-some-of-the-tools-youd-prioritize-learning-first)
@@ -27,47 +27,52 @@ For the last lecture, we answered questions that the students submitted:
 - [What is 2FA and why should I use it?](#what-is-2fa-and-why-should-i-use-it)
 - [Any comments on differences between web browsers?](#any-comments-on-differences-between-web-browsers)
 
-## Any recommendations on learning Operating Systems related topics like processes, virtual memory, interrupts, memory management, etc 
+## プロセッサ、バーチャルメモリ、割り込み、メモリ管理など、オペレーティング・システムに関連したトピックを学習するのにおすすめはありますか？
 
-First, it is unclear whether you actually need to be very familiar with all of these topics since they are very low level topics.
-They will matter as you start writing more low level code like implementing or modifying a kernel. Otherwise, most topics will not be relevant, with the exception of processes and signals that were briefly covered in other lectures. 
+まず、これらは非常に低レベルのトピックなので、
+これらすべてに精通する必要が本当にあるのかが不明です。
+これらは、カーネルの実装や改変など、より低レベルのコードを書き始めたときに問題となります。
+そうでない限り、他の講義で取り扱ったプロセスやシグナルを除き、
+ほとんどのトピックは関連がありません。
 
-Some good resources to learn about this topic:
+これらのトピックを学ぶ良いリソースには以下があります。
 
-- [MIT's 6.828 class](https://pdos.csail.mit.edu/6.828/) - Graduate level class on Operating System Engineering. Class materials are publicly available.
-- Modern Operating Systems (4th ed) - by Andrew S. Tanenbaum is a good overview of many of the mentioned concepts.
-- The Design and Implementation of the FreeBSD Operating System - A good resource about the FreeBSD OS (note that this is not Linux). 
-- Other guides like [Writing an OS in Rust](https://os.phil-opp.com/) where people implement a kernel step by step in various languages, mostly for teaching purposes. 
+- [MIT's 6.828 class](https://pdos.csail.mit.edu/6.828/) - オペレーティング・システムのエンジニアリングに関する大学院レベルの講義。講義資料は公開されています。
+- Andrew S. Tanenbaum 著『Modern Operating Systems』（第4版） は、ここで言及されているコンセプトの良い概要です。
+- FreeBSDオペレーティング・システムの設計と実装 - FreeBSD OSに関する良い資料（Linuxではないことに注意）。
+- 様々な言語でカーネルをステップ・バイ・ステップで実装している、 [Writing an OS in Rust](https://os.phil-opp.com/) のようなその他のガイド。ほとんどの場合教育目的。
 
 
-## What are some of the tools you'd prioritize learning first?
+## 優先的に学ぶべきツールは何ですか？
 
-Some topics worth prioritizing:
+優先する価値のあるトピックを以下に挙げます。
 
-- Learning how to use your keyboard more and your mouse less. This can be through keyboard shortcuts, changing interfaces, &c.
-- Learning your editor well. As a programmer most of your time is spent editing files so it really pays off to learn this skill well.
-- Learning how to automate and/or simplify repetitive tasks in your workflow because the time savings will be enormous...
-- Learning about version control tools like Git and how to use it in conjunction with GitHub to collaborate in modern software projects.
+- キーボードの使用頻度を上げ、マウスの使用頻度を下げる方法を学ぶ。キーボードショートカット、インターフェイスの変更などで行う。
+- エディタを詳細に学ぶ。プログラマとして、ほとんどの時間はファイルの編集に費やされるだろう。そのため、このスキルに習熟することは非常に利益をもたらす。
+- ワークフローで、自動化、または繰り返しのタスクを単純化する方法を学ぶ。節約できる時間は膨大になるだろう…
+- Git のようなバージョン管理ツールについて、そして現代のソフトウェアプロジェクトで協働するために、 GitHub と組み合わせて使用する方法を学ぶ。
 
 ## When do I use Python versus a Bash scripts versus some other language?
 
-In general, bash scripts are useful for short and simple one-off scripts when you just want to run a specific series of commands. bash has a set of oddities that make it hard to work with for larger programs or scripts:
+一般的に bash スクリプトは、特定の一連のコマンドを走らせたいだけという時など、短く単純な1回のみのスクリプトに便利です。
+bash にはいくつかの特殊性があり、より大きなプログラムやスクリプトでの作業はしにくくなっています。
 
-- bash is easy to get right for a simple use case but it can be really hard to get right for all possible inputs. For example, spaces in script arguments have led to countless bugs in bash scripts.
-- bash is not amenable to code reuse so it can be hard to reuse components of previous programs you have written. More generally, there is no concept of software libraries in bash.
-- bash relies on many magic strings like `$?` or `$@` to refer to specific values, whereas other languages refer to them explicitly, like `exitCode` or `sys.args` respectively. 
+- bashは単純なユースケースでは簡単に動作するが、可能な限りの全インプットに対しては使用が本当に難しい。例えば、スクリプトの引数にスペースがあると、bash スクリプトで数え切れないバグを生み出す。
+- bashはコード再利用のための修正が不可能なので、以前書いたプログラムの部品を再利用するのは難しいこともある。さらに一般的に言って、 bash にはソフトウェアライブラリのコンセプトはない。
+- bash は、特定の値を参照するのに `$?` や `$@` のような多くのマジックストリングに頼っている。一方で他の言語ではそれぞれ `exitCode` や `sys.args` など、明示的に参照している。
 
-Therefore, for larger and/or more complex scripts we recommend using more mature scripting languages like Python or Ruby. 
-You can find online countless libraries that people have already written to solve common problems in these languages.
-If you find a library that implements the specific functionality you care about in some language, usually the best thing to do is to just use that language.
+そのため、より大規模、または複雑なスクリプトでは、 Python や Ruby などより成熟したスクリプト言語を使用することをおすすめします。
+これらの言語での一般的な問題は、すでに多くの人が解決しており、たくさんのライブラリとして入手可能です。
+もし、着目している特定の機能が実装されたライブラリがある言語で存在するのを見つけたならば、通常その言語を使うことが最善手です。
 
-## What is the difference between `source script.sh` and `./script.sh`
+## `source script.sh` と `./script.sh` の違いは何ですか
 
-In both cases the `script.sh` will be read and executed in a bash session, the difference lies in which session is running the commands.
-For `source` the commands are executed in your current bash session and thus any changes made to the current environment, like changing directories or defining functions will persist in the current session once the `source` command finishes executing.
-When running the script standalone like `./script.sh`, your current bash session starts a new instance of bash that will run the commands in `script.sh`.
-Thus, if `script.sh` changes directories, the new bash instance will change directories but once it exits and returns control to the parent bash session, the parent session will remain in the same place.
-Similarly, if `script.sh` defines a function that you want to access in your terminal, you need to `source` it for it to be defined in your current bash session. Otherwise, if you run it, the new bash process will be the one to process the function definition instead of your current shell.
+両方のケースで、 bash セッションで `script.sh` が読まれ実行されます。違いは、どのセッションがコマンドを実行しているかです。
+`source` では、コマンドは現在の bash セッションで実行されているため、あらゆる変更は現在の環境に対して行われます。 `source` 実行を終了しても、例えばディレクトリの変更や関数の定義は現在のセッションで存続します。
+`./script.sh` のようなスタンドアロンのスクリプトを実行すると、現在の bash セッションが新しい bash インスタンスを開始し、これが `script.sh` のコマンドを実行します。
+
+そのため、 `script.sh` がディレクトリを変更すると、新しい bash インスタンスはディレクトリを変更しますが、終了し、親の bash セッションに管理が戻ると、親セッションは同じ場所にあるままです。
+同様に、もし `script.sh` がターミナルでアクセスしたい関数を定義しているなら、現在の bash セッションで定義するためには `source` が必要です。そうでないと、実行した時、現在の shell ではなく新しい bash プロセスが関数定義を処理してしまいます。
 
 ## What are the places where various packages and tools are stored and how does referencing them work? What even is `/bin` or `/lib`?
 
