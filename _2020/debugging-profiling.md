@@ -130,7 +130,7 @@ print(bubble_sort([4, 2, 1, 8, 7, 6]))
 Python はインタープリター言語であり、コマンドやプログラムを実行できる `pdb` シェルがあります。
 [`ipdb`](https://pypi.org/project/ipdb/) は [`IPython`](https://ipython.org) の REPL を用いた改良版の `pdb` で、`pdb` モジュールと同じインターフェースに加えて、タブキーでの予測変換が効いたり、シンタックスハイライティング、わかりやすいトレースバック、イントロスペクションなどが使えます。
 
-より低いレベルのプログラミングでは [`gdb`](https://www.gnu.org/software/gdb/) （に QoL を高める変更を加えた [`pwndbg`](https://github.com/pwndbg/pwndbg)) や [`lldb`](https://lldb.llvm.org/) ）を検討することでしょう。
+より低いレベルのプログラミングでは [`gdb`](https://www.gnu.org/software/gdb/) （に QoL を高める変更を加えた [`pwndbg`](https://github.com/pwndbg/pwndbg) や [`lldb`](https://lldb.llvm.org/) ）を検討することでしょう。
 これらは C のような言語のデバッグに最適化されていますが、ほとんどどのようなプロセスでも調査でき、レジスタ、スタック、プログラムカウンタなどのマシンの状態を得ることができるでしょう。
 
 ## 特化したツール
