@@ -39,7 +39,7 @@ $ python logger.py color
 # 色付きの整形された出力
 ```
 
-ログを読みやすくする私のよくつかうコツのひとつとして、色を付けるというものがあります。
+私のよくつかうログを読みやすくするためのコツのひとつとして、色を付けるというものがあります。
 これまでにおそらくすでにターミナルを読みやすくするため色が使われているのに気づいたことでしょう。これはどうすればできるのでしょうか？
 
 `ls` や `grep` のようなプログラムは、 [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code) というシェルに出力の色を変えるように伝えるための特別な文字列を利用しています。例えば `echo -e "\e[38;2;255;0;0mThis is red\e[0m"` を実行すると、ターミナルが [true color](https://gist.github.com/XVilka/8346728#terminals--true-color) をサポートしている場合は `This is red` が赤色で出力されます。 もしターミナルがそれをサポートしていなかった場合 （例えば macOS の Terminal.app）、より普遍的にサポートされている１６色のエスケープコード、例えば `echo -e "\e[31;1mThis is red\e[0m"` を使うことができます。
@@ -84,8 +84,8 @@ log show --last 1m | grep Hello
 journalctl --since "1m ago" | grep Hello
 ```
 
-「データの前処理」の授業で見たように、欲しい情報を得るためにはログをできる限り詳細にし、ある程度の処理とフィルタリングをすることが必要です。
-もし `journalctl` や `log show` でフィルタリングしすぎているなと思ったら、フラグを使って予め出力をフィルターすることができます。
+「データの前処理」の授業で見たように、ログはとても冗長な場合があり、欲しい情報を得るためにはある程度の処理とフィルタリングをすることが必要です。
+もし `journalctl` や `log show` でフィルタリングしすぎているなと思ったら、フィルタリングの前に出力を捨てるフラグを使うことを考えましょう。
 また、 [`lnav`](http://lnav.org/) のような、よりよい見た目やログファイル間の行き来をする機能を提供するようなツールがあります。
 
 ## デバッガー
@@ -154,7 +154,7 @@ sudo dtruss -t lstat64_extended ls -l > /dev/null
 
 ウェブ開発においては、ChromeやFirefoxの開発者ツールがとても便利です。たくさんの機能がありますが、たとえば以下のようなものが含まれています：
 - ソースコード - あらゆるサイトの HTML/CSS/JS のソースコードを調査する。
-- 動的な HTML, CSS, JS の変更 - ウェブサイトの中身、スタイルや動作を変えてテストする（ウェブサイトのスクリーンショットが証拠として確実なものではないことがよく分かることでしょう）。
+- 動的な HTML 、 CSS 、 JS の変更 - ウェブサイトの中身、スタイルや動作を変えてテストする（ウェブサイトのスクリーンショットが証拠として確実なものではないことがよく分かることでしょう）。
 - Javascript のシェル - JSのREPLでコマンドを実行する。
 - ネットワーク - リクエストのタイムラインを分析する。
 - ストレージ - クッキーやアプリケーションのストレージを見る。
@@ -201,8 +201,8 @@ Found 3 errors in 1 file (checked 1 source file)
 
 シェルツールの講義では、シェルスクリプトのための似たようなツールである [`shellcheck`](https://www.shellcheck.net/) を扱いました。
 
-ほとんどのエディタやIDEでは、それらのツールの出力をエディタ内に表示し、警告やエラーの場所をハイライトする機能をサポートしています。
-これらはよく **code linting** と呼ばれ、コードのスタイル違反や安全でない書き方といったエラーなどを表示するのにも使われます。
+ほとんどのエディタやIDEでは、このようなツールの出力をエディタ内に表示し、警告やエラーの場所をハイライトする機能をサポートしています。
+これはよく **code linting** と呼ばれ、コードのスタイル違反や安全でない書き方といったエラーなどを表示するのにも使われます。
 
 vim では、 [`ale`](https://vimawesome.com/plugin/ale) や [`syntastic`](https://vimawesome.com/plugin/syntastic) といったプラグインで lint を行うことができます。
 Python では、 [`pylint`](https://github.com/PyCQA/pylint) や [`pep8`](https://pypi.org/project/pep8/) がスタイルの linter の代表的なものであり、 [`bandit`](https://pypi.org/project/bandit/)　は一般的なセキュリティーに関する問題を見つけるためのツールです。
@@ -476,7 +476,7 @@ Summary
 
    ```bash
    #!/bin/sh
-   ## Example: a typical script with several problems
+   ## 例： いくつかの問題がある典型的なスクリプト
    for f in $(ls *.m3u)
    do
      grep -qi hq.*mp3 $f \
