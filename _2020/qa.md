@@ -80,39 +80,51 @@ bash にはいくつかの特殊性があり、より大きなプログラムや
 一般的には、特定の種類のファイルをどこに保存するかにはいくつかの慣習があります。以下には講義で取り扱ったものを挙げます。より包括的なリストは [Filesystem, Hierarchy Standard](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard) を参照してください。
 
 - `/bin` - 重要なコマンドバイナリ
-- `/sbin` - 重要なシステムバイナリ、通常rootで実行する
-- `/dev` - Device files, special files that often are interfaces to hardware devices
-- `/etc` - Host-specific system-wide configuration files
-- `/home` - Home directories for users in the system
-- `/lib` - Common libraries for system programs
-- `/opt` - Optional application software
-- `/sys` - Contains information and configuration for the system (covered in the [first lecture](/2020/course-shell/))
-- `/tmp` - Temporary files (also `/var/tmp`). Usually deleted between reboots.
-- `/usr/` - Read only user data
-  + `/usr/bin` - Non-essential command binaries
-  + `/usr/sbin` - Non-essential system binaries, usually to be run by root
-  + `/usr/local/bin` - Binaries for user compiled programs
-- `/var` - Variable files like logs or caches
+- `/sbin` - 重要なシステムバイナリ、通常 root が実行する
+- `/dev` - デバイスファイル、ハードウェアとのインターフェースに用いられる特別なファイル
+- `/etc` - ホストに特定なシステムワイドの設定ファイル
+- `/home` - そのシステム内のユーザのホームディレクトリ
+- `/lib` - システムのプログラムの共通ライブラリ
+- `/opt` - 追加のアプリケーションソフトウェア
+- `/sys` - システムの情報や設定を含む（[最初の講義](/2020/course-shell/) で取り扱いました)
+- `/tmp` - 一時ファイル（ `/var/tmp` も同様）。通常再起動の間に削除される。
+- `/usr/` - 読み取り専用ユーザデータ
+  + `/usr/bin` - 重要でないコマンドバイナリ
+  + `/usr/sbin` - 重要でないシステムバイナリ、通常 root が実行する
+  + `/usr/local/bin` - ユーザーがコンパイルしたプログラムのバイナリ
+- `/var` - ログやキャッシュなどの変数ファイル
 
-## Should I `apt-get install` a python-whatever, or `pip install` whatever package?
+## Python のパッケージのインストールには、`apt-get install` python-[パッケージ] か、`pip install` [パッケージ] どちらを使うべきですか？
 
-There's no universal answer to this question. It's related to the more general question of whether you should use your system's package manager or a language-specific package manager to install software. A few things to take into account:
+この質問へのユニバーサルな回答はありません。
+これは、ソフトウェアをインストールするのに、システムのパッケージマネージャか、言語に特化したパッケージマネージャを使用するか、という一般的な質問に関連しています。
+考慮すべきいくつかの点を以下に挙げます。
 
-- Common packages will be available through both, but less popular ones or more recent ones might not be available in your system package manager. In this case, using the language-specific tool is the better choice.
-- Similarly, language-specific package managers usually have more up to date versions of packages than system package managers.
-- When using your system package manager, libraries will be installed system wide. This means that if you need different versions of a library for development purposes, the system package manager might not suffice. For this scenario, most programming languages provide some sort of isolated or virtual environment so you can install different versions of libraries without running into conflicts. For Python, there's virtualenv, and for Ruby, there's RVM.
-- Depending on the operating system and the hardware architecture, some of these packages might come with binaries or might need to be compiled. For instance, in ARM computers like the Raspberry Pi, using the system package manager can be better than the language specific one if the former comes in form of binaries and the later needs to be compiled. This is highly dependent on your specific setup.
+- 一般的なパッケージは両方で入手可能だが、あまり有名でないものやより最新のものは、システムのパッケージマネージャでは入手できないことがある。その場合、言語に特化したツールがベターな選択肢。
+- 同様に、言語に特化したパッケージマネージャには通常、システムのパッケージマネージャよりも新しいバージョンがある。
+- システムのパッケージマネージャを使う時、ライブラリはシステムワイドにインストールされる。これはつまり、開発用途で様々なバージョンが必要な場合、システムのパッケージマネージャでは不十分なことを意味する。このシナリオの場合、ほとんどのプログラミング言語は、隔離された、または仮想環境の一種を提供しているので、コンフリクトを起こすことなしに様々なバージョンのライブラリをインストールできる。Python の場合は virtualenv 、 Ruby の場合は RVM がある。
+- オペレーティング・システムやハードウェアアーキテクチャによるが、これらのパッケージのいくつかは、バイナリで提供されたり、コンパイルが必要な場合がある。例えば、Raspberry Pi のような ARM コンピュータは、バイナリ形式で配布されているものや、後でコンパイルが必要なものに対して、システムのパッケージマネージャの方が言語に特化したものより優れている。これは自分の特定のセットアップに強く依存する。
 
-You should try to use one solution or the other and not both since that can lead to conflicts that are hard to debug. Our recommendation is to use the language-specific package manager whenever possible, and to use isolated environments (like Python's virtualenv) to avoid polluting the global environment. 
+インストールには、両方の方法ではなく片方のみ使用するべきです。なぜなら、併用することでデバッグが困難なコンフリクトを起こす可能性があるからです。
+おすすめは、可能な場合はできる限り言語に特化したパッケージマネージャを使用し、（ Python の virtualenv のような）隔離された環境を使用して、グローバル環境の汚染を避けることです。
 
-## What's the easiest and best profiling tools to use to improve performance of my code?
+## コードのパフォーマンスを改善するのに、一番簡単で最善のプロファイリングツールは何ですか？
 
-The easiest tool that is quite useful for profiling purposes is [print timing](/2020/debugging-profiling/#timing).
-You just manually compute the time taken between different parts of your code. By repeatedly doing this, you can effectively do a binary search over your code and find the segment of code that took the longest. 
+プロファイリングに非常に便利な一番簡単なツールは [print timing](/2020/debugging-profiling/#timing) です。
+コードの様々なパーツの間で、かかった時間を手動で計算します。
+これを繰り返すことで、コードのバイナリサーチをして、コードの中で最長の時間がかかっているセグメントを効率的に見つけることができます。
 
-For more advanced tools, Valgrind's [Callgrind](http://valgrind.org/docs/manual/cl-manual.html) lets you run your program and measure how long everything takes and all the call stacks, namely which function called which other function. It then produces an annotated version of your program's source code with the time taken per line. However, it slows down your program by an order of magnitude and does not support threads. For other cases, the [`perf`](http://www.brendangregg.com/perf.html) tool and other language specific sampling profilers can output useful data pretty quickly. [Flamegraphs](http://www.brendangregg.com/flamegraphs.html) are a good visualization tool for the output of said sampling profilers. You should also try to use specific tools for the programming language or task you are working with. For example, for web development, the dev tools built into Chrome and Firefox have fantastic profilers.
+より進化したツールとして、 Valgrind の [Callgrind](http://valgrind.org/docs/manual/cl-manual.html) があります。これはプログラムを走らせ、全部にどれだけの時間がかかるかと、全コールスタック、どの関数がどの他の関数を呼び出ししているかを測定します。
+その後、プログラムのソースに行ごとにかかった時間のメモがついたものを出力します。
+しかし、これはプログラムを相当遅くしますし、スレッドをサポートしていません。
+他のケースでは、 [`perf`](http://www.brendangregg.com/perf.html) ツールや他の言語に特化したサンプリングプロファイラが、便利なデータを素早く出力できます。
+[Flamegraphs](http://www.brendangregg.com/flamegraphs.html) は、このようなサンプリングプロファイラの出力を便利に可視化するツールです。
+さらに、プログラム言語や、作業中のタスクに特化したツールも使用するべきです。
+例えば web 開発では、 Chrome や Firefox にビルトインされた開発ツールに、素晴らしいプロファイラが組み込まれています。
 
-Sometimes the slow part of your code will be because your system is waiting for an event like a disk read or a network packet. In those cases, it is worth checking that back-of-the-envelope calculations about the theoretical speed in terms of hardware capabilities do not deviate from the actual readings. There are also specialized tools to analyze the wait times in system calls. These include tools like [eBPF](http://www.brendangregg.com/blog/2019-01-01/learn-ebpf-tracing.html) that perform kernel tracing of user programs. In particular [`bpftrace`](https://github.com/iovisor/bpftrace) is worth checking out if you need to perform this sort of low level profiling.
+コードの遅い部分の原因が、システムがディスク読み込みやネットワークパケットなどのイベントを待機しているから、というケースもあります。
+In those cases, it is worth checking that back-of-the-envelope calculations about the theoretical speed in terms of hardware capabilities do not deviate from the actual readings.
+There are also specialized tools to analyze the wait times in system calls. These include tools like [eBPF](http://www.brendangregg.com/blog/2019-01-01/learn-ebpf-tracing.html) that perform kernel tracing of user programs. In particular [`bpftrace`](https://github.com/iovisor/bpftrace) is worth checking out if you need to perform this sort of low level profiling.
 
 
 ## What browser plugins do you use?
