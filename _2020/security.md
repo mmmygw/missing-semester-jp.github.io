@@ -76,7 +76,7 @@ $ printf 'hello' | sha1sum
 aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d
 $ printf 'hello' | sha1sum
 aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d
-$ printf 'Hello' | sha1sum 
+$ printf 'Hello' | sha1sum
 f7ff9e8b7bb2e09b70935a5d785e0cc5d9d0abf0
 ```
 
@@ -274,7 +274,7 @@ social proofs (with Keybase).
 ## SSH
 
 We've covered the use of SSH and SSH keys in an [earlier
-lecture](/2020/command-line/#remote-machines). Let's look at the cryptography
+lecture](/2020/command-line/#リモートマシン). Let's look at the cryptography
 aspects of this.
 
 When you run `ssh-keygen`, it generates an asymmetric keypair, `public_key,
