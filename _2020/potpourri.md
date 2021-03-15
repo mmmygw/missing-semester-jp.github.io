@@ -107,13 +107,14 @@ FUSEファイルシステムの興味深い例をいくつか紹介します。
 - [kbfs](https://keybase.io/docs/kbfs) - End-to-endで暗号化された分散ファイルシステムです。個人フォルダ、共有フォルダ、パブリックフォルダを持つことができます。
 - [borgbackup](https://borgbackup.readthedocs.io/en/stable/usage/mount.html) - データ重複除去、圧縮、暗号化されたバックアップをマウントして、簡単に参照できるようにします。
 
-## Backups
+## バックアップ
 
-Any data that you haven’t backed up is data that could be gone at any moment, forever.
-It's easy to copy data around, it's hard to reliably backup data.
-Here are some good backup basics and the pitfalls of some approaches.
+バックアップされていないデータは、いつ、永遠に消えてしまうかもしれません。
+データをコピーするのは簡単ですが、データを確実にバックアップするのは難しいものです。
+ここでは、バックアップの基本的な方法と、いくつかのアプローチの落とし穴について説明します。
 
-First, a copy of the data in the same disk is not a backup, because the disk is the single point of failure for all the data. Similarly, an external drive in your home is also a weak backup solution since it could be lost in a fire/robbery/&c. Instead, having an off-site backup is a recommended practice.
+まず、同じディスク内でデータをコピーすることはバックアップとは言えません。なぜなら、ディスクはすべてのデータの単一障害点だからです。
+同様に、自宅の外付けドライブも、火事や強盗などで失われる可能性があるため、バックアップ手段としては不十分です。むしろ、オフサイトでバックアップをとることをお勧めします。
 
 Synchronization solutions are not backups. For instance, Dropbox/GDrive are convenient solutions, but when data is erased or corrupted they propagate the change. For the same reason, disk mirroring solutions like RAID are not backups. They don't help if data gets deleted, corrupted or encrypted by ransomware.
 
