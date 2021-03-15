@@ -10,10 +10,10 @@ video:
 
 ## 目次
 
-- [キーボード割り当て変更](#キーボード割り当て変更)
-- [デーモン](#デーモン)
+- [キーボード割り当て変更](#keyboard-remapping)
+- [デーモン](#daemon)
 - [FUSE](#fuse)
-- [バックアップ](#バックアップ)
+- [バックアップ](#backups)
 - [API](#api)
 - [Common command-line flags/patterns](#common-command-line-flagspatterns)
 - [Window managers](#window-managers)
@@ -109,154 +109,98 @@ FUSEファイルシステムの興味深い例をいくつか紹介します。
 
 ## バックアップ
 
-バックアップされていないデータは、いつ、永遠に消えてしまうかもしれません。
+バックアップされていないデータは、いつか永遠に消えてしまうかもしれません。
 データをコピーするのは簡単ですが、データを確実にバックアップするのは難しいものです。
 ここでは、バックアップの基本的な方法と、いくつかのアプローチの落とし穴について説明します。
 
 まず、同じディスク内でデータをコピーすることはバックアップとは言えません。なぜなら、ディスクはすべてのデータの単一障害点だからです。
 同様に、自宅の外付けドライブも、火事や強盗などで失われる可能性があるため、バックアップ手段としては不十分です。むしろ、オフサイトでバックアップをとることをお勧めします。
 
-Synchronization solutions are not backups. For instance, Dropbox/GDrive are convenient solutions, but when data is erased or corrupted they propagate the change. For the same reason, disk mirroring solutions like RAID are not backups. They don't help if data gets deleted, corrupted or encrypted by ransomware.
+オンラインストレージでの同期もバックアップではありません。例えば、DropboxやGDriveは便利な手段ですが、データが消去されたり破損したりすると、その変更が伝播してしまいます。
+同じ理由で、RAIDのようなディスクのミラーリングもバックアップではありません。データが削除されたり、破損したり、ランサムウェアで暗号化されたりした時に役に立たないからです。
 
-Some core features of good backups solutions are versioning, deduplication and security.
-Versioning backups ensure that you can access your history of changes and efficiently recover files.
-Efficient backup solutions use data deduplication to only store incremental changes and reduce the storage overhead.
-Regarding security, you should ask yourself what someone would need to know/have in order to read your data and, more importantly, to delete all your data and associated backups.
-Lastly, blindly trusting backups is a terrible idea and you should verify regularly that you can use them to recover data.
+優れたバックアップ手段の中核となる機能は、バージョン管理、重複排除、セキュリティです。
+バージョン管理されたバックアップでは、変更履歴にアクセスして効率的にファイルを復元することができます。
+効率的なバックアップ手段は、データの重複排除を使用することで増分の変更のみを保存し、ストレージのオーバーヘッドを削減します。
+セキュリティに関しては、データを読み取ったり、さらに重要なこととして、すべてのデータや関連するバックアップを削除したりするために、他人が何を知っていたり持っていたりする必要があるのかを点検すべきです。
+最後に、バックアップを盲目的に信用するのはよくない考えで、バックアップを使ってデータを復旧できるかどうかを定期的に確認する必要があります。
 
-Backups go beyond local files in your computer.
-Given the significant growth of web applications, large amounts of your data are only stored in the cloud.
-For instance, your webmail, social media photos, music playlists in streaming services or online docs are gone if you lose access to the corresponding accounts.
-Having an offline copy of this information is the way to go, and you can find online tools that people have built to fetch the data and save it.
+バックアップは、コンピュータ内のローカルファイルだけに留まりません。
+ウェブアプリケーションの大幅な増加に伴い、大量のデータがクラウドに保存されるようになりました。
+例えば、ウェブメール、ソーシャルメディアの写真、ストリーミングサービスの音楽プレイリスト、オンラインドキュメントなどは、対応するアカウントにアクセスできなくなると消えてしまいます。
+このような情報のオフラインコピーを持つことが望ましく、これらのデータを取得して保存するために有志が作ったオンラインツールが提供されています。
 
-For a more detailed explanation, see 2019's lecture notes on [Backups](/2019/backups).
-
+より詳しい説明は、2019年の講義ノート [バックアップ](/2019/backups) を見てみてください。
 
 ## API
 
-We've talked a lot in this class about using your computer more
-efficiently to accomplish _local_ tasks, but you will find that many of
-these lessons also extend to the wider internet. Most services online
-will have "APIs" that let you programmatically access their data. For
-example, the US government has an API that lets you get weather
-forecasts, which you could use to easily get a weather forecast in your
-shell.
+この授業では、コンピュータをより効率的に使って _ローカル_ なタスクをこなすことについて多くのことを説明してきましたが、これらの学びの多くは、より広いインターネットにも当てはまることがわかります。
+インターネット上のほとんどのサービスは、そのデータにプログラムでアクセスできる「API」を持っています。
+例えば、アメリカ政府は天気予報を取得するためのAPIを持っており、これを使えば自分のシェルで簡単に天気予報を取得することができます。
 
-Most of these APIs have a similar format. They are structured URLs,
-often rooted at `api.service.com`, where the path and query parameters
-indicate what data you want to read or what action you want to perform.
-For the US weather data for example, to get the forecast for a
-particular location, you issue GET request (with `curl` for example) to
-https://api.weather.gov/points/42.3604,-71.094. The response itself
-contains a bunch of other URLs that let you get specific forecasts for
-that region. Usually, the responses are formatted as JSON, which you can
-then pipe through a tool like [`jq`](https://stedolan.github.io/jq/) to
-massage into what you care about.
+これらのAPIのほとんどは、似たフォーマットを持っています。
+APIは構造化されたURLであり、多くの場合、`api.service.com`をルートとしており、パスとクエリパラメータは、読みたいデータや実行したいアクションを示します。
+例えば、米国の気象データの場合、特定の場所の予報を取得するには、https://api.weather.gov/points/42.3604,-71.094 に GET リクエスト（例えば `curl`を使用）を発行します。
+レスポンス自体には、その地域の特定の予報を得ることができる他のURLのまとまりが含まれています。
+通常、レスポンスはJSONとしてフォーマットされており、これを[`jq`](https://stedolan.github.io/jq/)のようなツールに通すことで、関心のある情報に変換することができます。
 
-Some APIs require authentication, and this usually takes the form of
-some sort of secret _token_ that you need to include with the request.
-You should read the documentation for the API to see what the particular
-service you are looking for uses, but "[OAuth](https://www.oauth.com/)"
-is a protocol you will often see used. At its heart, OAuth is a way to
-give you tokens that can "act as you" on a given service, and can only
-be used for particular purposes. Keep in mind that these tokens are
-_secret_, and anyone who gains access to your token can do whatever the
-token allows under _your_ account!
+APIによっては認証が必要なものがありますが、この認証は通常ある種の秘密の _トークン_ が用いられ、これをリクエストに含める必要があります。
+APIのドキュメントを読んで、探している特定のサービスが何を使用しているかを確認する必要がありますが、「[OAuth](https://www.oauth.com/)」はよく使われるプロトコルです。
+本質的には、OAuthは特定のサービスで「自分のように振る舞う」ことができるトークンを与え、特定の目的のためにのみ使用できるようにする方法です。
+このトークンは _秘密_ のものであり、あなたのトークンにアクセスした人は、 _あなたの_ アカウントでトークンが許可したことは何でもできるということを覚えておいてください。
 
-[IFTTT](https://ifttt.com/) is a website and service centered around the
-idea of APIs — it provides integrations with tons of services, and lets
-you chain events from them in nearly arbitrary ways. Give it a look!
+[IFTTT](https://ifttt.com/)は、APIのアイデアを中心としたウェブサイトとサービスです。膨大な数のサービスとの統合を提供し、それらのサービスからほぼ任意の方法でイベントを連鎖させることができます。
+ぜひ一度見てみてください。
 
 ## Common command-line flags/patterns
 
-Command-line tools vary a lot, and you will often want to check out
-their `man` pages before using them. They often share some common
-features though that can be good to be aware of:
+Command-line tools vary a lot, and you will often want to check out their `man` pages before using them.
+They often share some common features though that can be good to be aware of:
 
- - Most tools support some kind of `--help` flag to display brief usage
-   instructions for the tool.
- - Many tools that can cause irrevocable change support the notion of a
-   "dry run" in which they only print what they _would have done_, but
-   do not actually perform the change. Similarly, they often have an
-   "interactive" flag that will prompt you for each destructive action.
- - You can usually use `--version` or `-V` to have the program print its
-   own version (handy for reporting bugs!).
- - Almost all tools have a `--verbose` or `-v` flag to produce more
-   verbose output. You can usually include the flag multiple times
-   (`-vvv`) to get _more_ verbose output, which can be handy for
-   debugging. Similarly, many tools have a `--quiet` flag for making it
-   only print something on error.
- - In many tools, `-` in place of a file name means "standard input" or
-   "standard output", depending on the argument.
- - Possibly destructive tools are generally not recursive by default,
-   but support a "recursive" flag (often `-r`) to make them recurse.
- - Sometimes, you want to pass something that _looks_ like a flag as a
-   normal argument. For example, imagine you wanted to remove a file
-   called `-r`. Or you want to run one program "through" another, like
-   `ssh machine foo`, and you want to pass a flag to the "inner" program
-   (`foo`). The special argument `--` makes a program _stop_ processing
-   flags and options (things starting with `-`) in what follows, letting
-   you pass things that look like flags without them being interpreted
-   as such: `rm -- -r` or `ssh machine --for-ssh -- foo --for-foo`.
+ - Most tools support some kind of `--help` flag to display brief usage instructions for the tool.
+ - Many tools that can cause irrevocable change support the notion of a "dry run" in which they only print what they _would have done_, but do not actually perform the change. Similarly, they often have an "interactive" flag that will prompt you for each destructive action.
+ - You can usually use `--version` or `-V` to have the program print its own version (handy for reporting bugs!).
+ - Almost all tools have a `--verbose` or `-v` flag to produce more verbose output. You can usually include the flag multiple times (`-vvv`) to get _more_ verbose output, which can be handy for debugging. Similarly, many tools have a `--quiet` flag for making it only print something on error.
+ - In many tools, `-` in place of a file name means "standard input" or "standard output", depending on the argument.
+ - Possibly destructive tools are generally not recursive by default, but support a "recursive" flag (often `-r`) to make them recurse.
+ - Sometimes, you want to pass something that _looks_ like a flag as a normal argument. For example, imagine you wanted to remove a file called `-r`. Or you want to run one program "through" another, like `ssh machine foo`, and you want to pass a flag to the "inner" program (`foo`). The special argument `--` makes a program _stop_ processing flags and options (things starting with `-`) in what follows, letting you pass things that look like flags without them being interpreted as such: `rm -- -r` or `ssh machine --for-ssh -- foo --for-foo`.
 
 ## Window managers
 
-Most of you are used to using a "drag and drop" window manager, like
-what comes with Windows, macOS, and Ubuntu by default. There are windows
-that just sort of hang there on screen, and you can drag them around,
-resize them, and have them overlap one another. But these are only one
-_type_ of window manager, often referred to as a "floating" window
-manager. There are many others, especially on Linux. A particularly
-common alternative is a "tiling" window manager. In a tiling window
-manager, windows never overlap, and are instead arranged as tiles on
-your screen, sort of like panes in tmux. With a tiling window manager,
-the screen is always filled by whatever windows are open, arranged
-according to some _layout_. If you have just one window, it takes up the
-full screen. If you then open another, the original window shrinks to
-make room for it (often something like 2/3 and 1/3). If you open a
-third, the other windows will again shrink to accommodate the new
-window. Just like with tmux panes, you can navigate around these tiled
-windows with your keyboard, and you can resize them and move them
-around, all without touching the mouse. They are worth looking into!
-
+Most of you are used to using a "drag and drop" window manager, like what comes with Windows, macOS, and Ubuntu by default.
+There are windows that just sort of hang there on screen, and you can drag them around, resize them, and have them overlap one another.
+But these are only one _type_ of window manager, often referred to as a "floating" window manager.
+There are many others, especially on Linux.
+A particularly common alternative is a "tiling" window manager.
+In a tiling window manager, windows never overlap, and are instead arranged as tiles on your screen, sort of like panes in tmux.
+With a tiling window manager, the screen is always filled by whatever windows are open, arranged according to some _layout_.
+If you have just one window, it takes up the full screen.
+If you then open another, the original window shrinks to make room for it (often something like 2/3 and 1/3).
+If you open a third, the other windows will again shrink to accommodate the new window.
+Just like with tmux panes, you can navigate around these tiled windows with your keyboard, and you can resize them and move them around, all without touching the mouse.
+They are worth looking into!
 
 ## VPN
 
-VPNs are all the rage these days, but it's not clear that's for [any
-good reason](https://gist.github.com/joepie91/5a9909939e6ce7d09e29). You
-should be aware of what a VPN does and does not get you. A VPN, in the
-best case, is _really_ just a way for you to change your internet
-service provider as far as the internet is concerned. All your traffic
-will look like it's coming from the VPN provider instead of your "real"
-location, and the network you are connected to will only see encrypted
-traffic.
+VPNs are all the rage these days, but it's not clear that's for [any good reason](https://gist.github.com/joepie91/5a9909939e6ce7d09e29).
+You should be aware of what a VPN does and does not get you.
+A VPN, in the best case, is _really_ just a way for you to change your internet service provider as far as the internet is concerned.
+All your traffic will look like it's coming from the VPN provider instead of your "real" location, and the network you are connected to will only see encrypted traffic.
 
-While that may seem attractive, keep in mind that when you use a VPN,
-all you are really doing is shifting your trust from you current ISP to
-the VPN hosting company. Whatever your ISP _could_ see, the VPN provider
-now sees _instead_. If you trust them _more_ than your ISP, that is a
-win, but otherwise, it is not clear that you have gained much. If you
-are sitting on some dodgy unencrypted public Wi-Fi at an airport, then
-maybe you don't trust the connection much, but at home, the trade-off is
-not quite as clear.
+While that may seem attractive, keep in mind that when you use a VPN, all you are really doing is shifting your trust from you current ISP to the VPN hosting company.
+Whatever your ISP _could_ see, the VPN provider now sees _instead_.
+If you trust them _more_ than your ISP, that is a win, but otherwise, it is not clear that you have gained much.
+If you are sitting on some dodgy unencrypted public Wi-Fi at an airport, then maybe you don't trust the connection much, but at home, the trade-off is not quite as clear.
 
-You should also know that these days, much of your traffic, at least of
-a sensitive nature, is _already_ encrypted through HTTPS or TLS more
-generally. In that case, it usually matters little whether you are on
-a "bad" network or not -- the network operator will only learn what
-servers you talk to, but not anything about the data that is exchanged.
+You should also know that these days, much of your traffic, at least of a sensitive nature, is _already_ encrypted through HTTPS or TLS more generally.
+In that case, it usually matters little whether you are on a "bad" network or not -- the network operator will only learn what servers you talk to, but not anything about the data that is exchanged.
 
-Notice that I said "in the best case" above. It is not unheard of for
-VPN providers to accidentally misconfigure their software such that the
-encryption is either weak or entirely disabled. Some VPN providers are
-malicious (or at the very least opportunist), and will log all your
-traffic, and possibly sell information about it to third parties.
-Choosing a bad VPN provider is often worse than not using one in the
-first place.
+Notice that I said "in the best case" above.
+It is not unheard of for VPN providers to accidentally misconfigure their software such that the encryption is either weak or entirely disabled.
+Some VPN providers are malicious (or at the very least opportunist), and will log all your traffic, and possibly sell information about it to third parties.
+Choosing a bad VPN provider is often worse than not using one in the first place.
 
-In a pinch, MIT [runs a VPN](https://ist.mit.edu/vpn) for its students,
-so that may be worth taking a look at. Also, if you're going to roll
-your own, give [WireGuard](https://www.wireguard.com/) a look.
+In a pinch, MIT [runs a VPN](https://ist.mit.edu/vpn) for its students, so that may be worth taking a look at. Also, if you're going to roll your own, give [WireGuard](https://www.wireguard.com/) a look.
 
 ## Markdown
 
