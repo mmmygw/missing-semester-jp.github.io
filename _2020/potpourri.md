@@ -15,7 +15,7 @@ video:
 - [FUSE](#fuse)
 - [バックアップ](#backups)
 - [API](#api)
-- [Common command-line flags/patterns](#common-command-line-flagspatterns)
+- [一般的なコマンドラインのフラグとパターン](#common-command-line-flagspatterns)
 - [Window managers](#window-managers)
 - [VPN](#vpn)
 - [Markdown](#markdown)
@@ -152,18 +152,18 @@ APIのドキュメントを読んで、探している特定のサービスが�
 [IFTTT](https://ifttt.com/)は、APIのアイデアを中心としたウェブサイトとサービスです。膨大な数のサービスとの統合を提供し、それらのサービスからほぼ任意の方法でイベントを連鎖させることができます。
 ぜひ一度見てみてください。
 
-## Common command-line flags/patterns
+## 一般的なコマンドラインのフラグとパターン
 
-Command-line tools vary a lot, and you will often want to check out their `man` pages before using them.
-They often share some common features though that can be good to be aware of:
+コマンドラインツールには様々な種類があるため、使用する前にそれぞれの `man` ページを確認することを推奨します。
+しかし、これらのツールには共通の機能がありますので、知っておくとよいでしょう。
 
- - Most tools support some kind of `--help` flag to display brief usage instructions for the tool.
- - Many tools that can cause irrevocable change support the notion of a "dry run" in which they only print what they _would have done_, but do not actually perform the change. Similarly, they often have an "interactive" flag that will prompt you for each destructive action.
- - You can usually use `--version` or `-V` to have the program print its own version (handy for reporting bugs!).
- - Almost all tools have a `--verbose` or `-v` flag to produce more verbose output. You can usually include the flag multiple times (`-vvv`) to get _more_ verbose output, which can be handy for debugging. Similarly, many tools have a `--quiet` flag for making it only print something on error.
- - In many tools, `-` in place of a file name means "standard input" or "standard output", depending on the argument.
- - Possibly destructive tools are generally not recursive by default, but support a "recursive" flag (often `-r`) to make them recurse.
- - Sometimes, you want to pass something that _looks_ like a flag as a normal argument. For example, imagine you wanted to remove a file called `-r`. Or you want to run one program "through" another, like `ssh machine foo`, and you want to pass a flag to the "inner" program (`foo`). The special argument `--` makes a program _stop_ processing flags and options (things starting with `-`) in what follows, letting you pass things that look like flags without them being interpreted as such: `rm -- -r` or `ssh machine --for-ssh -- foo --for-foo`.
+ - ほとんどのツールは、そのツールの簡単な使用方法を表示するために、何らかの `--help` フラグをサポートしています。
+ - 取り返しのつかない変更を引き起こすツールの多くは、 "dry run" という概念をサポートしています。これは、 _実行されたであろう_ 内容を出力するだけで、実際に変更を実行するわけではありません。同様に、破壊的なアクションを行うたびにプロンプトが表示される "interactive" フラグを備えていることも多いです。
+ - 通常、 `--version` または `-V` を使用して、プログラムに自身のバージョンを表示させることができます（バグを報告するのに便利です！）。
+ - ほとんどのツールには、より詳細な出力を得るための `--verbose` または `-v` フラグがあります。通常、このフラグを複数回（ `-vvv` ）含めることでより _詳細な_ 出力を得ることができ、これはデバッグの際に便利です。同様に、多くのツールには `--quiet` フラグがあり、エラー時にのみ何かを表示するように設定できます。
+ - 多くのツールでは、ファイル名の代わりに `-` を付けると、引数に応じて「標準入力」または「標準出力」を意味します。
+ - 破壊的変更を行う可能性のあるツールは、一般的にデフォルトでは再帰的ではありませんが、再帰的にするための "recursive" フラグ（多くの場合、 `-r` ）をサポートしています。
+ - フラグのように _見える_ ものを通常の引数として渡したい場合があります。例えば、 `-r` というファイルを削除したいとします。また、 `ssh machine foo` のように、あるプログラムを別のプログラムに「通して」実行したいときに、「内側」のプログラム（ `foo` ）にフラグを渡したいとします。特別な引数 `--` は、プログラムが以下のフラグやオプション（ `-` で始まるもの）の処理を _停止_ させ、フラグのように見えるものをフラグとして解釈せずに渡すことができます。つまり、 `rm -- -r` や `ssh machine --for-ssh -- foo --for-foo` のように、フラグのように見えるものをフラグと解釈されずに渡すことができます。
 
 ## Window managers
 
