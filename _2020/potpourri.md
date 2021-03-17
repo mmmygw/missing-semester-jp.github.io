@@ -10,19 +10,19 @@ video:
 
 ## 目次
 
-- [キーボード割り当て変更](#keyboard-remapping)
-- [デーモン](#daemons)
+- [キーボード割り当て変更](#キーボード割り当て変更)
+- [デーモン](#デーモン)
 - [FUSE](#fuse)
-- [バックアップ](#backups)
-- [API](#apis)
-- [一般的なコマンドラインのフラグとパターン](#common-command-line-flagspatterns)
-- [ウィンドウマネージャ](#window-managers)
+- [バックアップ](#バックアップ)
+- [API](#api)
+- [一般的なコマンドラインのフラグとパターン](#一般的なコマンドラインのフラグとパターン)
+- [ウィンドウマネージャ](#ウィンドウマネージャ)
 - [VPN](#vpn)
 - [Markdown](#markdown)
-- [Hammerspoon（macOS用のデスクトップ操作自動化ツール）](#hammerspoon-desktop-automation-on-macos)
-- [ブート + Live USB](#booting--live-usbs)
-- [Docker, Vagrant, 仮想マシン, クラウド, OpenStack](#docker-vagrant-vms-cloud-openstack)
-- [ノートブック型プログラミング環境](#notebook-programming)
+- [Hammerspoon (macOS用のデスクトップ操作自動化ツール)](#hammerspoon-macos用のデスクトップ操作自動化ツール)
+- [ブート + Live USB](#ブート--live-usb)
+- [Docker, Vagrant, 仮想マシン, クラウド, OpenStack](#docker-vagrant-仮想マシン-クラウド-openstack)
+- [ノートブック型プログラミング環境](#ノートブック型プログラミング環境)
 - [GitHub](#github)
 
 ## キーボード割り当て変更
@@ -226,7 +226,7 @@ Markdownの核心は、人々がプレーンテキスト文書を書くときに
 Markdownは簡単に使い始めることができ、ほとんどどこでも使用することができます。
 実際、この講義のレクチャーノートや他のすべての講義はMarkdownで書かれており、生のMarkdownを[ここ](https://raw.githubusercontent.com/missing-semester/missing-semester/master/_2020/potpourri.md)で見ることができます。
 
-## Hammerspoon（macOS用のデスクトップ操作自動化ツール）
+## Hammerspoon (macOS用のデスクトップ操作自動化ツール)
 
 [Hammerspoon](https://www.hammerspoon.org/)は、macOS用のデスクトップ操作自動化フレームワークです。
 OSに機能的につながるLuaスクリプトを書くことができ、キーボード/マウス、ウィンドウ、ディスプレイ、ファイルシステムなどを操作することができます。
