@@ -97,7 +97,7 @@ Elaine Mello, Jim Cain, [MIT Open
 Learning](https://openlearning.mit.edu/) に対し講義ビデオ録画を可能としていただいたことを、
 Anthony Zolnik と [MIT
 AeroAstro](https://aeroastro.mit.edu/) にはA/V機器を設定頂いたことを、Brandi Adams と
-[MIT EECS](https://www.eecs.mit.edu/) には本講義を支援していただたことを、それぞれ感謝申し上げます。
+[MIT EECS](https://www.eecs.mit.edu/) には本講義を支援していただいたことを、それぞれ感謝申し上げます。
 
 
 
