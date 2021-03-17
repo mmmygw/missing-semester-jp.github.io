@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Potpourri"
+title: "雑録"
 date: 2020-01-29
 ready: true
 video:
