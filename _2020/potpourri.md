@@ -11,18 +11,18 @@ video:
 ## 目次
 
 - [キーボード割り当て変更](#keyboard-remapping)
-- [デーモン](#daemon)
+- [デーモン](#daemons)
 - [FUSE](#fuse)
 - [バックアップ](#backups)
-- [API](#api)
+- [API](#apis)
 - [一般的なコマンドラインのフラグとパターン](#common-command-line-flagspatterns)
-- [Window managers](#window-managers)
+- [ウィンドウマネージャ](#window-managers)
 - [VPN](#vpn)
 - [Markdown](#markdown)
-- [Hammerspoon (desktop automation on macOS)](#hammerspoon-desktop-automation-on-macos)
-- [Booting + Live USBs](#booting--live-usbs)
-- [Docker, Vagrant, VMs, Cloud, OpenStack](#docker-vagrant-vms-cloud-openstack)
-- [Notebook programming](#notebook-programming)
+- [Hammerspoon（macOS用のデスクトップ操作自動化ツール）](#hammerspoon-desktop-automation-on-macos)
+- [ブート + Live USB](#booting--live-usbs)
+- [Docker, Vagrant, 仮想マシン, クラウド, OpenStack](#docker-vagrant-vms-cloud-openstack)
+- [ノートブック型プログラミング環境](#notebook-programming)
 - [GitHub](#github)
 
 ## キーボード割り当て変更
@@ -158,201 +158,150 @@ APIのドキュメントを読んで、探している特定のサービスが�
 しかし、これらのツールには共通の機能がありますので、知っておくとよいでしょう。
 
  - ほとんどのツールは、そのツールの簡単な使用方法を表示するために、何らかの `--help` フラグをサポートしています。
- - 取り返しのつかない変更を引き起こすツールの多くは、 "dry run" という概念をサポートしています。これは、 _実行されたであろう_ 内容を出力するだけで、実際に変更を実行するわけではありません。同様に、破壊的なアクションを行うたびにプロンプトが表示される "interactive" フラグを備えていることも多いです。
+ - 取り返しのつかない変更を引き起こすツールの多くは、「ドライラン」という概念をサポートしています。これは、 _実行されたであろう_ 内容を出力するだけで、実際に変更を実行するわけではありません。同様に、破壊的なアクションを行うたびにプロンプトが表示される「インタラクティブ」フラグを備えていることも多いです。
  - 通常、 `--version` または `-V` を使用して、プログラムに自身のバージョンを表示させることができます（バグを報告するのに便利です！）。
  - ほとんどのツールには、より詳細な出力を得るための `--verbose` または `-v` フラグがあります。通常、このフラグを複数回（ `-vvv` ）含めることでより _詳細な_ 出力を得ることができ、これはデバッグの際に便利です。同様に、多くのツールには `--quiet` フラグがあり、エラー時にのみ何かを表示するように設定できます。
  - 多くのツールでは、ファイル名の代わりに `-` を付けると、引数に応じて「標準入力」または「標準出力」を意味します。
- - 破壊的変更を行う可能性のあるツールは、一般的にデフォルトでは再帰的ではありませんが、再帰的にするための "recursive" フラグ（多くの場合、 `-r` ）をサポートしています。
+ - 破壊的変更を行う可能性のあるツールは、一般的にデフォルトでは再帰的ではありませんが、再帰的にするための「リカーシブ」フラグ（多くの場合、 `-r` ）をサポートしています。
  - フラグのように _見える_ ものを通常の引数として渡したい場合があります。例えば、 `-r` というファイルを削除したいとします。また、 `ssh machine foo` のように、あるプログラムを別のプログラムに「通して」実行したいときに、「内側」のプログラム（ `foo` ）にフラグを渡したいとします。特別な引数 `--` は、プログラムが以下のフラグやオプション（ `-` で始まるもの）の処理を _停止_ させ、フラグのように見えるものをフラグとして解釈せずに渡すことができます。つまり、 `rm -- -r` や `ssh machine --for-ssh -- foo --for-foo` のように、フラグのように見えるものをフラグと解釈されずに渡すことができます。
 
-## Window managers
+## ウィンドウマネージャ
 
-Most of you are used to using a "drag and drop" window manager, like what comes with Windows, macOS, and Ubuntu by default.
-There are windows that just sort of hang there on screen, and you can drag them around, resize them, and have them overlap one another.
-But these are only one _type_ of window manager, often referred to as a "floating" window manager.
-There are many others, especially on Linux.
-A particularly common alternative is a "tiling" window manager.
-In a tiling window manager, windows never overlap, and are instead arranged as tiles on your screen, sort of like panes in tmux.
-With a tiling window manager, the screen is always filled by whatever windows are open, arranged according to some _layout_.
-If you have just one window, it takes up the full screen.
-If you then open another, the original window shrinks to make room for it (often something like 2/3 and 1/3).
-If you open a third, the other windows will again shrink to accommodate the new window.
-Just like with tmux panes, you can navigate around these tiled windows with your keyboard, and you can resize them and move them around, all without touching the mouse.
-They are worth looking into!
+多くの人は、WindowsやmacOS、Ubuntuにデフォルトで搭載されているような「ドラッグ＆ドロップ」式のウィンドウマネージャを使い慣れているでしょう。
+ウィンドウは画面上にただ単に散らばっており、それらをドラッグしてサイズを変えたり、重ね合わせたりすることができます。
+しかし、これは「フローティング」ウィンドウマネージャと呼ばれるウィンドウマネージャの1つの _種類_ に過ぎません。
+特にLinuxでは、他にもたくさんの種類があります。
+特によく使われるのは、「タイリング」ウィンドウマネージャです。
+タイリングウィンドウマネージャでは、ウィンドウは決して重ならず、tmuxのペインのように画面上にタイル状に配置されます。
+タイリングウィンドウマネージャでは、画面は常に開いているウィンドウで埋め尽くされ、何らかの _レイアウト_ に従って配置されます。
+1つのウィンドウを開くと、それが画面全体を占めます。
+次に別のウィンドウを開くと、元のウィンドウはそれに合わせて縮小されます（多くの場合、2/3と1/3のように）。
+3つ目のウィンドウを開くと、他のウィンドウは新しいウィンドウに合わせて再び縮小します。
+tmuxのペインと同じように、キーボードでこれらのタイル状のウィンドウを操作することができ、マウスを使わずにウィンドウのサイズを変更したり、移動させたりすることができます。
+使ってみる価値はありそうですね！
 
 ## VPN
 
-VPNs are all the rage these days, but it's not clear that's for [any good reason](https://gist.github.com/joepie91/5a9909939e6ce7d09e29).
-You should be aware of what a VPN does and does not get you.
-A VPN, in the best case, is _really_ just a way for you to change your internet service provider as far as the internet is concerned.
-All your traffic will look like it's coming from the VPN provider instead of your "real" location, and the network you are connected to will only see encrypted traffic.
+最近、VPNが流行していますが、それが[正当な理由](https://gist.github.com/joepie91/5a9909939e6ce7d09e29)であるかどうかは明らかではありません。
+VPNが何をしてくれて、何をしてくれないのかを知っておく必要があります。
+VPNは最良の場合では、インターネットに関する限り、 _実際のところ_ インターネットサービスプロバイダー (ISP) を変更する方法に過ぎません。
+すべてのトラフィックは、あなたの「実際の」場所ではなく、VPNプロバイダーから来ているように見え、あなたが接続しているネットワークは、暗号化されたトラフィックだけを見ることができます。
 
-While that may seem attractive, keep in mind that when you use a VPN, all you are really doing is shifting your trust from you current ISP to the VPN hosting company.
-Whatever your ISP _could_ see, the VPN provider now sees _instead_.
-If you trust them _more_ than your ISP, that is a win, but otherwise, it is not clear that you have gained much.
-If you are sitting on some dodgy unencrypted public Wi-Fi at an airport, then maybe you don't trust the connection much, but at home, the trade-off is not quite as clear.
+これは魅力的に見えるかもしれませんが、VPNを使用する際に実際に行っていることは、あなたの信頼を現在のISPからVPNホスティング会社に移しているだけだということを覚えておいてください。
+あなたのISPが見ることが _できた_ ものは、VPNプロバイダーが _代わりに_ 見ることになります。
+もし、あなたがISP _よりも_ VPNプロバイダーを信頼しているのであればそれは成果ですが、そうでなければ、あなたが得たものは明らかではありません。
+空港で暗号化されていない危険な公衆無線LANを利用している場合は、その接続をあまり信用していないかもしれませんが、自宅ではそのトレードオフはそれほど明確ではありません。
 
-You should also know that these days, much of your traffic, at least of a sensitive nature, is _already_ encrypted through HTTPS or TLS more generally.
-In that case, it usually matters little whether you are on a "bad" network or not -- the network operator will only learn what servers you talk to, but not anything about the data that is exchanged.
+また、最近では、少なくとも機密性の高いトラフィックの多くは、HTTPSやTLSを通じて既に暗号化されていることを知っておくべきでしょう。
+この場合、あなたが「悪い」ネットワークを利用しているかどうかは、通常はほとんど問題になりません。-- ネットワーク事業者は、あなたがどのサーバーと通信しているかを知るだけで、やり取りされているデータについては何も知りません。
 
-Notice that I said "in the best case" above.
-It is not unheard of for VPN providers to accidentally misconfigure their software such that the encryption is either weak or entirely disabled.
-Some VPN providers are malicious (or at the very least opportunist), and will log all your traffic, and possibly sell information about it to third parties.
-Choosing a bad VPN provider is often worse than not using one in the first place.
+前述の「最良の場合」という言葉に注目してください。
+VPNプロバイダーがソフトウェアの設定を誤って、暗号化が弱くなったり、完全に無効になったりすることは、決して珍しいことではありません。
+また、VPNプロバイダーの中には、悪意のある（あるいは、少なくともご都合主義の）会社もあり、あなたのトラフィックをすべて記録し、その情報を第三者に販売する可能性もあります。
+悪いVPNプロバイダーを選ぶことは、そもそもVPNを使わないことよりも悪いことが多いのです。
 
-In a pinch, MIT [runs a VPN](https://ist.mit.edu/vpn) for its students, so that may be worth taking a look at. Also, if you're going to roll your own, give [WireGuard](https://www.wireguard.com/) a look.
+ピンチの時には、MITが学生向けに[VPN](https://ist.mit.edu/vpn)を運営しているので、見てみる価値はあるかもしれません。
+また、自分で構築するのであれば、[WireGuard](https://www.wireguard.com/)を検討してみてください。
 
 ## Markdown
 
-There is a high chance that you will write some text over the course of
-your career. And often, you will want to mark up that text in simple
-ways. You want some text to be bold or italic, or you want to add
-headers, links, and code fragments. Instead of pulling out a heavy tool
-like Word or LaTeX, you may want to consider using the lightweight
-markup language [Markdown](https://commonmark.org/help/).
-
-You have probably seen Markdown already, or at least some variant of it.
-Subsets of it are used and supported almost everywhere, even if it's not
-under the name Markdown. At its core, Markdown is an attempt to codify
-the way that people already often mark up text when they are writing
-plain text documents. Emphasis (*italics*) is added by surrounding a
-word with `*`. Strong emphasis (**bold**) is added using `**`. Lines
-starting with `#` are headings (and the number of `#`s is the subheading
-level). Any line starting with `-` is a bullet list item, and any line
-starting with a number + `.` is a numbered list item. Backtick is used
-to show words in `code font`, and a code block can be entered by
-indenting a line with four spaces or surrounding it with
-triple-backticks:
+キャリアの中で何らかの文章を書く機会は多いでしょう。
+そして、そのテキストを簡単な方法でマークアップしたいと思うことがよくあります。
+例えば、テキストを太字や斜体にしたり、ヘッダーやリンク、コードフラグメントを追加したいことがあります。
+WordやLaTeXのような重いツールを持ち出す代わりに、軽量マークアップ言語[Markdown](https://commonmark.org/help/)の使用を検討してみてはいかがでしょう。
+Markdownはすでに見たことがあるでしょうし、少なくともそのいくつかのバリエーションは見たことがあるでしょう。
+そのサブセットは、Markdownという名前でなくても、ほとんどどこでも使用され、サポートされています。
+Markdownの核心は、人々がプレーンテキスト文書を書くときにテキストをマークアップする方法をコード化しようとするものです。
+強調 (*italics*) は、単語を `*` で囲むことで追加されます。
+強い強調（**ボールド**）は `**` を使って加えられます。
+`#` で始まる行は見出しです（`#`の数が小見出しのレベルです）。
+`-` で始まる行は箇条書きリストの項目で、数字 + `.`で始まる行は番号付きリストの項目です。
+バッククォートは、`コードフォント`で単語を表示するために使われ、コードブロックは、行を4つのスペースでインデントするか、3つのバッククォートで囲むことで入力できます。
 
     ```
-    code goes here
+    コードをここに書く
     ```
 
-To add a link, place the _text_ for the link in square brackets,
-and the URL immediately following that in parentheses: `[name](url)`.
-Markdown is easy to get started with, and you can use it nearly
-everywhere. In fact, the lecture notes for this lecture, and all the
-others, are written in Markdown, and you can see the raw Markdown
-[here](https://raw.githubusercontent.com/missing-semester/missing-semester/master/_2020/potpourri.md).
+リンクを貼る場合は、`[name](url)` のように角括弧の中にリンク先の _テキスト_ を入れ、その直後にURLを括弧で囲みます。
+Markdownは簡単に使い始めることができ、ほとんどどこでも使用することができます。
+実際、この講義のレクチャーノートや他のすべての講義はMarkdownで書かれており、生のMarkdownを[ここ](https://raw.githubusercontent.com/missing-semester/missing-semester/master/_2020/potpourri.md)で見ることができます。
 
+## Hammerspoon（macOS用のデスクトップ操作自動化ツール）
 
+[Hammerspoon](https://www.hammerspoon.org/)は、macOS用のデスクトップ操作自動化フレームワークです。
+OSに機能的につながるLuaスクリプトを書くことができ、キーボード/マウス、ウィンドウ、ディスプレイ、ファイルシステムなどを操作することができます。
 
-## Hammerspoon (desktop automation on macOS)
+Hammerspoonでできることの例をいくつか挙げます。
 
-[Hammerspoon](https://www.hammerspoon.org/) is a desktop automation framework
-for macOS. It lets you write Lua scripts that hook into operating system
-functionality, allowing you to interact with the keyboard/mouse, windows,
-displays, filesystem, and much more.
+- ウィンドウを特定の場所に移動させるホットキーを割り当てる
+- ウィンドウを自動的に特定のレイアウトで表示するメニューバーボタンの作成
+- （無線LANネットワークを検出することで）研究室に到着したときにスピーカーをミュートする
+- 友人の電源を誤って取ってしまった場合、警告を表示する
 
-Some examples of things you can do with Hammerspoon:
+高いレベルでは、Hammerspoonはメニューボタンやキープレス、イベントに紐付けられた任意のLuaコードを実行することができ、Hammerspoonはシステムと対話するための広範なライブラリを提供しているので、基本的には何をするにも制限はありません。
+多くの人がHammerspoonの設定を公開しているので、インターネットで検索すれば必要なものは大体見つかりますが、自分でゼロからコードを書くこともできます。
 
-- Bind hotkeys to move windows to specific locations
-- Create a menu bar button that automatically lays out windows in a specific layout
-- Mute your speaker when you arrive in lab (by detecting the WiFi network)
-- Show you a warning if you've accidentally taken your friend's power supply
-
-At a high level, Hammerspoon lets you run arbitrary Lua code, bound to menu
-buttons, key presses, or events, and Hammerspoon provides an extensive library
-for interacting with the system, so there's basically no limit to what you can
-do with it. Many people have made their Hammerspoon configurations public, so
-you can generally find what you need by searching the internet, but you can
-always write your own code from scratch.
-
-### Resources
+### 参考資料
 
 - [Getting Started with Hammerspoon](https://www.hammerspoon.org/go/)
 - [Sample configurations](https://github.com/Hammerspoon/hammerspoon/wiki/Sample-Configurations)
 - [Anish's Hammerspoon config](https://github.com/anishathalye/dotfiles-local/tree/mac/hammerspoon)
 
-## Booting + Live USBs
+## ブート + Live USB
 
-When your machine boots up, before the operating system is loaded, the
-[BIOS](https://en.wikipedia.org/wiki/BIOS)/[UEFI](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface)
-initializes the system. During this process, you can press a specific key
-combination to configure this layer of software. For example, your computer may
-say something like "Press F9 to configure BIOS. Press F12 to enter boot menu."
-during the boot process. You can configure all sorts of hardware-related
-settings in the BIOS menu. You can also enter the boot menu to boot from an
-alternate device instead of your hard drive.
+マシンが起動すると、OSがロードされる前に、[BIOS](https://ja.wikipedia.org/wiki/Basic_Input/Output_System)/[UEFI](https://ja.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface)がシステムを初期化します。
+このプロセスでは、特定のキーの組み合わせを押すことで、このレイヤーのソフトウェアを設定することができます。
+例えば、コンピュータは起動中に「Press F9 to configure BIOS. Press F12 to enter boot menu.」のようなことを出力するでしょう。
+BIOSメニューでは、あらゆる種類のハードウェア関連設定を変更することができます。
+また、ブートメニューに入ると、ハードディスクの代わりに代替デバイスから起動することができます。
 
-[Live USBs](https://en.wikipedia.org/wiki/Live_USB) are USB flash drives
-containing an operating system. You can create one of these by downloading an
-operating system (e.g. a Linux distribution) and burning it to the flash drive.
-This process is a little bit more complicated than simply copying a `.iso` file
-to the disk. There are tools like [UNetbootin](https://unetbootin.github.io/)
-to help you create live USBs.
+[Live USB](https://ja.wikipedia.org/wiki/Live_USB)とは、OSが入ったUSBメモリのことです。
+OS（例：Linuxディストリビューション）をダウンロードして、フラッシュドライブに書き込むことで作成できます。
+このプロセスは、単に `.iso` ファイルをディスクにコピーするよりも少し複雑です。
+[UNetbootin](https://unetbootin.github.io/)のような、Live USBの作成に役立つツールもあります。
+Live USBは様々な目的に役立ちます。
+とりわけ、既存のOSの構造が壊れて起動しなくなった場合、Live USBを使ってデータを回復したり、OSを修正したりすることができます。
 
-Live USBs are useful for all sorts of purposes. Among other things, if you
-break your existing operating system installation so that it no longer boots,
-you can use a live USB to recover data or fix the operating system.
+## Docker, Vagrant, 仮想マシン, クラウド, OpenStack
 
-## Docker, Vagrant, VMs, Cloud, OpenStack
+[仮想マシン](https://ja.wikipedia.org/wiki/%E4%BB%AE%E6%83%B3%E3%83%9E%E3%82%B7%E3%83%B3)やコンテナのようなそれと似たツールを使うと、OSを含むコンピュータシステム全体をエミュレートすることができます。
+これは、テスト、開発、または実験（悪意のあるコードを実行するなど）のために隔離された環境を構築するのに便利です。
 
-[Virtual machines](https://en.wikipedia.org/wiki/Virtual_machine) and similar
-tools like containers let you emulate a whole computer system, including the
-operating system. This can be useful for creating an isolated environment for
-testing, development, or exploration (e.g. running potentially malicious code).
+[Vagrant](https://www.vagrantup.com/)は、マシンの構成（OS、サービス、パッケージなど）をコードで記述し、単純な `vagrant up` で仮想マシンをインスタンス化することができるツールです。
+[Docker](https://www.docker.com/)はコンセプト的には似ていますが、代わりにコンテナを使用します。
 
-[Vagrant](https://www.vagrantup.com/) is a tool that lets you describe machine
-configurations (operating system, services, packages, etc.) in code, and then
-instantiate VMs with a simple `vagrant up`. [Docker](https://www.docker.com/)
-is conceptually similar but it uses containers instead.
+また、クラウド上で仮想マシンをレンタルすることもでき、これはすぐに利用できる良い方法です。
 
-You can also rent virtual machines on the cloud, and it's a nice way to get instant
-access to:
+- サービスのホスティングに使用される、パブリックIPアドレスを持つ安価な常時稼働マシン
+- 大容量のCPU、ディスク、RAM、場合によってはGPUも搭載したマシン
+- 物理的に利用可能な台数よりも多くのマシン（課金は秒単位で行われることが多いため、短時間で大量のコンピュータを利用したい場合には、数分間で1000台のコンピュータをレンタルすることも可能です
 
-- A cheap always-on machine that has a public IP address, used to host services
-- A machine with a lot of CPU, disk, RAM, and/or GPU
-- Many more machines than you physically have access to (billing is often by
-the second, so if you want a lot of computing for a short amount of time, it's
-feasible to rent 1000 computers for a couple of minutes)
+人気のあるサービスとしては、[Amazon AWS](https://aws.amazon.com/)、[Google Cloud](https://cloud.google.com/)、[Microsoft Azure](https://azure.microsoft.com/)、[DigitalOcean](https://www.digitalocean.com/)などがあります。
 
-Popular services include [Amazon AWS](https://aws.amazon.com/), [Google
-Cloud](https://cloud.google.com/),[ Microsoft Azure](https://azure.microsoft.com/),
-[DigitalOcean](https://www.digitalocean.com/).
+MIT CSAILのメンバーであれば、[CSAIL OpenStack instance](https://tig.csail.mit.edu/shared-computing/open-stack/)を通じて、研究用の仮想マシンを無料で手に入れることができます。
 
-If you're a member of MIT CSAIL, you can get free VMs for research purposes
-through the [CSAIL OpenStack
-instance](https://tig.csail.mit.edu/shared-computing/open-stack/).
+## ノートブック型プログラミング環境
 
-## Notebook programming
-
-[Notebook programming
-environments](https://en.wikipedia.org/wiki/Notebook_interface) can be really
-handy for doing certain types of interactive or exploratory development.
-Perhaps the most popular notebook programming environment today is
-[Jupyter](https://jupyter.org/), for Python (and several other languages).
-[Wolfram Mathematica](https://www.wolfram.com/mathematica/) is another notebook
-programming environment that's great for doing math-oriented programming.
+[ノートブック型プログラミング環境](https://en.wikipedia.org/wiki/Notebook_interface)は、ある種のインタラクティブな開発や実験的な開発を行うのにとても便利です。
+おそらく現在最も人気のあるノートブックプログラミング環境は、Python（および他のいくつかの言語）用の[Jupyter](https://jupyter.org/)でしょう。
+また、[Wolfram Mathematica](https://www.wolfram.com/mathematica/)は、数学指向のプログラミングを行うのに適したノートブック型プログラミング環境です。
 
 ## GitHub
 
-[GitHub](https://github.com/) is one of the most popular platforms for
-open-source software development. Many of the tools we've talked about in this
-class, from [vim](https://github.com/vim/vim) to
-[Hammerspoon](https://github.com/Hammerspoon/hammerspoon), are hosted on
-GitHub. It's easy to get started contributing to open-source to help improve
-the tools that you use every day.
+[GitHub](https://github.com/)は、オープンソースソフトウェア開発のための最も人気のあるプラットフォームの1つです。
+[vim](https://github.com/vim/vim)や[Hammerspoon](https://github.com/Hammerspoon/hammerspoon)など、このクラスで紹介したツールの多くはGitHubでホストされています。
+毎日使うツールをより良くするために、オープンソースへの貢献を始めるのは簡単です。
 
-There are two primary ways in which people contribute to projects on GitHub:
+GitHubでプロジェクトに貢献するには、主に2つの方法があります。
 
-- Creating an
-[issue](https://help.github.com/en/github/managing-your-work-on-github/creating-an-issue).
-This can be used to report bugs or request a new feature. Neither of these
-involves reading or writing code, so it can be pretty lightweight to do.
-High-quality bug reports can be extremely valuable to developers. Commenting on
-existing discussions can be helpful too.
-- Contribute code through a [pull
-request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests).
-This is generally more involved than creating an issue. You can
-[fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo)
-a repository on GitHub, clone your fork, create a new branch, make some changes
-(e.g. fix a bug or implement a feature), push the branch, and then [create a
-pull
-request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
-After this, there will generally be some back-and-forth with the project
-maintainers, who will give you feedback on your patch. Finally, if all goes
-well, your patch will be merged into the upstream repository. Often times,
-larger projects will have a contributing guide, tag beginner-friendly issues,
-and some even have mentorship programs to help first-time contributors become
-familiar with the project.
+- [Issue](https://help.github.com/ja/github/managing-your-work-on-github/creating-an-issue)の作成。
+これは、バグを報告したり、新しい機能をリクエストしたりするときに使います。
+どちらもコードの読み書きを伴わないので、非常に簡単に行うことができます。
+質の高いバグ報告は開発者にとって非常に価値のあるものです。
+また、既存の議論にコメントすることも有益です。
+- [プルリクエスト](https://help.github.com/ja/github/collaborating-with-issues-and-pull-requests/about-pull-requests)を通じてコードを提供する。
+これは一般的に、Issueを作成するよりも複雑です。
+GitHub上のリポジトリを[フォーク](https://docs.github.com/ja/github/getting-started-with-github/fork-a-repo)し、フォークをクローンして新しいブランチを作成し、いくつかの変更（バグの修正や機能の実装など）を行い、そのブランチをプッシュしてから[プルリクエストの作成](https://help.github.com/ja/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request)を行うことができます。
+この後、一般的にはプロジェクトのメンテナとのやりとりがあり、メンテナはあなたのパッチに対するフィードバックをしてくれるでしょう。
+最後に、すべてがうまくいけば、あなたのパッチは上流のリポジトリにマージされます。
+大きなプロジェクトでは、コントリビューティングガイドや初心者向けのIssueが用意されていることが多く、中には初めてのコントリビューターがプロジェクトに慣れるのを助けるメンターシッププログラムを用意しているところもあります。
