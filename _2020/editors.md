@@ -72,22 +72,22 @@ Vim は多くのプログラマはまとまった長いテキストを書くよ�
 という作業に大半の時間を費やしているという事実に着眼して設計されています。
 このため、Vim は複数の操作モードを備えています。
 
-- **標準モード**：ファイル上を移動し、編集を加える
+- **ノーマルモード**：ファイル上を移動し、編集を加える
 - **挿入モード**：テキストを挿入する
 - **置換モード**：テキストを置換する
 - **ビジュアルモード**：テキストをブロック選択する
 - **コマンドラインモード**：コマンドを実行する
 
 キーストロークは操作モード毎に異なる機能が割り当てられています。
-挿入モードでの x は単に文字 x の挿入を行いますが、標準モードではカーソル下の文字を消去し、
+挿入モードでの x は単に文字 x の挿入を行いますが、ノーマルモードではカーソル下の文字を消去し、
 ビジュアルモードでは選択範囲を消去します。
 
 初期設定では、Vim の画面左下に現在のモードが表示されます。
-デフォルトのモードは標準モードです。
-基本的には、標準モードと挿入モードを行き来することになります。
+デフォルトのモードはノーマルモードです。
+基本的には、ノーマルモードと挿入モードを行き来することになります。
 
-`<ESC>` (Escキー) を押すと現在のモードから標準モードに切り替えることができます。
-標準モードからは、`i` で挿入モード、`R` で置換モード、`v` でビジュアルモード、`V` でビジュアルブロックモード、
+`<ESC>` (Escキー) を押すと現在のモードからノーマルモードに切り替えることができます。
+ノーマルモードからは、`i` で挿入モード、`R` で置換モード、`v` でビジュアルモード、`V` でビジュアルブロックモード、
 `<C-v>`（Ctrl-V、`^V` とも表記）、コマンドラインモードに `:` で入ります。
 
 Vim で編集する際は `<ESC>` を頻繁に使うため、
@@ -97,48 +97,57 @@ instructions](https://vim.fandom.com/wiki/Map_caps_lock_to_escape_in_macOS)）�
 
 # 基本
 ## テキストを挿入する
-標準モードから、`i` を押下して挿入モードに入ります。
+ノーマルモードから、`i` を押下して挿入モードに入ります。
 挿入モードでは、Vim は他のエディタと殆ど同じような挙動をしているでしょう。
-そこで `<ESC>` を押すとまた標準モードに戻ってきます。
+そこで `<ESC>` を押すとまたノーマルモードに戻ってきます。
 これが Vim によるファイル編集を始める全ての基本になります。
-（挿入モードで大半の編集作業を行わないよう注意し、速やかに標準モードに戻るようにして下さい。）
+（挿入モードで大半の編集作業を行わないよう注意し、速やかにノーマルモードに戻るようにして下さい。）
 
-## Buffers, tabs, and windows
+## バッファ、タブ、ウィンドウ
+Vim ではメモリ上に読み込まれたファイル群のことを”バッファ”と呼びます。
+Vim のセッションはバッファの表示領域であるウィンドウと、そのウィンドウを集めたタブを管理しています。
+ウェブブラウザ等他のアプリケーションとは異なり、Vim のバッファとウィンドウには１対１の対応関係があるわけではありません。
+ウィンドウは単に表示領域に過ぎず、あるバッファの内容を同じタブ、複数のウィンドウに表示することもできます。
+これは例えばあるファイルの２つの領域を同時に見たいという場合に役立ちます。
 
-Vim maintains a set of open files, called "buffers". A Vim session has a number
-of tabs, each of which has a number of windows (split panes). Each window shows
-a single buffer. Unlike other programs you are familiar with, like web
-browsers, there is not a 1-to-1 correspondence between buffers and windows;
-windows are merely views. A given buffer may be open in _multiple_ windows,
-even within the same tab. This can be quite handy, for example, to view two
-different parts of a file at the same time.
+デフォルトでは、Vim は１つのウィンドウを含む１つのタブを立ち上げます。
 
-By default, Vim opens with a single tab, which contains a single window.
+## コマンドライン
+コマンドモードにはノーマルモードで `:` を入力することによって切り替えます。
+画面下に入力領域が移り、`:` 以降にコマンドを入力することができます。
+このモードはファイルを開く、保存する、閉じる、[Vimを終了する](https://twitter.com/iamdevloper/status/435555976687923200) といった多くの機能を担っています。
 
-## Command-line
+- `:q` 終了する（ウィンドウを閉じる）
+- `:w` 保存する ("write")
+- `:wq` 保存して閉じる
+- `:e {ファイル名}` ファイルを開いて編集する
+- `:ls` バッファの一覧を表示する
+- `:help {topic}` ヘルプを開く
+    - `:help :w` `:w` コマンドに関するヘルプを開く
+    - `:help w` （ノーマルモードでの移動）`w` に関してヘルプを開く
 
-Command mode can be entered by typing `:` in Normal mode. Your cursor will jump
-to the command line at the bottom of the screen upon pressing `:`. This mode
-has many functionalities, including opening, saving, and closing files, and
-[quitting Vim](https://twitter.com/iamdevloper/status/435555976687923200).
+# Vim のインタフェースはプログラム言語である
+Vim における最も重要なアイデアは、Vimのインタフェースそのものもプログラミング言語であるということです。
+キーストロークはコマンドであり、コマンドは組み合わせることができます。
+この仕様によって一度身体でコマンドを覚えれば、非常に効率的に移動や編集を行うことができるようになります。
 
-- `:q` quit (close window)
-- `:w` save ("write")
-- `:wq` save and quit
-- `:e {name of file}` open file for editing
-- `:ls` show open buffers
-- `:help {topic}` open help
-    - `:help :w` opens help for the `:w` command
-    - `:help w` opens help for the `w` movement
+## 移動
+編集作業中は、
+ノーマルモードにおいてバッファ上を移動コマンドで移動することに多くの時間を使っているべきです。
+Vim における移動は"名詞"とも呼ばれ、
 
-# Vim's interface is a programming language
-
-The most important idea in Vim is that Vim's interface itself is a programming
-language. Keystrokes (with mnemonic names) are commands, and these commands
-_compose_. This enables efficient movement and edits, especially once the
-commands become muscle memory.
-
-## Movement
+- 基本の移動: `hjkl` (left, down, up, right)
+- 単語: `w` (次の単語へ) 、`b`（単語の先頭へ）、`e`（単語の末尾へ）
+- 行: `0`（行の先頭へ）、`^`（行先頭の文字へ）`$`（行末へ）
+- スクリーン: `H` `M` `L`
+- スクロール: `Ctrl-u` `Ctrl-d`
+- ファイル: `gg` `G`
+- 行番号: `:{番号}<CR>` または `{number}G`
+- その他: `%` （括弧等対応する要素へ）
+- 探す: `f{character}`、`t{character}`、`F{character}`、`T{character}`
+  - 探す　find/to forward/backward {character} on the currentline
+  - `,` / `;` for navigating matches
+- 探す: `/{regex}`、`n` / `N` for navigating matches
 
 You should spend most of your time in Normal mode, using movement commands to
 navigate the buffer. Movements in Vim are also called "nouns", because they
@@ -157,17 +166,28 @@ refer to chunks of text.
     - `,` / `;` for navigating matches
 - Search: `/{regex}`, `n` / `N` for navigating matches
 
-## Selection
+## 選択
 
-Visual modes:
+ビジュアルモード：
 
-- Visual
-- Visual Line
-- Visual Block
+- ビジュアル
+- ビジュアルライン
+- ビジュアルブロック
 
-Can use movement keys to make selection.
+は移動キーを用いて選択を行うことができます。
 
-## Edits
+## 編集
+
+今までマウスで行っていた作業は、
+編集コマンドと移動コマンドｗお組み合わせたキーボードによって行えるようになります。
+Vim のインタフェースがプログラミング言語のように見えるのは
+Vim の編集コマンドは先で述べた名詞に対して機能させることができるため、”動詞”とも表現されます。
+
+- `i` 編集モードに入る
+  - テキストを操作/消去するにはバックスペース以上のものを使いたい
+- `o` / `O` 行を一行下に/一行上に挿入します
+- `d{motion}`
+
 
 Everything that you used to do with the mouse, you now do with the keyboard
 using editing commands that compose with movement commands. Here's where Vim's
@@ -193,7 +213,7 @@ are also called "verbs", because verbs act on nouns.
 - `p` to paste
 - Lots more to learn: e.g. `~` flips the case of a character
 
-## Counts
+## カウント
 
 You can combine nouns and verbs with a count, which will perform a given action
 a number of times.
