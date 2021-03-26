@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Editors (Vim)"
+title: "エディタ (Vim)"
 date: 2020-01-15
 ready: true
 video:
@@ -8,111 +8,100 @@ video:
   id: a6Q8Na575qc
 ---
 
-Writing English words and writing code are very different activities. When
-programming, you spend more time switching files, reading, navigating, and
-editing code compared to writing a long stream. It makes sense that there are
-different types of programs for writing English words versus code (e.g.
-Microsoft Word versus Visual Studio Code).
+文章を書くこととプログラミングは全く異なる営みです。
+英語のライティングがまとまった文章を書く作業であるのに対し、
+プログラミングではファイルを切り替え、コードを読み、辿り、そして編集します。
+そのため、英語という言語に適したエディタとプログラム言語に適したエディタがある
+のです。（例: Microsoft Word と Visual Studio Code）
 
-As programmers, we spend most of our time editing code, so it's worth investing
-time mastering an editor that fits your needs. Here's how you learn a new
-editor:
+プログラマとして我々は大半の時間をコードの編集に費やすため、
+ニーズに合ったエディタに習熟することは非常に時間対効果が高いといえます。
+以下に新しいエディタの使い方を学ぶ際の一般的な方法論を紹介します。
 
-- Start with a tutorial (i.e. this lecture, plus resources that we point out)
-- Stick with using the editor for all your text editing needs (even if it slows
-you down initially)
-- Look things up as you go: if it seems like there should be a better way to do
-something, there probably is
+- チュートリアルを始める（例: 本講座 + 紹介資料）
+- （たとえ一時的に生産性を損ねても）あらゆるテキスト編集にそのエディタを使うことに拘る
+- 常により良い方法がないかを模索する。もしもっと良い方法がないかという考えが頭をよぎったら、それは必ず存在します。
 
-If you follow the above method, fully committing to using the new program for
-all text editing purposes, the timeline for learning a sophisticated text
-editor looks like this. In an hour or two, you'll learn basic editor functions
-such as opening and editing files, save/quit, and navigating buffers. Once
-you're 20 hours in, you should be as fast as you were with your old editor.
-After that, the benefits start: you will have enough knowledge and muscle
-memory that using the new editor saves you time. Modern text editors are fancy
-and powerful tools, so the learning never stops: you'll get even faster as you
-learn more.
+上記の方法に従い新たなプログラムをエディタの使い方を学ぶ題材にするならば、
+タイムラインはこのようになるでしょう。
+まず１、２時間以内にエディタの基礎機能（ファイルを開いて編集する、保存・終了する、バッファを操作する）
+を習得します。
+２０時間も経てば元のエディタと同じくらいの速度で編集できるようになっているでしょう。
+新しいエディタに関する十分な知識を得て、使い方を身体で覚えたならば、
+その恩恵を受け膨大な時間を節約することができるようになっていきます。
+モダンなテキストエディタは素晴らしく強力なツールです。
+あなたは学べば学ぶほどより速い編集能力を身につけることができるでしょう。
 
-# Which editor to learn?
+# どのエディタを学ぶべきですか？
 
-Programmers have [strong opinions](https://en.wikipedia.org/wiki/Editor_war)
-about their text editors.
-
-Which editors are popular today? See this [Stack Overflow
-survey](https://insights.stackoverflow.com/survey/2019/#development-environments-and-tools)
-(there may be some bias because Stack Overflow users may not be representative
-of programmers as a whole). [Visual Studio
-Code](https://code.visualstudio.com/) is the most popular editor.
-[Vim](https://www.vim.org/) is the most popular command-line-based editor.
+プログラマはテキストエディタに関して[様々な選択肢](https://ja.wikipedia.org/wiki/%E3%82%A8%E3%83%87%E3%82%A3%E3%82%BF%E6%88%A6%E4%BA%89)があります。
+どのエディタが現在最も人気でしょうか？
+[Stack Overflow
+での調査](https://insights.stackoverflow.com/survey/2019/#development-environments-and-tools)
+によると、
+[Visual Studio Code](https://code.visualstudio.com/) が全体で最も人気があり、
+[Vim](https://www.vim.org/) はCLI（コマンドラインインターフェース）のエディタの中で最も支持を集めています。
+（ただし、Stack Overflow のユーザは全プログラマを代表するものではないため調査結果にはバイアスが含まれています。)
 
 ## Vim
+この講座では全てのインストラクションに Vim を用います。
+Vim には長い歴史があります。
+Vim は元々 Vi（1976）として開発され、今日まで開発が継続されてきました。
+Vim はいくつかの素晴らしいアイデアが背景にあります。そのため、
+多くのツールが Vim の挙動をエミュレートするモードを採用しています
+（VSCode でも、１４０万のユーザが [Vim emulation for VS code](https://github.com/VSCodeVim/Vim) をインストールしています）。
+つまり、たとえ他のエディタを最終的に使うことになるとしても、Vim は間違いなく学ぶ価値があるといえるでしょう。
 
-All the instructors of this class use Vim as their editor. Vim has a rich
-history; it originated from the Vi editor (1976), and it's still being
-developed today. Vim has some really neat ideas behind it, and for this reason,
-lots of tools support a Vim emulation mode (for example, 1.4 million people
-have installed [Vim emulation for VS code](https://github.com/VSCodeVim/Vim)).
-Vim is probably worth learning even if you finally end up switching to some
-other text editor.
+Vim の機能全てを５０分の講座で紹介し尽くすことは到底できません、
+そこで本講座は Vim の哲学とその基礎、より高度な機能の一部を紹介するに留めようと思います。
+講座の終わりでは Vim に更に習熟するための情報源をまとめて紹介します。
 
-It's not possible to teach all of Vim's functionality in 50 minutes, so we're
-going to focus on explaining the philosophy of Vim, teaching you the basics,
-showing you some of the more advanced functionality, and giving you the
-resources to master the tool.
+# Vim の哲学
+プログラミングをする際、我々は殆どの時間をコードを書くことではなく、読むことと編集に費やします。
+このため Vim は **モーダル** エディタとして設計されており、
+テキストの挿入と編集にはそれぞれ異なるモードが割り当てられています。
+また、Vim はプログラマブル（Vimscript や Python 等他のプログラミング言語で拡張機能を開発可能）
+であり、覚えやすいキーストロークやコマンドは全て組み合わせて実行することができます。
+Vim はマウスの使用を徹底して避けます。何故ならマウスでの操作はキーボードのそれと比較して余りにも遅いからです。
+更に Vim は矢印キーの使用を避けます、これもキーボード上で必要な移動量が大きすぎるためです。
+これらの思想から、思考のスピードで編集することが可能なエディタが完成しました。
 
-# Philosophy of Vim
+# モーダル編集
+Vim は多くのプログラマはまとまった長いテキストを書くよりも、
+コードを読み、ファイルを辿り、そして僅かに編集を加える
+という作業に大半の時間を費やしているという事実に着眼して設計されています。
+このため、Vim は複数の操作モードを備えています。
 
-When programming, you spend most of your time reading/editing, not writing. For
-this reason, Vim is a _modal_ editor: it has different modes for inserting text
-vs manipulating text. Vim is programmable (with Vimscript and also other
-languages like Python), and Vim's interface itself is a programming language:
-keystrokes (with mnemonic names) are commands, and these commands are
-composable. Vim avoids the use of the mouse, because it's too slow; Vim even
-avoids using the arrow keys because it requires too much movement.
+- **標準モード**：ファイル上を移動し、編集を加える
+- **挿入モード**：テキストを挿入する
+- **置換モード**：テキストを置換する
+- **ビジュアルモード**：テキストをブロック選択する
+- **コマンドラインモード**：コマンドを実行する
 
-The end result is an editor that can match the speed at which you think.
+キーストロークは操作モード毎に異なる機能が割り当てられています。
+挿入モードでの x は単に文字 x の挿入を行いますが、標準モードではカーソル下の文字を消去し、
+ビジュアルモードでは選択範囲を消去します。
 
-# Modal editing
+初期設定では、Vim の画面左下に現在のモードが表示されます。
+デフォルトのモードは標準モードです。
+基本的には、標準モードと挿入モードを行き来することになります。
 
-Vim's design is based on the idea that a lot of programmer time is spent
-reading, navigating, and making small edits, as opposed to writing long streams
-of text. For this reason, Vim has multiple operating modes.
+`<ESC>` (Escキー) を押すと現在のモードから標準モードに切り替えることができます。
+標準モードからは、`i` で挿入モード、`R` で置換モード、`v` でビジュアルモード、`V` でビジュアルブロックモード、
+`<C-v>`（Ctrl-V、`^V` とも表記）、コマンドラインモードに `:` で入ります。
 
-- **Normal**: for moving around a file and making edits
-- **Insert**: for inserting text
-- **Replace**: for replacing text
-- **Visual** (plain, line, or block): for selecting blocks of text
-- **Command-line**: for running a command
+Vim で編集する際は `<ESC>` を頻繁に使うため、
+Caps Lock キーを Escape に置換することを検討してみてもいいでしょう
+（[macOS
+instructions](https://vim.fandom.com/wiki/Map_caps_lock_to_escape_in_macOS)）。
 
-Keystrokes have different meanings in different operating modes. For example,
-the letter `x` in Insert mode will just insert a literal character 'x', but in
-Normal mode, it will delete the character under the cursor, and in Visual mode,
-it will delete the selection.
-
-In its default configuration, Vim shows the current mode in the bottom left.
-The initial/default mode is Normal mode. You'll generally spend most of your
-time between Normal mode and Insert mode.
-
-You change modes by pressing `<ESC>` (the escape key) to switch from any mode
-back to Normal mode. From Normal mode, enter Insert mode with `i`, Replace mode
-with `R`, Visual mode with `v`, Visual Line mode with `V`, Visual Block mode
-with `<C-v>` (Ctrl-V, sometimes also written `^V`), and Command-line mode with
-`:`.
-
-You use the `<ESC>` key a lot when using Vim: consider remapping Caps Lock to
-Escape ([macOS
-instructions](https://vim.fandom.com/wiki/Map_caps_lock_to_escape_in_macOS)).
-
-# Basics
-
-## Inserting text
-
-From Normal mode, press `i` to enter Insert mode. Now, Vim behaves like any
-other text editor, until you press `<ESC>` to return to Normal mode. This,
-along with the basics explained above, are all you need to start editing files
-using Vim (though not particularly efficiently, if you're spending all your
-time editing from Insert mode).
+# 基本
+## テキストを挿入する
+標準モードから、`i` を押下して挿入モードに入ります。
+挿入モードでは、Vim は他のエディタと殆ど同じような挙動をしているでしょう。
+そこで `<ESC>` を押すとまた標準モードに戻ってきます。
+これが Vim によるファイル編集を始める全ての基本になります。
+（挿入モードで大半の編集作業を行わないよう注意し、速やかに標準モードに戻るようにして下さい。）
 
 ## Buffers, tabs, and windows
 
@@ -381,7 +370,7 @@ better way of doing this", there probably is: look it up online.
 - `:sp` / `:vsp` to split windows
 - Can have multiple views of the same buffer.
 
-## Macros
+## マクロ
 
 - `q{character}` to start recording a macro in register `{character}`
 - `q` to stop recording
@@ -415,7 +404,16 @@ better way of doing this", there probably is: look it up online.
             - `999@q`
         - Manually remove last `,` and add `[` and `]` delimiters
 
-# Resources
+# 参考
+
+- `vimtutor` はVimと共にインストールされるチュートリアルです。もしVimが既にインストールされている環境ならば、シェルで `vimtutor` を実行することができます。
+- [Vim Adventures](https://vim-adventures.com/) is a game to learn Vim
+- [Vim Tips Wiki](http://vim.wikia.com/wiki/Vim_Tips_Wiki)
+- [Vim Advent Calendar](https://vimways.org/2019/) has various Vim tips
+- [Vim Golf](http://www.vimgolf.com/) は Vimの[コードゴルフ](https://ja.wikipedia.org/wiki/%E3%82%B3%E3%83%BC%E3%83%89%E3%82%B4%E3%83%AB%E3%83%95)場です
+- [Vi/Vim Stack Exchange](https://vi.stackexchange.com/)
+- [Vim Screencasts](http://vimcasts.org/)
+- [Practical Vim](https://pragprog.com/titles/dnvim2/) (book)
 
 - `vimtutor` is a tutorial that comes installed with Vim - if Vim is installed, you should be able to run `vimtutor` from your shell
 - [Vim Adventures](https://vim-adventures.com/) is a game to learn Vim
@@ -426,7 +424,21 @@ better way of doing this", there probably is: look it up online.
 - [Vim Screencasts](http://vimcasts.org/)
 - [Practical Vim](https://pragprog.com/titles/dnvim2/) (book)
 
-# Exercises
+# 練習
+1. `vimtutor` を完了させる。[80x24](https://ja.wikipedia.org/wiki/VT100)(80 columns by 24 lines) ターミナルウィンドウで行うのが良いでしょう。
+1. 我々の [basic vimrc](/2020/files/vimrc) を`~/.vimrc` に保存し、ファイル全体を（*Vim を使って*）読み、Vimがデフォルト設定とどのように挙動や見た目が異なるかを確認して下さい。
+1. プラグインのインストール、設定を行う
+   1. プラグインのディレクトリを作ります `mkdir -p ~/.vim/pack/vendor/start`
+   1. プラグインをダウンロードする `cd ~/.vim/pack/vendor/start; gitclone https://github.com/ctrlpvim/ctrlp.vim`
+   1. [プラグインのドキュメント](https://github.com/ctrlpvim/ctrlp.vim/blob/master/readme.md)
+      を読みます。Vim を開いて、Vimコマンドで `:CtrlP` を使ってファイルを見つけてみましょう。プロジェクトディレクトリに移動し、Vimを開いて `:CtrlP` を入力します。
+   1. [configuration](https://github.com/ctrlpvim/ctrlp.vim/blob/master/readme.md#basic-options) を参考に、`~/.vimrc` へ設定を追加してみましょう。`Ctrl-P` で CtrlP を開けるようにします。
+1. Vim の訓練に、[Demo](#demo) をあなたのマシンで復習しましょう。
+1. 次の月から__全ての__テキスト編集にVimを使います。何かが非行率または "もっと良い方法があるはずだ" と感じる度に方法を検索しましょう。きっと良い方法があるはずです。
+1. 他のツールを Vim のキーバインディングを使うように設定してみましょう。
+1. `~/.vimrc` を更にカスタマイズしましょう。そして好みのプラグインを入れましょう。
+1. （発展）XMLをJSON [example file](/2020/files/example-data.xml) にVimおマクロを使って変換してみましょう。躓いたら、[マクロ](#マクロ) セクションがヒントになります。
+
 
 1. Complete `vimtutor`. Note: it looks best in a
    [80x24](https://en.wikipedia.org/wiki/VT100) (80 columns by 24 lines)
