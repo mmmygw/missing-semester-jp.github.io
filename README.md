@@ -35,6 +35,7 @@ docker run --rm --volume="$PWD:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll jekyl
 - [@soramichi](https://github.com/soramichi) ([メタプログラミング](https://missing-semester-jp.github.io/2020/metaprogramming/))
 - [@logcpp](https://github.com/logcpp) ([シェルツールとスクリプト](https://missing-semester-jp.github.io/2020/shell-tools/))
 - [@translucens](https://github.com/translucens) ([セキュリティと暗号](https://missing-semester-jp.github.io/2020/security/))
+- [@Katsumata210](https://github.com/Katsumata210) ([バージョン管理 (Git)](https://missing-semester-jp.github.io/2020/version-control/))
 
 ## License
 
