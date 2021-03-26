@@ -12,8 +12,6 @@ issues/PRによる貢献は歓迎です。実際に各セクションの翻訳�
 - 翻訳をしたい方は[@matsui528](https://github.com/matsui528)にgithubアカウントをお伝えください。
 - [issues](https://github.com/missing-semester-jp/missing-semester-jp.github.io/issues)にて、翻訳対象のファイルごとにissueが立っています。closeされているものはもう翻訳が終わっています。対象のissueにて自分自身をassignしてください（更新が被ることを防ぐため）。ちなみにissueで既に誰かがassignされていた場合は既にその人が翻訳中です。
 - ブランチを作り、翻訳を行い、PRを作ってください。PR中では上記issueをメンションしてください。
-- masterにマージされたあと、issueから自分をunassignしてください。
-
 
 
 ## Development
@@ -31,9 +29,13 @@ docker run --rm --volume="$PWD:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll jekyl
 
 ## Translator
 - [@matsui528](https://github.com/matsui528) (organizer)
-- [@makotoshimazu](https://github.com/makotoshimazu) (organizer)
-- [@take1108](https://github.com/take1108) (organizer)
-
+- [@makotoshimazu](https://github.com/makotoshimazu) (organizer, [デバッグとプロファイリング](https://missing-semester-jp.github.io/2020/debugging-profiling/))
+- [@take1108](https://github.com/take1108) (organizer, [雑録](https://missing-semester-jp.github.io/2020/potpourri/))
+- [@ikuehirata](https://github.com/ikuehirata) ([コマンドライン環境](https://missing-semester-jp.github.io/2020/command-line/), [講義ノート](https://github.com/missing-semester-jp/missing-semester-jp.github.io/blob/master/_2020/editors-notes.txt), [Q&A](https://missing-semester-jp.github.io/2020/qa/))
+- [@soramichi](https://github.com/soramichi) ([メタプログラミング](https://missing-semester-jp.github.io/2020/metaprogramming/))
+- [@logcpp](https://github.com/logcpp) ([シェルツールとスクリプト](https://missing-semester-jp.github.io/2020/shell-tools/))
+- [@translucens](https://github.com/translucens) ([セキュリティと暗号](https://missing-semester-jp.github.io/2020/security/))
+- [@Katsumata210](https://github.com/Katsumata210) ([バージョン管理 (Git)](https://missing-semester-jp.github.io/2020/version-control/))
 
 ## License
 

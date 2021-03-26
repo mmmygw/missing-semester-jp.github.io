@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Security and Cryptography"
+title: "セキュリティと暗号"
 date: 2020-01-28
 ready: true
 video:
@@ -8,347 +8,209 @@ video:
   id: tjwobAmnKTo
 ---
 
-Last year's [security and privacy lecture](/2019/security/) focused on how you
-can be more secure as a computer _user_. This year, we will focus on security
-and cryptography concepts that are relevant in understanding tools covered
-earlier in this class, such as the use of hash functions in Git or key
-derivation functions and symmetric/asymmetric cryptosystems in SSH.
+前年（訳注: 2019年）の[セキュリティとプライパシーの講義](/2019/security/)はコンピューターの _ユーザー_ としてどのようによりセキュアにできるかという点に注目していました。今年は、セキュリティと暗号理論のうち、この講義で先に取り上げたツール群を理解するために関係する事柄に注目します。例えば、Gitにおけるハッシュ関数や、SSHにおける鍵導出関数と対称・非対称鍵の利用についてです。
 
-This lecture is not a substitute for a more rigorous and complete course on
-computer systems security ([6.858](https://css.csail.mit.edu/6.858/)) or
-cryptography ([6.857](https://courses.csail.mit.edu/6.857/) and 6.875). Don't
-do security work without formal training in security. Unless you're an expert,
-don't [roll your own
-crypto](https://www.schneier.com/blog/archives/2015/05/amateurs_produc.html).
-The same principle applies to systems security.
+この講義はより厳密で完全なコンピューターシステムのセキュリティ([6.858](https://css.csail.mit.edu/6.858/))、暗号理論([6.857](https://courses.csail.mit.edu/6.857/) and 6.875)コースに代わるものではありません。セキュリティの正式な教育を受けずにセキュリティの仕事をしてはなりません。専門家でなければ、[暗号を自作](https://www.schneier.com/blog/archives/2015/05/amateurs_produc.html)してはいけません。同じことはシステムのセキュリティにも当てはまります。
 
-This lecture has a very informal (but we think practical) treatment of basic
-cryptography concepts. This lecture won't be enough to teach you how to
-_design_ secure systems or cryptographic protocols, but we hope it will be
-enough to give you a general understanding of the programs and protocols you
-already use.
+この講義ではとても簡単に（ただ実用的であると考える）基礎的な暗号理論の扱い方を示します。
+どのようにセキュアなシステムや暗号プロトコルを _設計する_ かを教えるには、この講義は十分ではないでしょうが、
+既に利用しているプログラムやプロトコルについて一般的な理解をするのには十分であることを願っています。
 
-# Entropy
+# エントロピー
 
-[Entropy](https://en.wikipedia.org/wiki/Entropy_(information_theory)) is a
-measure of randomness. This is useful, for example, when determining the
-strength of a password.
+[Entropy](https://en.wikipedia.org/wiki/Entropy_(information_theory))（訳注: 日本語版は「[情報量](https://ja.wikipedia.org/wiki/%E6%83%85%E5%A0%B1%E9%87%8F)」）は乱雑さの尺度です。例えば、パスワードの強度を判断するときに有用です。
 
 ![XKCD 936: Password Strength](https://imgs.xkcd.com/comics/password_strength.png)
 
-As the above [XKCD comic](https://xkcd.com/936/) illustrates, a password like
-"correcthorsebatterystaple" is more secure than one like "Tr0ub4dor&3". But how
-do you quantify something like this?
+|  |  |  |
+| --- | --- | --- |
+| 一般的ではない基本の単語　順序はわからない<br>`Tr0ub4dor&3`<br>大文字?　よくある置き換え　記号　数字<br>（これは一般的なフォーマットの一例を示しているだけなので、もう少しビットを増やすことは可能） | 約28ビットのエントロピー<br>2^28 = 1000試行/sで3日<br>（脆弱なリモートのWebサービスでは妥当。盗まれたハッシュ値のクラックはもっと速くできるが、一般的なユーザが心配することではない）<br>当てやすさ: **簡単** | tromboneだったかな？いやtroubadorだ。Oの一つは0にしたんだったかな？いくつかは記号にしたような…<br>覚えやすさ: **難しい** |
+| `correcthorsebatterystaple` <br>4つのランダムな一般的な単語 | 約44ビットのエントロピー<br>2^44 = 1000試行/sで550年<br>当てやすさ: **難しい** | 覚えやすさ: もう覚えている |
 
-Entropy is measured in _bits_, and when selecting uniformly at random from a
-set of possible outcomes, the entropy is equal to `log_2(# of possibilities)`.
-A fair coin flip gives 1 bit of entropy. A dice roll (of a 6-sided die) has
-\~2.58 bits of entropy.
+> 20年間かけて、人に覚えにくくコンピューターが当てやすいパスワードを使うように人々を訓練してしまった
 
-You should consider that the attacker knows the _model_ of the password, but
-not the randomness (e.g. from [dice
-rolls](https://en.wikipedia.org/wiki/Diceware)) used to select a particular
-password.
+[XKCD comic](https://xkcd.com/936/)に描かれているように、"correcthorsebatterystaple"は"Tr0ub4dor&3"よりも強固です。
+ではどのように定量的に評価すればよいのでしょうか。
 
-How many bits of entropy is enough? It depends on your threat model. For online
-guessing, as the XKCD comic points out, \~40 bits of entropy is pretty good. To
-be resistant to offline guessing, a stronger password would be necessary (e.g.
-80 bits, or more).
+エントロピーは _ビット_ 単位で表現されます。取り得る結果の集合から一様かつランダムに取り出す場合、そのエントロピーは`log_2(結果の選択肢の数)`に等しいです。
+公平な硬貨投げは1ビットのエントロピーを与えます。6面のサイコロを振ることは約2.58ビットのエントロピーです。
 
-# Hash functions
+攻撃者はパスワードの _型_ は知っているものの、特定のパスワードを選ぶために使用したランダムさ(例えば[サイコロを振る](https://en.wikipedia.org/wiki/Diceware))については知らないことを考えるべきでしょう。
 
-A [cryptographic hash
-function](https://en.wikipedia.org/wiki/Cryptographic_hash_function) maps data
-of arbitrary size to a fixed size, and has some special properties. A rough
-specification of a hash function is as follows:
+エントロピーは何ビットあれば十分でしょうか。それは脅威の種類によります。オンラインで当てるのであれば、XKCDの漫画にあったように40ビットのエントロピーでもまあ良いでしょう。オフラインでの攻撃に耐えるには、80ビットやそれ以上のより強固なパスワードが必要です。
+
+# ハッシュ関数
+
+[cryptographic hash
+function](https://en.wikipedia.org/wiki/Cryptographic_hash_function)（訳注: 日本語版は「[暗号学的ハッシュ関数](https://ja.wikipedia.org/wiki/%E6%9A%97%E5%8F%B7%E5%AD%A6%E7%9A%84%E3%83%8F%E3%83%83%E3%82%B7%E3%83%A5%E9%96%A2%E6%95%B0)」）は任意のサイズのデータを、固定長で特別な性質を持つデータへとマッピングします。
+大まかなハッシュ関数の定義は次のようになります。
 
 ```
-hash(value: array<byte>) -> vector<byte, N>  (for some fixed N)
+hash(value: array<byte>) -> vector<byte, N>  (Nはいくつかの定数)
 ```
 
-An example of a hash function is [SHA1](https://en.wikipedia.org/wiki/SHA-1),
-which is used in Git. It maps arbitrary-sized inputs to 160-bit outputs (which
-can be represented as 40 hexadecimal characters). We can try out the SHA1 hash
-on an input using the `sha1sum` command:
+ハッシュ関数の例の一つとして、Gitで使われている[SHA1](https://en.wikipedia.org/wiki/SHA-1)（訳注: 日本語版 [SHA-1](https://ja.wikipedia.org/wiki/SHA-1)）があります。任意のサイズの入力を160ビットの出力（16進数では40桁で表される）へと変換します。`sha1sum`コマンドを使ってSHA-1ハッシュを試してみることができます。
 
 ```console
 $ printf 'hello' | sha1sum
 aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d
 $ printf 'hello' | sha1sum
 aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d
-$ printf 'Hello' | sha1sum 
+$ printf 'Hello' | sha1sum
 f7ff9e8b7bb2e09b70935a5d785e0cc5d9d0abf0
 ```
 
-At a high level, a hash function can be thought of as a hard-to-invert
-random-looking (but deterministic) function (and this is the [ideal model of a
-hash function](https://en.wikipedia.org/wiki/Random_oracle)). A hash function
-has the following properties:
+概念としてはハッシュ関数は逆算することが難しく、ランダムであるように見える（が決定論的）な関数と考えることができます。これはハッシュ関数の概念的なモデル（[Random oracle](https://en.wikipedia.org/wiki/Random_oracle)/日本語版[ランダムオラクル](https://ja.wikipedia.org/wiki/%E3%83%A9%E3%83%B3%E3%83%80%E3%83%A0%E3%82%AA%E3%83%A9%E3%82%AF%E3%83%AB)）にあたります。ハッシュ関数は次の性質を持ちます。
 
-- Deterministic: the same input always generates the same output.
-- Non-invertible: it is hard to find an input `m` such that `hash(m) = h` for
-some desired output `h`.
-- Target collision resistant: given an input `m_1`, it's hard to find a
-different input `m_2` such that `hash(m_1) = hash(m_2)`.
-- Collision resistant: it's hard to find two inputs `m_1` and `m_2` such that
-`hash(m_1) = hash(m_2)` (note that this is a strictly stronger property than
-target collision resistance).
+- 決定論的: 同一の入力は常に同一の出力を生成する
+- 非可逆: ある出力`h`に対して`hash(m) = h`を満たす入力`m`を見つけることが困難
+- 弱衝突耐性: 入力`m_1`が与えられたとき、`hash(m_1) = hash(m_2)`を満たす別の入力`m_2`を見つけることが困難
+- 強衝突耐性: `hash(m_1) = hash(m_2)`となる2つの入力`m_1`を`m_2`を見つけることが困難（これは弱衝突耐性よりも強い性質であることに注意）
 
-Note: while it may work for certain purposes, SHA-1 is [no
-longer](https://shattered.io/) considered a strong cryptographic hash function.
-You might find this table of [lifetimes of cryptographic hash
-functions](https://valerieaurora.org/hash.html) interesting. However, note that
-recommending specific hash functions is beyond the scope of this lecture. If you
-are doing work where this matters, you need formal training in
-security/cryptography.
+注: 一定の役割では機能するものの、SHA-1は[もはや](https://shattered.io/)強固な暗号論的ハッシュ関数ではないと考えられています。[暗号論的ハッシュ関数の寿命](https://valerieaurora.org/hash.html)の表は興味深いでしょう。しかし、特定のハッシュ関数を勧めることはこの講義の範囲を越えています。このような作業をする必要がある場合、正式なセキュリティや暗号理論のトレーニングを受ける必要があります。
 
-## Applications
+## 応用
 
-- Git, for content-addressed storage. The idea of a [hash
-function](https://en.wikipedia.org/wiki/Hash_function) is a more general
-concept (there are non-cryptographic hash functions). Why does Git use a
-cryptographic hash function?
-- A short summary of the contents of a file. Software can often be downloaded
-from (potentially less trustworthy) mirrors, e.g. Linux ISOs, and it would be
-nice to not have to trust them. The official sites usually post hashes
-alongside the download links (that point to third-party mirrors), so that the
-hash can be checked after downloading a file.
-- [Commitment schemes](https://en.wikipedia.org/wiki/Commitment_scheme).
-Suppose you want to commit to a particular value, but reveal the value itself
-later. For example, I want to do a fair coin toss "in my head", without a
-trusted shared coin that two parties can see. I could choose a value `r =
-random()`, and then share `h = sha256(r)`. Then, you could call heads or tails
-(we'll agree that even `r` means heads, and odd `r` means tails). After you
-call, I can reveal my value `r`, and you can confirm that I haven't cheated by
-checking `sha256(r)` matches the hash I shared earlier.
+- Gitはファイルの内容を示すために使用しています。ここでの[ハッシュ関数](https://en.wikipedia.org/wiki/Hash_function)（訳注: 日本語版「[ハッシュ関数](https://ja.wikipedia.org/wiki/%E3%83%8F%E3%83%83%E3%82%B7%E3%83%A5%E9%96%A2%E6%95%B0)」）はより一般的な概念です。どうしてGitは暗号論的ハッシュ関数を使用したのでしょうか？
+- ファイルの内容の要約として。LinuxのISOファイルのようなソフトウェアは（信頼性が低い可能性のある）ミラーからダウンロードされることがあります。ハッシュを使ってミラーが信頼できる必要性をなくせます。公式サイトにはダウンロードリンク（第三者のミラーを指している）と並んでハッシュが載っていることが多いので、ファイルのダウンロードが終わってからそのハッシュと比較すればよいのです。
+- [コミットメント方式](https://en.wikipedia.org/wiki/Commitment_scheme)（訳注: 日本語版「[ビットコミットメント](https://ja.wikipedia.org/wiki/%E3%83%93%E3%83%83%E3%83%88%E3%82%B3%E3%83%9F%E3%83%83%E3%83%88%E3%83%A1%E3%83%B3%E3%83%88)」）。ある値をコミットしたいが、その値そのものを明かすのは後にしたい場合を考えます。例えば、二者が同時に見られるコインなしに、公正なコイントスを「頭の中で」したいとします。私が値`r = random()`を選んで、`h = sha256(r)`のハッシュ値を共有します。あなたは裏か表か宣言します（偶数の`r`は表、奇数の`r`は裏を示すことに合意します）。宣言したあと、私は`r`を公開することができ、`sha256(r)`の値が先に共有したハッシュ値を一致することを確認することでずるをしていないことを確認できます。
 
-# Key derivation functions
+# 鍵導出関数
 
-A related concept to cryptographic hashes, [key derivation
-functions](https://en.wikipedia.org/wiki/Key_derivation_function) (KDFs) are
-used for a number of applications, including producing fixed-length output for
-use as keys in other cryptographic algorithms. Usually, KDFs are deliberately
-slow, in order to slow down offline brute-force attacks.
+暗号論的ハッシュに関連して、[Key derivation function](https://en.wikipedia.org/wiki/Key_derivation_function)(KDF, 日本語版「[鍵導出関数](https://ja.wikipedia.org/wiki/%E9%8D%B5%E5%B0%8E%E5%87%BA%E9%96%A2%E6%95%B0)」は他の暗号アルゴリズムで使用する固定長の出力を得ることを含め、多くの応用があります。一般に、鍵導出関数はオフラインの総当たり攻撃を遅くするために意図的に遅くされています。
 
-## Applications
+## 応用
 
-- Producing keys from passphrases for use in other cryptographic algorithms
-(e.g. symmetric cryptography, see below).
-- Storing login credentials. Storing plaintext passwords is bad; the right
-approach is to generate and store a random
-[salt](https://en.wikipedia.org/wiki/Salt_(cryptography)) `salt = random()` for
-each user, store `KDF(password + salt)`, and verify login attempts by
-re-computing the KDF given the entered password and the stored salt.
+- 他の暗号アルゴリズムで使用する鍵をパスフレーズから生成する。例えば下記に示す対称暗号があります。
+- ログイン情報の保存。平文でパスワードを保存するのは好ましくありません。正しい方法はランダムな[Salt](https://en.wikipedia.org/wiki/Salt_(cryptography))（訳注: 日本語版「[ソルト](https://ja.wikipedia.org/wiki/%E3%82%BD%E3%83%AB%E3%83%88_(%E6%9A%97%E5%8F%B7))」）`salt = random()`をユーザごとに生成、保存して、`KDF(password + salt)`を保存することです。ログイン試行の検証は入力されたパスワードと保存されたソルトの値から、再度KDFを算出することにより行います。
 
-# Symmetric cryptography
+# 対称暗号
 
-Hiding message contents is probably the first concept you think about when you
-think about cryptography. Symmetric cryptography accomplishes this with the
-following set of functionality:
+暗号理論について考えたとき、メッセージの内容を隠すことは最初に思い浮かぶことでしょう。
+対称暗号は次の関数の組でこれを実現します。
 
 ```
-keygen() -> key  (this function is randomized)
+keygen() -> key  （この関数はランダム化されている）
 
-encrypt(plaintext: array<byte>, key) -> array<byte>  (the ciphertext)
-decrypt(ciphertext: array<byte>, key) -> array<byte>  (the plaintext)
+encrypt(plaintext: array<byte>, key) -> array<byte> （暗号文）
+decrypt(ciphertext: array<byte>, key) -> array<byte> （平文）
 ```
 
-The encrypt function has the property that given the output (ciphertext), it's
-hard to determine the input (plaintext) without the key. The decrypt function
-has the obvious correctness property, that `decrypt(encrypt(m, k), k) = m`.
+暗号化関数は得られる出力（暗号文）から入力（平文）を鍵なしには決められないような性質を持っています。復号関数は明らかな性質である`decrypt(encrypt(m, k), k) = m`を持ちます。
 
-An example of a symmetric cryptosystem in wide use today is
-[AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard).
+現在幅広く用いられている対称暗号の例として[AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard)（訳注: 日本語版「[Advanced Encryption Standard](https://ja.wikipedia.org/wiki/Advanced_Encryption_Standard)」）があります。
 
-## Applications
+## 応用
 
-- Encrypting files for storage in an untrusted cloud service. This can be
-combined with KDFs, so you can encrypt a file with a passphrase. Generate `key
-= KDF(passphrase)`, and then store `encrypt(file, key)`.
+- 信用できないクラウドサービスに保存するファイルを暗号化します。KDFと組み合わせて、ファイルをパスフレーズで暗号化することによります。鍵を`key = KDF(passphrase)`で生成し、`encrypt(file, key)`により得られる暗号化ファイルを保存します。
 
-# Asymmetric cryptography
+# 非対称暗号
 
-The term "asymmetric" refers to there being two keys, with two different roles.
-A private key, as its name implies, is meant to be kept private, while the
-public key can be publicly shared and it won't affect security (unlike sharing
-the key in a symmetric cryptosystem). Asymmetric cryptosystems provide the
-following set of functionality, to encrypt/decrypt and to sign/verify:
+「非対称」は異なる役割の2つの鍵が存在することを示します。
+秘密鍵はその名前からわかるように秘密にしておくものです。一方で、公開鍵は公開して共有することができて、それによってセキュリティ上の影響を受けることがありません。これは対称暗号において鍵を共有する方法とは異なります。
+非対称暗号は次のように暗号化、復号と署名、検証の関数を提供します。
 
 ```
-keygen() -> (public key, private key)  (this function is randomized)
+keygen() -> (public key, private key) （この関数はランダム化されている）
 
-encrypt(plaintext: array<byte>, public key) -> array<byte>  (the ciphertext)
-decrypt(ciphertext: array<byte>, private key) -> array<byte>  (the plaintext)
+encrypt(plaintext: array<byte>, public key) -> array<byte> （暗号文）
+decrypt(ciphertext: array<byte>, private key) -> array<byte> （平文）
 
-sign(message: array<byte>, private key) -> array<byte>  (the signature)
-verify(message: array<byte>, signature: array<byte>, public key) -> bool  (whether or not the signature is valid)
+sign(message: array<byte>, private key) -> array<byte> （署名）
+verify(message: array<byte>, signature: array<byte>, public key) -> bool （署名が正当であるか否か）
 ```
 
-The encrypt/decrypt functions have properties similar to their analogs from
-symmetric cryptosystems. A message can be encrypted using the _public_ key.
-Given the output (ciphertext), it's hard to determine the input (plaintext)
-without the _private_ key. The decrypt function has the obvious correctness
-property, that `decrypt(encrypt(m, public key), private key) = m`.
+暗号化、復号の機能は対称暗号のそれと似た性質を持っています。
+メッセージは _公開_ 鍵を用いて暗号化することができます。得られた出力（暗号文）から _秘密_ 鍵なしには入力（平文）を決定することは困難です。復号関数は明らかな性質`decrypt(encrypt(m, public key), private key) = m`を持ちます。
 
-Symmetric and asymmetric encryption can be compared to physical locks. A
-symmetric cryptosystem is like a door lock: anyone with the key can lock and
-unlock it. Asymmetric encryption is like a padlock with a key. You could give
-the unlocked lock to someone (the public key), they could put a message in a
-box and then put the lock on, and after that, only you could open the lock
-because you kept the key (the private key).
+対称暗号と非対称暗号は物理的な鍵に例えることができます。
+対称暗号はドアの鍵のようなものです。鍵を持つ人は誰でも鍵をかけ、また外すことができます。
+非対称暗号は南京錠のようなものです。誰かに開いた状態の南京錠（公開鍵）を渡し、メッセージを箱に入れて鍵をかけた後は、鍵（秘密鍵）を持つあなただけが鍵を開けられるようになります。
 
-The sign/verify functions have the same properties that you would hope physical
-signatures would have, in that it's hard to forge a signature. No matter the
-message, without the _private_ key, it's hard to produce a signature such that
-`verify(message, signature, public key)` returns true. And of course, the
-verify function has the obvious correctness property that `verify(message,
-sign(message, private key), public key) = true`.
+署名、検証の関数は物理的な署名に期待するのと同様に、偽造が困難という性質を持っています。
+メッセージの内容によらず、 _秘密_ 鍵なしには`verify(message, signature, public key)`が真となるような署名を生成することは困難です。
+もちろん、検証関数は明らかな性質である`verify(message, sign(message, private key), public key) = true`となる性質を持っています。
 
-## Applications
+## 応用
 
-- [PGP email encryption](https://en.wikipedia.org/wiki/Pretty_Good_Privacy).
-People can have their public keys posted online (e.g. in a PGP keyserver, or on
-[Keybase](https://keybase.io/)). Anyone can send them encrypted email.
-- Private messaging. Apps like [Signal](https://signal.org/) and
-[Keybase](https://keybase.io/) use asymmetric keys to establish private
-communication channels.
-- Signing software. Git can have GPG-signed commits and tags. With a posted
-public key, anyone can verify the authenticity of downloaded software.
+- [PGPによるメールの暗号化](https://en.wikipedia.org/wiki/Pretty_Good_Privacy)（訳注: 日本語版[Pretty Good Privacy](https://ja.wikipedia.org/wiki/Pretty_Good_Privacy)）。公開鍵をオンラインで公開（PGPキーサーバや[Keybase](https://keybase.io/)）している人に対して、誰でも暗号化されたメールを送れます。
+- 秘匿化されたメッセージング。[Signal](https://signal.org/)や[Keybase](https://keybase.io/)のようなアプリは秘匿化された通信路を確立するために非対称暗号を使っています。
+- ソフトウェアへの署名。GitはGPGで署名されたコミットやタグを持つことができます。公開鍵と併せて投稿されれば、誰でもダウンロードしたソフトウェアの正当性を検証することができます。
 
-## Key distribution
+## 鍵の配布
 
-Asymmetric-key cryptography is wonderful, but it has a big challenge of
-distributing public keys / mapping public keys to real-world identities. There
-are many solutions to this problem. Signal has one simple solution: trust on
-first use, and support out-of-band public key exchange (you verify your
-friends' "safety numbers" in person). PGP has a different solution, which is
-[web of trust](https://en.wikipedia.org/wiki/Web_of_trust). Keybase has yet
-another solution of [social
-proof](https://keybase.io/blog/chat-apps-softer-than-tofu) (along with other
-neat ideas). Each model has its merits; we (the instructors) like Keybase's
-model.
+非対称鍵は素晴らしいものですが、公開鍵を配布し、実世界のアイデンティティと関連付ける大きな課題もあります。
+この課題の解決策はいくつもあります。Signalは単純な解決策を提供します。最初に利用するときに検証し、アプリの外で公開鍵の交換を行えるようになっています（友達の「安全番号」を対面で確認します）。
+PGPは[信用の輪](https://en.wikipedia.org/wiki/Web_of_trust)（訳注: 日本語版「[信用の輪（Web of Trust）](https://ja.wikipedia.org/wiki/%E5%85%AC%E9%96%8B%E9%8D%B5%E5%9F%BA%E7%9B%A4#%E4%BF%A1%E7%94%A8%E3%81%AE%E8%BC%AA%EF%BC%88Web_of_Trust%EF%BC%89)」）と呼ばれる別の解決策を提供します。
+Keybaseは[social
+proof](https://keybase.io/blog/chat-apps-softer-than-tofu)とその他の適切な考えに基づく解決策を提供します。
 
-# Case studies
+それぞれのモデルにメリットがありますが、我々（講師陣）はKeybaseのモデルが好みです。
 
-## Password managers
+# ケーススタディ
 
-This is an essential tool that everyone should try to use (e.g.
-[KeePassXC](https://keepassxc.org/), [pass](https://www.passwordstore.org/),
-and [1Password](https://1password.com)). Password managers make it convenient to use unique,
-randomly generated high-entropy passwords for all your logins, and they save
-all your passwords in one place, encrypted with a symmetric cipher with a key
-produced from a passphrase using a KDF.
+## パスワードマネージャ
 
-Using a password manager lets you avoid password reuse (so you're less impacted
-when websites get compromised), use high-entropy passwords (so you're less likely to
-get compromised), and only need to remember a single high-entropy password.
+これは誰もが試すべき必須のツールです。例として、[KeePassXC](https://keepassxc.org/), [pass](https://www.passwordstore.org/), [1Password](https://1password.com)が挙げられます。
+パスワードマネージャを使うと、全てのログイン情報を個別かつランダムに生成されエントロピーの高いパスワードにして、また全てのパスワードを一カ所にまとめておくことができます。パスワード群は対称暗号で暗号化されます。暗号化に使うキーは、パスフレーズからKDFを用いて生成されます。
 
-## Two-factor authentication
+パスワードマネージャを使えば、パスワードの使い回しを避け、あるサイトから漏洩したときの影響を小さくすることができます。また、エントロピーの高いパスワードを使えるので推測されてしまう可能性を下げます。覚えておく必要があるのはエントロピーの高いパスワード（訳注: パスワードマネージャのファイルの暗号化に使うマスターパスワード）一つのみです。
 
-[Two-factor
-authentication](https://en.wikipedia.org/wiki/Multi-factor_authentication)
-(2FA) requires you to use a passphrase ("something you know") along with a 2FA
-authenticator (like a [YubiKey](https://www.yubico.com/), "something you have")
-in order to protect against stolen passwords and
-[phishing](https://en.wikipedia.org/wiki/Phishing) attacks.
+## 2要素認証
 
-## Full disk encryption
+[2要素認証](https://en.wikipedia.org/wiki/Multi-factor_authentication)
+(訳注: 2Factor-Authenticationの頭文字から2FAとも呼ばれる。日本語版「[多要素認証](https://ja.wikipedia.org/wiki/%E5%A4%9A%E8%A6%81%E7%B4%A0%E8%AA%8D%E8%A8%BC)」)はパスフレーズ（「知る要素」）と同時に、2要素認証認証機（例えば[YubiKey](https://www.yubico.com/)、「持つ要素」）を要求します。
+これにより、パスワードの流出や[フィッシング](https://en.wikipedia.org/wiki/Phishing)（訳注: 日本語版「[フィッシング](https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A3%E3%83%83%E3%82%B7%E3%83%B3%E3%82%B0_(%E8%A9%90%E6%AC%BA))」）から守ります。
 
-Keeping your laptop's entire disk encrypted is an easy way to protect your data
-in the case that your laptop is stolen. You can use [cryptsetup +
-LUKS](https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_a_non-root_file_system)
-on Linux,
-[BitLocker](https://fossbytes.com/enable-full-disk-encryption-windows-10/) on
-Windows, or [FileVault](https://support.apple.com/en-us/HT204837) on macOS.
-This encrypts the entire disk with a symmetric cipher, with a key protected by
-a passphrase.
+## ディスク全体の暗号化
 
-## Private messaging
+ノートパソコンのディスク全体が暗号化された状態にしておくことは、盗まれてしまったときにデータを守る簡単な方法です。Linuxでは[cryptsetup +
+LUKS](https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_a_non-root_file_system)、Windowsでは[BitLocker](https://fossbytes.com/enable-full-disk-encryption-windows-10/)、macOSでは[FileVault](https://support.apple.com/ja-jp/HT204837)が使えます。パスフレーズによって保護されたキーを使って、ディスク全体を対称暗号で暗号化します。
 
-Use [Signal](https://signal.org/) or [Keybase](https://keybase.io/). End-to-end
-security is bootstrapped from asymmetric-key encryption. Obtaining your
-contacts' public keys is the critical step here. If you want good security, you
-need to authenticate public keys out-of-band (with Signal or Keybase), or trust
-social proofs (with Keybase).
+## メッセージの秘匿
+
+[Signal](https://signal.org/)または[Keybase](https://keybase.io/)を使います。エンドツーエンドのセキュリティは非対称暗号によるプロセスから始まります。ここで、連絡先の公開鍵を取得することは重要なステップです。高いセキュリティを実現するために、公開鍵を通信以外の手段で認証する（SignalやKeybaseの場合）か、social proofを信用する（Keybase）ことが求められます。
 
 ## SSH
 
-We've covered the use of SSH and SSH keys in an [earlier
-lecture](/2020/command-line/#remote-machines). Let's look at the cryptography
-aspects of this.
+[先の講義](/2020/command-line/#リモートマシン)でSSHとSSH鍵の利用について触れました。暗号の観点から見てみましょう。
 
-When you run `ssh-keygen`, it generates an asymmetric keypair, `public_key,
-private_key`. This is generated randomly, using entropy provided by the
-operating system (collected from hardware events, etc.). The public key is
-stored as-is (it's public, so keeping it a secret is not important), but at
-rest, the private key should be encrypted on disk. The `ssh-keygen` program
-prompts the user for a passphrase, and this is fed through a key derivation
-function to produce a key, which is then used to encrypt the private key with a
-symmetric cipher.
+`ssh-keygen`を実行すると、公開鍵と秘密鍵の非対称な鍵ペアが生成されます。OSが提供するエントロピー（ハードウェアイベントの収集等を基にする）を使って、ランダムに生成されます。公開鍵は秘密にしておく必要性が低いので、そのまま保存されます。一方で、秘密鍵は暗号化してディスクに保存すべきです。`ssh-keygen`はユーザにパスフレーズを入力するよう要求しますが、これは鍵導出関数に送られ、生成されたキーによって秘密鍵は対称暗号で暗号化されます。
 
-In use, once the server knows the client's public key (stored in the
-`.ssh/authorized_keys` file), a connecting client can prove its identity using
-asymmetric signatures. This is done through
-[challenge-response](https://en.wikipedia.org/wiki/Challenge%E2%80%93response_authentication).
-At a high level, the server picks a random number and sends it to the client.
-The client then signs this message and sends the signature back to the server,
-which checks the signature against the public key on record. This effectively
-proves that the client is in possession of the private key corresponding to the
-public key that's in the server's `.ssh/authorized_keys` file, so the server
-can allow the client to log in.
+SSHを使用するときは、サーバが一度クライアントの公開鍵を知ればそれは`.ssh/authorized_keys`ファイルに保存されます。接続しようとするクライアントは非対称署名を利用してその正当性を証明することができます。これは[チャレンジレスポンス](https://en.wikipedia.org/wiki/Challenge%E2%80%93response_authentication)によってなされます。
+
+チャレンジレスポンスの概要を示します。サーバは乱数を選び、クライアントに送ります。クライアントはそれに署名し、サーバへ送り返します。サーバは署名と記録されている公開鍵が対応することを確認します。これは事実上、クライアントがサーバの`.ssh/authorized_keys` にある公開鍵に対応する秘密鍵を持っていることを証明するので、サーバはクライアントのログインを許可することができます。
 
 {% comment %}
-extra topics, if there's time
+時間があれば、追加のテーマとして
 
-security concepts, tips
-- biometrics
+セキュリティの考え方、ヒント
+- 生体認証
 - HTTPS
 {% endcomment %}
 
-# Resources
+# 資料
 
-- [Last year's notes](/2019/security/): from when this lecture was more focused on security and privacy as a computer user
-- [Cryptographic Right Answers](https://latacora.micro.blog/2018/04/03/cryptographic-right-answers.html): answers "what crypto should I use for X?" for many common X.
+- [前年(2019年)の講義ノート](/2019/security/): コンピュータのユーザとしてのセキュリティやプライバシーを中心とした内容でした
+- [Cryptographic Right Answers](https://latacora.micro.blog/2018/04/03/cryptographic-right-answers.html): 「Xにはどの暗号を使うべきか？」という疑問の答えが多数載っています
 
-# Exercises
+# 演習
 
-1. **Entropy.**
-    1. Suppose a password is chosen as a concatenation of four lower-case
-       dictionary words, where each word is selected uniformly at random from a
-       dictionary of size 100,000. An example of such a password is
-       `correcthorsebatterystaple`. How many bits of entropy does this have?
-    1. Consider an alternative scheme where a password is chosen as a sequence
-       of 8 random alphanumeric characters (including both lower-case and
-       upper-case letters). An example is `rg8Ql34g`. How many bits of entropy
-       does this have?
-    1. Which is the stronger password?
-    1. Suppose an attacker can try guessing 10,000 passwords per second. On
-       average, how long will it take to break each of the passwords?
-1. **Cryptographic hash functions.** Download a Debian image from a
-   [mirror](https://www.debian.org/CD/http-ftp/) (e.g. [from this Argentinean
-   mirror](http://debian.xfree.com.ar/debian-cd/current/amd64/iso-cd/).
-   Cross-check the hash (e.g. using the `sha256sum` command) with the hash
-   retrieved from the official Debian site (e.g. [this
-   file](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/SHA256SUMS)
-   hosted at `debian.org`, if you've downloaded the linked file from the
-   Argentinean mirror).
-1. **Symmetric cryptography.** Encrypt a file with AES encryption, using
-   [OpenSSL](https://www.openssl.org/): `openssl aes-256-cbc -salt -in {input
-   filename} -out {output filename}`. Look at the contents using `cat` or
-   `hexdump`. Decrypt it with `openssl aes-256-cbc -d -in {input filename} -out
-   {output filename}` and confirm that the contents match the original using
-   `cmp`.
-1. **Asymmetric cryptography.**
-    1. Set up [SSH
-       keys](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2)
-       on a computer you have access to (not Athena, because Kerberos interacts
-       weirdly with SSH keys). Rather than using RSA keys as in the linked
-       tutorial, use more secure [ED25519
-       keys](https://wiki.archlinux.org/index.php/SSH_keys#Ed25519). Make sure
-       your private key is encrypted with a passphrase, so it is protected at
-       rest.
-    1. [Set up GPG](https://www.digitalocean.com/community/tutorials/how-to-use-gpg-to-encrypt-and-sign-messages)
-    1. Send Anish an encrypted email ([public key](https://keybase.io/anish)).
-    1. Sign a Git commit with `git commit -S` or create a signed Git tag with
-       `git tag -s`. Verify the signature on the commit with `git show
-       --show-signature` or on the tag with `git tag -v`.
+1. **エントロピー**
+    1. 辞書に載っている小文字の単語を4つ選び、パスワードとしたときを考えます。
+       辞書の単語数は100,000で、単語の選択に偏りはないものとします。
+       パスワードの例は`correcthorsebatterystaple`です。
+       このようなパスワードのエントロピーは何bitあるでしょうか。
+    1. パスワードを決める別の方法として、8桁のランダムな英数字（大文字と小文字の両方）を使います。
+       例えば`rg8Ql34g`です。
+       これのエントロピーは何bitでしょうか。
+    1. より強いパスワードはどちらでしょうか。
+    1. 攻撃者は1秒間に10,000件のパスワードを試行できるとします。それぞれのパスワードを破るために必要な平均所要時間を求めてください。
+1. **暗号論的ハッシュ関数** Debianのイメージを[ミラーサイト](https://www.debian.org/CD/http-ftp/)（例えば [アルゼンチンのミラーサイト](http://debian.xfree.com.ar/debian-cd/current/amd64/iso-cd/)）からダウンロードします。
+   `sha256sum`コマンドを使用して得られたハッシュ値と、Debianの公式サイトから得られるハッシュ値（`debian.org`にある[SHA256のハッシュファイル](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/SHA256SUMS)）が一致することを確認します。
+1. **対称暗号** [OpenSSL](https://www.openssl.org/)を使って、ファイルをAESで暗号化します: `openssl aes-256-cbc -salt -in {input filename} -out {output filename}`。暗号化したファイルの内容を`cat`や`hexdump`で確認します。復号するコマンドは `openssl aes-256-cbc -d -in {input filename} -out {output filename}` です。元々の内容と一致することを`cmp`を使って確認します。
+1. **非対称暗号**
+    1. アクセスする必要のあるコンピュータで[SSH鍵ペア](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2)の設定を行います（KerberosがSSH鍵に干渉するため、MITのAthena以外で）。リンク先のチュートリアルではRSAを使用していますが、よりセキュアな[ED25519](https://wiki.archlinux.org/index.php/SSH_keys#Ed25519)を使いましょう（訳注: `ssh-keygen -t ed25519`のようにする）。秘密鍵は安全に保存されるよう、パスフレーズで暗号化されていることを確認します。
+    1. [GPGのセットアップ](https://www.digitalocean.com/community/tutorials/how-to-use-gpg-to-encrypt-and-sign-messages)
+    1. Anishへ暗号化されたメールを送る([公開鍵](https://keybase.io/anish))
+    1. Gitのコミットを`git commit -S`を使って署名したり、署名付のタグを`git tag -s`により作ります。 コミットの署名は`git show --show-signature`、タグは`git tag -v`により確認できます。
