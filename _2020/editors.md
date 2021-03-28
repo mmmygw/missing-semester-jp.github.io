@@ -33,7 +33,7 @@ video:
 
 # どのエディタを学ぶべきですか？
 
-プログラマはテキストエディタに関して[様々な選択肢](https://ja.wikipedia.org/wiki/%E3%82%A8%E3%83%87%E3%82%A3%E3%82%BF%E6%88%A6%E4%BA%89)があります。
+プログラマはテキストエディタに関して[様々な選択肢](https://en.wikipedia.org/wiki/Editor_war)があります。
 どのエディタが現在最も人気でしょうか？
 [Stack Overflow
 での調査](https://insights.stackoverflow.com/survey/2019/#development-environments-and-tools)
@@ -390,13 +390,13 @@ Vim での編集作業中、もっと良い方法があるのではという考�
 - [Vim Adventures](https://vim-adventures.com/) は Vim を学ぶことができるゲームです。
 - [Vim Tips Wiki](http://vim.wikia.com/wiki/Vim_Tips_Wiki)
 - [Vim Advent Calendar](https://vimways.org/2019/) では様々な Vim Tips が紹介されています。
-- [Vim Golf](http://www.vimgolf.com/) は Vimの[コードゴルフ](https://ja.wikipedia.org/wiki/%E3%82%B3%E3%83%BC%E3%83%89%E3%82%B4%E3%83%AB%E3%83%95)場です。
+- [Vim Golf](http://www.vimgolf.com/) は Vimの[コードゴルフ](https://en.wikipedia.org/wiki/Code_golf)場です。
 - [Vi/Vim Stack Exchange](https://vi.stackexchange.com/)
 - [Vim Screencasts](http://vimcasts.org/)
 - [Practical Vim](https://pragprog.com/titles/dnvim2/) (book)
 
 # 演習
-1. `vimtutor` を完了させましょう。[80x24](https://ja.wikipedia.org/wiki/VT100) (80 columns by 24 lines) のターミナルで行うのが良いでしょう。
+1. `vimtutor` を完了させましょう。[80x24](https://en.wikipedia.org/wiki/VT100) (80 columns by 24 lines) のターミナルで行うのが良いでしょう。
 1. [基本の vimrc](/2020/files/vimrc) を`~/.vimrc` に保存し、コメント含めファイル全体を（**Vim を使って**）読み、設定ファイルによって Vim の挙動がどのように変化するかを確認して下さい。
 1. プラグインのインストール、設定を行いましょう。
    1. プラグインのディレクトリを作成 `mkdir -p ~/.vim/pack/vendor/start`
