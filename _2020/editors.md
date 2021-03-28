@@ -256,138 +256,71 @@ Vim で必要なキータイプ数が非常に少なく、習熟すればまさ�
 実感できるでしょう。
 
 # Vim のカスタマイズ
-Vim は VimScript を含んだプレーンテキストの設定ファイル `~/.vimrc`
-によってカスタマイズすることができます。
-基本的な設定で有効化したい設定が沢山あるでしょう。
+Vim は VimScript を含んだプレーンテキストの設定ファイル `~/.vimrc` によってカスタマイズすることができます。
+Vim では有効化することが推奨される基本設定が多くあります。
 
-我々は入門用として、ドキュメンテーションされた基本的なコンフィグファイルを用意しました。
-Vim の風変わりなデフォルトの挙動を修正するこのコンフィグを利用することをおすすめします。
+そこで我々は入門用として、（ドキュメンテーションされた）基本のコンフィグファイルを用意しました。
+やや扱いづらいデフォルトの挙動を修正するこのコンフィグをまず利用することをおすすめします。
 **[ここ](/2020/files/vimrc)からファイルをダウンロードし、`~/.vimrc` に保存してください。**
 
 Vim は隅々までカスタマイズが可能で、カスタマイズオプションを調査しつくす価値は大いに有ります。
-GitHub 上で他のユーザの dotfiles を参考にすることもできるでしょう。例えばインストラクターのコンフィグは
+GitHub 上で他のユーザの dotfiles を参考にしてもいいでしょう。
+例えばインストラクターのコンフィグも GitHub に公開しています
 ([Anish](https://github.com/anishathalye/dotfiles/blob/master/vimrc),
-[Jon](https://github.com/jonhoo/configs/blob/master/editor/.config/nvim/init.vim) (uses [neovim](https://neovim.io/)),
-[Jose](https://github.com/JJGO/dotfiles/blob/master/vim/.vimrc)).
-また、ネット上には Vim の設定について多くの優良記事が公開されています。
-単に他のユーザのコンフィグをコピーペーストするのではなく、熟読し、内容を理解し、必要な設定だけを取り入れるようにしましょう。
-
-Vim is customized through a plain-text configuration file in `~/.vimrc`
-(containing Vimscript commands). There are probably lots of basic settings that
-you want to turn on.
-
-We are providing a well-documented basic config that you can use as a starting
-point. We recommend using this because it fixes some of Vim's quirky default
-behavior. **Download our config [here](/2020/files/vimrc) and save it to
-`~/.vimrc`.**
-
-Vim is heavily customizable, and it's worth spending time exploring
-customization options. You can look at people's dotfiles on GitHub for
-inspiration, for example, your instructors' Vim configs
-([Anish](https://github.com/anishathalye/dotfiles/blob/master/vimrc),
-[Jon](https://github.com/jonhoo/configs/blob/master/editor/.config/nvim/init.vim) (uses [neovim](https://neovim.io/)),
-[Jose](https://github.com/JJGO/dotfiles/blob/master/vim/.vimrc)). There are
-lots of good blog posts on this topic too. Try not to copy-and-paste people's
-full configuration, but read it, understand it, and take what you need.
+[Jon](https://github.com/jonhoo/configs/blob/master/editor/.config/nvim/init.vim) ([neovim](https://neovim.io/) ユーザ),
+[Jose](https://github.com/JJGO/dotfiles/blob/master/vim/.vimrc))。
+また、ネット上には Vim の設定について多くのブログ記事が公開されています。
+ただし、単に他のユーザの設定をコピーペーストするのではなく、熟読し、内容を理解し、必要な設定だけを取り入れるようにしましょう。
 
 # Vim を拡張する
 
-Vim のプラグインは非常に多く開発されています。
-インターネット上で目にしたかもしれないアドバイスは時代遅れで、
-Vim 8.0 以降ではプラグインマネージャを使用する必要はありません。
-その代わりに、Vim 組み込みのパッケージマネジメントシステムを使用することができます。
-ディレクトリ `~/.vim/pack/vendor/start/` を作成し、プラグインを `git clone` 等で
-保存してください。
+Vim では非常に多くの拡張プラグインが開発されています。
+まずプラグインマネージャを導入する、という解説記事を多く目にするかもしれませんが、
+Vim 8.0 以降では必ずしもプラグインマネージャを使用する必要はありません。
+その代わりに、Vim 組み込みのパッケージ管理システムを利用することができます。
+新規にディレクトリ `~/.vim/pack/vendor/start/` を作成し、このディレクトリにプラグインを（`git clone` 等で）
+配置してください。
 
-これらは我々のお気に入りのプラグインの一部です。
+我々が愛用しているプラグインの一部を紹介します。
 
 - [ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim): fuzzy file finder
 - [ack.vim](https://github.com/mileszs/ack.vim): code search
 - [nerdtree](https://github.com/scrooloose/nerdtree): file explorer
 - [vim-easymotion](https://github.com/easymotion/vim-easymotion): magic motions
 
-我々は膨大なリストをここで紹介するのを避けたいと思います。
-あなたはインストラクタの dotfiles をまず参照し
+プラグインの膨大なリストをここで紹介するのは敢えて避けたいと思います。
+インストラクタの dotfiles をまず参照し
 ([Anish](https://github.com/anishathalye/dotfiles),
 [Jon](https://github.com/jonhoo/configs),
 [Jose](https://github.com/JJGO/dotfiles)) どんなプラグインを我々が使っているか見てみて下さい。
-[Vim Awesome](https://vimawesome.com/) では更に多くの優れたプラグインについて知ることができます。
-"best Vim plugins" で検索すれば、プラグインについて多くの記事が見つかるはずです。
-
-There are tons of plugins for extending Vim. Contrary to outdated advice that
-you might find on the internet, you do _not_ need to use a plugin manager for
-Vim (since Vim 8.0). Instead, you can use the built-in package management
-system. Simply create the directory `~/.vim/pack/vendor/start/`, and put
-plugins in there (e.g. via `git clone`).
-
-Here are some of our favorite plugins:
-
-- [ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim): fuzzy file finder
-- [ack.vim](https://github.com/mileszs/ack.vim): code search
-- [nerdtree](https://github.com/scrooloose/nerdtree): file explorer
-- [vim-easymotion](https://github.com/easymotion/vim-easymotion): magic motions
-
-We're trying to avoid giving an overwhelmingly long list of plugins here. You
-can check out the instructors' dotfiles
-([Anish](https://github.com/anishathalye/dotfiles),
-[Jon](https://github.com/jonhoo/configs),
-[Jose](https://github.com/JJGO/dotfiles)) to see what other plugins we use.
-Check out [Vim Awesome](https://vimawesome.com/) for more awesome Vim plugins.
-There are also tons of blog posts on this topic: just search for "best Vim
-plugins".
+[Vim Awesome](https://vimawesome.com/) では更に多くのプラグインを発見できます。
+"best Vim plugins" で検索すれば、優れたプラグインについて多くの記事が見つかるはずです。
 
 # ソフトウェアにおける Vim モード
 
 多くのツールが Vim のエミュレーションモードをサポートしています。
-その質は低いものから高いものまでツールによって様々ですが、
-全ての機能とはいかないまでも基本的な機能は大抵網羅されています。
-
-# Vim-mode in other programs
-
-Many tools support Vim emulation. The quality varies from good to great;
-depending on the tool, it may not support the fancier Vim features, but most
-cover the basics pretty well.
+その質はツールによって様々ですが、
+素晴らしい機能の全てとはいかないまでも基本的な機能は大抵網羅されています。
 
 ## シェル
 
 もし Bash を使っているならば、 `set -o vi` を、`Zsh` を使っているなら `bindkey -v` を、
-`Fish` を使っているなら `fish_vi_key_bindings` を使いましょう。
-加えて、どのシェルを使っていようと、 `export EDITOR=vim` を環境変数に設定しましょう。
-これはあらゆるプログラムがエディタを呼び出そうとする時、どのエディタを使うかを定める環境変数です。
-例えば、 `git` はコミットメッセージを入力する際ここで設定されているエディタを最初に呼び出します。
-
-## Shell
-
-If you're a Bash user, use `set -o vi`. If you use Zsh, `bindkey -v`. For Fish,
-`fish_vi_key_bindings`. Additionally, no matter what shell you use, you can
-`export EDITOR=vim`. This is the environment variable used to decide which
-editor is launched when a program wants to start an editor. For example, `git`
-will use this editor for commit messages.
+`Fish` を使っているなら `fish_vi_key_bindings` で vi モードを使用してみましょう。
+加えて、どのシェルを使っていようとも、 `export EDITOR=vim` を環境変数に設定しましょう。
+これはあらゆるプログラムがエディタを呼び出す際に、どのエディタを使うかを定める環境変数です。
+例えば、 `git` はコミットメッセージを入力する際この環境変数で設定されているエディタをデフォルトで起動します。
 
 ## Readline
 多くのプログラムはコマンドラインインタフェースのためのライブラリ [GNU
 Readline](https://tiswww.case.edu/php/chet/readline/rltop.html)
-を使っています。Readline は基本的な Vim 風のバインディングも備えています。
-`~/.inputrc` ファイルに以下の行を追加すれば、Vi エミュレーションモードを有効化できます。
+を使っています。Readline は基本的な vi キーバインドをサポートしています。
+`~/.inputrc` ファイルに以下の行を追加すると、vi モードを有効化できます。
 
 ```
 set editing-mode vi
 ```
 
-この設定をすると例えば、Python の REPL も Vim バインディングをサポートします。
-
-## Readline
-
-Many programs use the [GNU
-Readline](https://tiswww.case.edu/php/chet/readline/rltop.html) library for
-their command-line interface. Readline supports (basic) Vim emulation too,
-which can be enabled by adding the following line to the `~/.inputrc` file:
-
-```
-set editing-mode vi
-```
-
-With this setting, for example, the Python REPL will support Vim bindings.
+この設定を有効化すると、例えば Python の REPL も Vim キーバインドをサポートします。
 
 ## その他
 
@@ -398,29 +331,12 @@ With this setting, for example, the Python REPL will support Vim bindings.
 [Jupyter
 notebooks](https://github.com/lambdalisue/jupyter-vim-binding) でも Vim のキーバインドが提供されています。
 
-## Others
-
-There are even vim keybinding extensions for web
-[browsers](http://vim.wikia.com/wiki/Vim_key_bindings_for_web_browsers) - some
-popular ones are
-[Vimium](https://chrome.google.com/webstore/detail/vimium/dbepggeogbaibhgnhhndojpepiihcmeb?hl=en)
-for Google Chrome and [Tridactyl](https://github.com/tridactyl/tridactyl) for
-Firefox. You can even get Vim bindings in [Jupyter
-notebooks](https://github.com/lambdalisue/jupyter-vim-binding).
-
 # 発展的な Tips
 
 このエディタの真価の一端をいくつか紹介します。
-全てを教えつくすことはできませんが、学んでいくうちに理解が深まっていくでしょう。
-もっとよい方法があるのでは，という考えが頭をよぎったら、
-必ずその方法は存在します。ネットで検索してみましょう。
-
-# Advanced Vim
-
-Here are a few examples to show you the power of the editor. We can't teach you
-all of these kinds of things, but you'll learn them as you go. A good
-heuristic: whenever you're using your editor and you think "there must be a
-better way of doing this", there probably is: look it up online.
+全てを教えつくすことはできませんが、Vim を使用するにつれ自然と他のテクニックについても習熟していくでしょう。
+Vim での編集作業中、もっと良い方法があるのではという考えが頭をよぎったら、
+必ずその方法は存在します。ネットで検索して常に最適な方法を模索する癖を付けましょう。
 
 ## 検索と置換
 
@@ -429,155 +345,67 @@ better way of doing this", there probably is: look it up online.
 - `%s/foo/bar/g`
     - ドキュメント中全ての foo を bar に置換する
 - `%s/\[.*\](\(.*\))/\1/g`
-    - Markdown のリンクをリンク内のURLに置換する
-
-
-## Search and replace
-
-`:s` (substitute) command ([documentation](http://vim.wikia.com/wiki/Search_and_replace)).
-
-- `%s/foo/bar/g`
-    - replace foo with bar globally in file
-- `%s/\[.*\](\(.*\))/\1/g`
-    - replace named Markdown links with plain URLs
+    - Markdown のリンクテキストをリンク内の URL に置換する
 
 ## 複数ウィンドウ
 - `:sp` / `:vsp` ウィンドウを分割する
-- 同じバッファに対して複数のビューを持つことができます
-
-## Multiple windows
-
-- `:sp` / `:vsp` to split windows
-- Can have multiple views of the same buffer.
+- 同じバッファに対して複数のビューを持つこともできます。
 
 ## マクロ
 
-- `q{character}` レジスタ {character} にマクロのレコーディングを開始`{character}`
+- `q{character}` レジスタ {character} へマクロのレコーディングを開始
 - `q` レコーディングを停止
-- `@{character}` マクロを繰り返す
-- マクロがエラーで止まる
-- `{number}@{character}` マクロを {number} 回数分繰り返す
-- マクロは再帰的にできる
-  - `q{character}q` でマクロをクリアする
-  - マクロ記録し，`@{character}` でマクロを再生する（レコードが完了するまで no-op になる）
-- 例： xml を json にする ([file](/2020/files/example-data.xml))
-  - "name" / "email" といキーのオブジェクトのあれい
+- `@{character}` レジスタ {character} の内容を実行する
+- `{number}@{character}` マクロを {number} 回繰り返す
+- マクロは再帰的にも実行される
+  - まず `q{character}q` でマクロをクリアする
+  - マクロを記録し、`@{character}` でマクロを実行する（レコーディングが完了するまで何もしない）
+- 例: xml を json にする ([ファイル](/2020/files/example-data.xml))
+  - "name" / "email" キーを持つオブジェクトの配列
   - Python のプログラムを使うか？
-  - sed / regex を使うか？
+  - sed / 正規表現を使うか？
       - `g/people/d`
       - `%s/<person>/{/g`
       - `%s/<name>\(.*\)<\/name>/"name": "\1",/g`
       - ...
   - Vim コマンド / マクロを使うか？
-        - `Gdd`, `ggdd` delete first and last lines
-        - Macro to format a single element (register `e`)
-            - Go to line with `<name>`
-            - `qe^r"f>s": "<ESC>f<C"<ESC>q`
-        - Macro to format a person
-            - Go to line with `<person>`
-            - `qpS{<ESC>j@eA,<ESC>j@ejS},<ESC>q`
-        - Macro to format a person and go to the next person
-            - Go to line with `<person>`
-            - `qq@pjq`
-        - Execute macro until end of file
-            - `999@q`
-        - Manually remove last `,` and add `[` and `]` delimiters
-
-- `q{character}` to start recording a macro in register `{character}`
-- `q` to stop recording
-- `@{character}` replays the macro
-- Macro execution stops on error
-- `{number}@{character}` executes a macro {number} times
-- Macros can be recursive
-    - first clear the macro with `q{character}q`
-    - record the macro, with `@{character}` to invoke the macro recursively
-    (will be a no-op until recording is complete)
-- Example: convert xml to json ([file](/2020/files/example-data.xml))
-    - Array of objects with keys "name" / "email"
-    - Use a Python program?
-    - Use sed / regexes
-        - `g/people/d`
-        - `%s/<person>/{/g`
-        - `%s/<name>\(.*\)<\/name>/"name": "\1",/g`
-        - ...
-    - Vim commands / macros
-        - `Gdd`, `ggdd` delete first and last lines
-        - Macro to format a single element (register `e`)
-            - Go to line with `<name>`
-            - `qe^r"f>s": "<ESC>f<C"<ESC>q`
-        - Macro to format a person
-            - Go to line with `<person>`
-            - `qpS{<ESC>j@eA,<ESC>j@ejS},<ESC>q`
-        - Macro to format a person and go to the next person
-            - Go to line with `<person>`
-            - `qq@pjq`
-        - Execute macro until end of file
-            - `999@q`
+      - `Gdd`, `ggdd` 最初と最後の行を削除する
+      - 1 つの要素を整形するためのマクロをレジスタ `e` に登録する
+        - `<name>` の行に移動
+        - `qe^r"f>s": "<ESC>f<C"<ESC>q`
+      - `<person>` を整形する
+        - `<person>` の行に移動
+        - `qpS{<ESC>j@eA,<ESC>j@ejS},<ESC>q`
+      - `<person>` を整形し次の `<person>` へ移動
+        - `<person>` の行に移動
+        - `qq@pjq`
+      - マクロを最終行まで実行する
+        - `999@q`
+      - 手動で最後の `,` を消去し、`[` `]` を追加する
         - Manually remove last `,` and add `[` and `]` delimiters
 
 # 参考
 
 - `vimtutor` はVimと共にインストールされるチュートリアルです。もしVimが既にインストールされている環境ならば、シェルで `vimtutor` を実行することができます。
-- [Vim Adventures](https://vim-adventures.com/) is a game to learn Vim
+- [Vim Adventures](https://vim-adventures.com/) は Vim を学ぶことができるゲームです。
 - [Vim Tips Wiki](http://vim.wikia.com/wiki/Vim_Tips_Wiki)
-- [Vim Advent Calendar](https://vimways.org/2019/) has various Vim tips
-- [Vim Golf](http://www.vimgolf.com/) は Vimの[コードゴルフ](https://ja.wikipedia.org/wiki/%E3%82%B3%E3%83%BC%E3%83%89%E3%82%B4%E3%83%AB%E3%83%95)場です
+- [Vim Advent Calendar](https://vimways.org/2019/) では様々な Vim Tips が紹介されています。
+- [Vim Golf](http://www.vimgolf.com/) は Vimの[コードゴルフ](https://ja.wikipedia.org/wiki/%E3%82%B3%E3%83%BC%E3%83%89%E3%82%B4%E3%83%AB%E3%83%95)場です。
 - [Vi/Vim Stack Exchange](https://vi.stackexchange.com/)
 - [Vim Screencasts](http://vimcasts.org/)
 - [Practical Vim](https://pragprog.com/titles/dnvim2/) (book)
 
-- `vimtutor` is a tutorial that comes installed with Vim - if Vim is installed, you should be able to run `vimtutor` from your shell
-- [Vim Adventures](https://vim-adventures.com/) is a game to learn Vim
-- [Vim Tips Wiki](http://vim.wikia.com/wiki/Vim_Tips_Wiki)
-- [Vim Advent Calendar](https://vimways.org/2019/) has various Vim tips
-- [Vim Golf](http://www.vimgolf.com/) is [code golf](https://en.wikipedia.org/wiki/Code_golf), but where the programming language is Vim's UI
-- [Vi/Vim Stack Exchange](https://vi.stackexchange.com/)
-- [Vim Screencasts](http://vimcasts.org/)
-- [Practical Vim](https://pragprog.com/titles/dnvim2/) (book)
-
-# 練習
-1. `vimtutor` を完了させる。[80x24](https://ja.wikipedia.org/wiki/VT100)(80 columns by 24 lines) ターミナルウィンドウで行うのが良いでしょう。
-1. 我々の [basic vimrc](/2020/files/vimrc) を`~/.vimrc` に保存し、ファイル全体を（*Vim を使って*）読み、Vimがデフォルト設定とどのように挙動や見た目が異なるかを確認して下さい。
-1. プラグインのインストール、設定を行う
-   1. プラグインのディレクトリを作ります `mkdir -p ~/.vim/pack/vendor/start`
-   1. プラグインをダウンロードする `cd ~/.vim/pack/vendor/start; gitclone https://github.com/ctrlpvim/ctrlp.vim`
+# 演習
+1. `vimtutor` を完了させましょう。[80x24](https://ja.wikipedia.org/wiki/VT100) (80 columns by 24 lines) のターミナルで行うのが良いでしょう。
+1. [基本の vimrc](/2020/files/vimrc) を`~/.vimrc` に保存し、コメント含めファイル全体を（**Vim を使って**）読み、設定ファイルによって Vim の挙動がどのように変化するかを確認して下さい。
+1. プラグインのインストール、設定を行いましょう。
+   1. プラグインのディレクトリを作成 `mkdir -p ~/.vim/pack/vendor/start`
+   1. プラグインのダウンロード `cd ~/.vim/pack/vendor/start; gitclone https://github.com/ctrlpvim/ctrlp.vim`
    1. [プラグインのドキュメント](https://github.com/ctrlpvim/ctrlp.vim/blob/master/readme.md)
-      を読みます。Vim を開いて、Vimコマンドで `:CtrlP` を使ってファイルを見つけてみましょう。プロジェクトディレクトリに移動し、Vimを開いて `:CtrlP` を入力します。
+      を読みます。まず CtrlP を使ってファイルを見つけてみましょう。プロジェクトディレクトリに移動し、Vimを開いて `:CtrlP` を入力します。
    1. [configuration](https://github.com/ctrlpvim/ctrlp.vim/blob/master/readme.md#basic-options) を参考に、`~/.vimrc` へ設定を追加してみましょう。`Ctrl-P` で CtrlP を開けるようにします。
-1. Vim の訓練に、[Demo](#demo) をあなたのマシンで復習しましょう。
-1. 次の月から__全ての__テキスト編集にVimを使います。何かが非行率または "もっと良い方法があるはずだ" と感じる度に方法を検索しましょう。きっと良い方法があるはずです。
-1. 他のツールを Vim のキーバインディングを使うように設定してみましょう。
-1. `~/.vimrc` を更にカスタマイズしましょう。そして好みのプラグインを入れましょう。
-1. （発展）XMLをJSON [example file](/2020/files/example-data.xml) にVimおマクロを使って変換してみましょう。躓いたら、[マクロ](#マクロ) セクションがヒントになります。
-
-
-1. Complete `vimtutor`. Note: it looks best in a
-   [80x24](https://en.wikipedia.org/wiki/VT100) (80 columns by 24 lines)
-   terminal window.
-1. Download our [basic vimrc](/2020/files/vimrc) and save it to `~/.vimrc`. Read
-   through the well-commented file (using Vim!), and observe how Vim looks and
-   behaves slightly differently with the new config.
-1. Install and configure a plugin:
-   [ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim).
-   1. Create the plugins directory with `mkdir -p ~/.vim/pack/vendor/start`
-   1. Download the plugin: `cd ~/.vim/pack/vendor/start; git clone
-      https://github.com/ctrlpvim/ctrlp.vim`
-   1. Read the
-      [documentation](https://github.com/ctrlpvim/ctrlp.vim/blob/master/readme.md)
-      for the plugin. Try using CtrlP to locate a file by navigating to a
-      project directory, opening Vim, and using the Vim command-line to start
-      `:CtrlP`.
-    1. Customize CtrlP by adding
-       [configuration](https://github.com/ctrlpvim/ctrlp.vim/blob/master/readme.md#basic-options)
-       to your `~/.vimrc` to open CtrlP by pressing Ctrl-P.
-1. To practice using Vim, re-do the [Demo](#demo) from lecture on your own
-   machine.
-1. Use Vim for _all_ your text editing for the next month. Whenever something
-   seems inefficient, or when you think "there must be a better way", try
-   Googling it, there probably is. If you get stuck, come to office hours or
-   send us an email.
-1. Configure your other tools to use Vim bindings (see instructions above).
-1. Further customize your `~/.vimrc` and install more plugins.
-1. (Advanced) Convert XML to JSON ([example file](/2020/files/example-data.xml))
-   using Vim macros. Try to do this on your own, but you can look at the
-   [macros](#macros) section above if you get stuck.
+1. [Demo](#demo) をあなたのマシンで復習しましょう。
+1. 次の月から**全ての**テキスト編集にVimを使います。何かが非行率または "もっと良い方法があるはずだ" と感じる度にベストな方法を検索する癖を付けましょう。
+1. 他のツールを Vim のキーバインディングを使用するように設定してみましょう。
+1. `~/.vimrc` を更にカスタマイズしましょう。好みのプラグインを入れてみてもいいでしょう。
+1. （発展）XMLをJSON（[example file](/2020/files/example-data.xml)）に Vim マクロを使って変換してみましょう。躓いたら、[マクロ](#マクロ) のセクションがヒントになるはずです。
