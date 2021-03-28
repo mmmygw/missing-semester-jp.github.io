@@ -186,8 +186,18 @@ Vim の編集コマンドは先で述べた名詞に対して機能させるこ�
 - `i` 編集モードに入る
   - テキストを操作/消去するにはバックスペース以上のものを使いたい
 - `o` / `O` 行を一行下に/一行上に挿入します
-- `d{motion}`
-
+- `d{motion}`{motion} を消去する
+  - 例: `dw` は文字を消去する、`d$` は行末まで文字を消去する、`d0` は行頭まで文字を消去する
+- `c{motion}`  {motion} を変更する
+  - 例: `cw` 単語を変更する（`d{motion}` + `i` と同等）
+- `x` 文字を消去する（`dl` と同等）
+- `s` 文字を置換する（`xi` と同等）
+- ビジュアルモード + 操作
+  - テキストを選択し、`d` で消去または `c` で変更する
+- `u` もとに戻す、`<C-r>` やり直し
+- `y` コピーする / "yank"（`d` も消去した内容のコピーを行います）
+- `p` 貼り付け
+- `~` 単語のキャピタライズを切り替える（大文字⇔小文字）
 
 Everything that you used to do with the mouse, you now do with the keyboard
 using editing commands that compose with movement commands. Here's where Vim's
@@ -215,6 +225,13 @@ are also called "verbs", because verbs act on nouns.
 
 ## カウント
 
+名詞と動詞を数字カウントによっても組み合わせることができます。
+数字カウントによって、その回数分命令を繰り返すことができます。
+
+- `3w` ３単語先に移動する
+- `5j` ５行下に移動する
+- `7dw` ７単語消去する
+
 You can combine nouns and verbs with a count, which will perform a given action
 a number of times.
 
@@ -222,7 +239,14 @@ a number of times.
 - `5j` move 5 lines down
 - `7dw` delete 7 words
 
-## Modifiers
+## 修飾子
+
+名詞の意味を変更する修飾子を付加することができます。
+いくつかの修飾子は `i` で、”inner”　”inside”　を意味し、"a" は "around" を意味します。
+
+- `ci(` 括弧内の内容を変更する
+- `ci[` 角括弧内の内容を変更する
+- `da'` シングルクオートで囲まれた文字をシングルクオートを含めて消去する
 
 You can use modifiers to change the meaning of a noun. Some modifiers are `i`,
 which means "inner" or "inside", and `a`, which means "around".
@@ -233,8 +257,8 @@ which means "inner" or "inside", and `a`, which means "around".
 
 # Demo
 
-Here is a broken [fizz buzz](https://en.wikipedia.org/wiki/Fizz_buzz)
-implementation:
+以下は、不完全な [fizz buzz](https://en.wikipedia.org/wiki/Fizz_buzz)
+の実装です:
 
 ```python
 def fizz_buzz(limit):
@@ -250,13 +274,12 @@ def main():
     fizz_buzz(10)
 ```
 
-We will fix the following issues:
-
-- Main is never called
-- Starts at 0 instead of 1
-- Prints "fizz" and "buzz" on separate lines for multiples of 15
-- Prints "fizz" for multiples of 5
-- Uses a hard-coded argument of 10 instead of taking a command-line argument
+我々は以下の問題を修正しなければなりません。
+- Main が呼ばれていない
+- イテレーションが 1 ではなく 0 から始まっている
+- 15 の倍数のとき、"fizz" "buzz" を別々の行に出力してしまう
+- 5 の倍数のとき、"fizz" を出力してしまう
+- コマンドライン引数ではなく、ハードコーディングされた入力(10) を使っている
 
 {% comment %}
 - main is never called
@@ -283,12 +306,31 @@ We will fix the following issues:
   - `ci(` to "int(sys.argv[1])"
 {% endcomment %}
 
+講義ビデオを視聴し、上記の変更が Vim を用いてどのように修正されるかを確認してください。
+Vim で必要なキータイプが非常に少なく、まさに思考のスピードで編集できることが
+実感できるでしょう。
+
 See the lecture video for the demonstration. Compare how the above changes are
 made using Vim to how you might make the same edits using another program.
 Notice how very few keystrokes are required in Vim, allowing you to edit at the
 speed you think.
 
-# Customizing Vim
+# Vim のカスタマイズ
+Vim は VimScript を含んだプレーンテキストの設定ファイル `~/.vimrc`
+によってカスタマイズすることができます。
+基本的な設定で有効化したい設定が沢山あるでしょう。
+
+我々は入門用として、ドキュメンテーションされた基本的なコンフィグファイルを用意しました。
+Vim の風変わりなデフォルトの挙動を修正するこのコンフィグを利用することをおすすめします。
+**[ここ](/2020/files/vimrc)からファイルをダウンロードし、`~/.vimrc` に保存してください。**
+
+Vim は隅々までカスタマイズが可能で、カスタマイズオプションを調査しつくす価値は大いに有ります。
+GitHub 上で他のユーザの dotfiles を参考にすることもできるでしょう。例えばインストラクターのコンフィグは
+([Anish](https://github.com/anishathalye/dotfiles/blob/master/vimrc),
+[Jon](https://github.com/jonhoo/configs/blob/master/editor/.config/nvim/init.vim) (uses [neovim](https://neovim.io/)),
+[Jose](https://github.com/JJGO/dotfiles/blob/master/vim/.vimrc)).
+また、ネット上には Vim の設定について多くの優良記事が公開されています。
+単に他のユーザのコンフィグをコピーペーストするのではなく、熟読し、内容を理解し、必要な設定だけを取り入れるようにしましょう。
 
 Vim is customized through a plain-text configuration file in `~/.vimrc`
 (containing Vimscript commands). There are probably lots of basic settings that
@@ -308,7 +350,29 @@ inspiration, for example, your instructors' Vim configs
 lots of good blog posts on this topic too. Try not to copy-and-paste people's
 full configuration, but read it, understand it, and take what you need.
 
-# Extending Vim
+# Vim を拡張する
+
+Vim のプラグインは非常に多く開発されています。
+インターネット上で目にしたかもしれないアドバイスは時代遅れで、
+Vim 8.0 以降ではプラグインマネージャを使用する必要はありません。
+その代わりに、Vim 組み込みのパッケージマネジメントシステムを使用することができます。
+ディレクトリ `~/.vim/pack/vendor/start/` を作成し、プラグインを `git clone` 等で
+保存してください。
+
+これらは我々のお気に入りのプラグインの一部です。
+
+- [ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim): fuzzy file finder
+- [ack.vim](https://github.com/mileszs/ack.vim): code search
+- [nerdtree](https://github.com/scrooloose/nerdtree): file explorer
+- [vim-easymotion](https://github.com/easymotion/vim-easymotion): magic motions
+
+我々は膨大なリストをここで紹介するのを避けたいと思います。
+あなたはインストラクタの dotfiles をまず参照し
+([Anish](https://github.com/anishathalye/dotfiles),
+[Jon](https://github.com/jonhoo/configs),
+[Jose](https://github.com/JJGO/dotfiles)) どんなプラグインを我々が使っているか見てみて下さい。
+[Vim Awesome](https://vimawesome.com/) では更に多くの優れたプラグインについて知ることができます。
+"best Vim plugins" で検索すれば、プラグインについて多くの記事が見つかるはずです。
 
 There are tons of plugins for extending Vim. Contrary to outdated advice that
 you might find on the internet, you do _not_ need to use a plugin manager for
@@ -332,11 +396,25 @@ Check out [Vim Awesome](https://vimawesome.com/) for more awesome Vim plugins.
 There are also tons of blog posts on this topic: just search for "best Vim
 plugins".
 
+# ソフトウェアにおける Vim モード
+
+多くのツールが Vim のエミュレーションモードをサポートしています。
+その質は低いものから高いものまでツールによって様々ですが、
+全ての機能とはいかないまでも基本的な機能は大抵網羅されています。
+
 # Vim-mode in other programs
 
 Many tools support Vim emulation. The quality varies from good to great;
 depending on the tool, it may not support the fancier Vim features, but most
 cover the basics pretty well.
+
+## シェル
+
+もし Bash を使っているならば、 `set -o vi` を、`Zsh` を使っているなら `bindkey -v` を、
+`Fish` を使っているなら `fish_vi_key_bindings` を使いましょう。
+加えて、どのシェルを使っていようと、 `export EDITOR=vim` を環境変数に設定しましょう。
+これはあらゆるプログラムがエディタを呼び出そうとする時、どのエディタを使うかを定める環境変数です。
+例えば、 `git` はコミットメッセージを入力する際ここで設定されているエディタを最初に呼び出します。
 
 ## Shell
 
@@ -345,6 +423,18 @@ If you're a Bash user, use `set -o vi`. If you use Zsh, `bindkey -v`. For Fish,
 `export EDITOR=vim`. This is the environment variable used to decide which
 editor is launched when a program wants to start an editor. For example, `git`
 will use this editor for commit messages.
+
+## Readline
+多くのプログラムはコマンドラインインタフェースのためのライブラリ [GNU
+Readline](https://tiswww.case.edu/php/chet/readline/rltop.html)
+を使っています。Readline は基本的な Vim 風のバインディングも備えています。
+`~/.inputrc` ファイルに以下の行を追加すれば、Vi エミュレーションモードを有効化できます。
+
+```
+set editing-mode vi
+```
+
+この設定をすると例えば、Python の REPL も Vim バインディングをサポートします。
 
 ## Readline
 
@@ -359,6 +449,15 @@ set editing-mode vi
 
 With this setting, for example, the Python REPL will support Vim bindings.
 
+## その他
+
+[Web ブラウザ](http://vim.wikia.com/wiki/Vim_key_bindings_for_web_browsers) にも Vim のキーバインドをエミュレートする拡張機能があります。
+有名なものでは Google Chrome 用の
+[Vimium](https://chrome.google.com/webstore/detail/vimium/dbepggeogbaibhgnhhndojpepiihcmeb?hl=en)
+や Firefox 用の [Tridactyl](https://github.com/tridactyl/tridactyl) があります。
+[Jupyter
+notebooks](https://github.com/lambdalisue/jupyter-vim-binding) でも Vim のキーバインドが提供されています。
+
 ## Others
 
 There are even vim keybinding extensions for web
@@ -369,12 +468,29 @@ for Google Chrome and [Tridactyl](https://github.com/tridactyl/tridactyl) for
 Firefox. You can even get Vim bindings in [Jupyter
 notebooks](https://github.com/lambdalisue/jupyter-vim-binding).
 
+# 発展的な Tips
+
+このエディタの真価の一端をいくつか紹介します。
+全てを教えつくすことはできませんが、学んでいくうちに理解が深まっていくでしょう。
+もっとよい方法があるのでは，という考えが頭をよぎったら、
+必ずその方法は存在します。ネットで検索してみましょう。
+
 # Advanced Vim
 
 Here are a few examples to show you the power of the editor. We can't teach you
 all of these kinds of things, but you'll learn them as you go. A good
 heuristic: whenever you're using your editor and you think "there must be a
 better way of doing this", there probably is: look it up online.
+
+## 検索と置換
+
+`:s` (substitute) コマンド ([documentation](http://vim.wikia.com/wiki/Search_and_replace)).
+
+- `%s/foo/bar/g`
+    - ドキュメント中全ての foo を bar に置換する
+- `%s/\[.*\](\(.*\))/\1/g`
+    - Markdown のリンクをリンク内のURLに置換する
+
 
 ## Search and replace
 
@@ -385,12 +501,47 @@ better way of doing this", there probably is: look it up online.
 - `%s/\[.*\](\(.*\))/\1/g`
     - replace named Markdown links with plain URLs
 
+## 複数ウィンドウ
+- `:sp` / `:vsp` ウィンドウを分割する
+- 同じバッファに対して複数のビューを持つことができます
+
 ## Multiple windows
 
 - `:sp` / `:vsp` to split windows
 - Can have multiple views of the same buffer.
 
 ## マクロ
+
+- `q{character}` レジスタ {character} にマクロのレコーディングを開始`{character}`
+- `q` レコーディングを停止
+- `@{character}` マクロを繰り返す
+- マクロがエラーで止まる
+- `{number}@{character}` マクロを {number} 回数分繰り返す
+- マクロは再帰的にできる
+  - `q{character}q` でマクロをクリアする
+  - マクロ記録し，`@{character}` でマクロを再生する（レコードが完了するまで no-op になる）
+- 例： xml を json にする ([file](/2020/files/example-data.xml))
+  - "name" / "email" といキーのオブジェクトのあれい
+  - Python のプログラムを使うか？
+  - sed / regex を使うか？
+      - `g/people/d`
+      - `%s/<person>/{/g`
+      - `%s/<name>\(.*\)<\/name>/"name": "\1",/g`
+      - ...
+  - Vim コマンド / マクロを使うか？
+        - `Gdd`, `ggdd` delete first and last lines
+        - Macro to format a single element (register `e`)
+            - Go to line with `<name>`
+            - `qe^r"f>s": "<ESC>f<C"<ESC>q`
+        - Macro to format a person
+            - Go to line with `<person>`
+            - `qpS{<ESC>j@eA,<ESC>j@ejS},<ESC>q`
+        - Macro to format a person and go to the next person
+            - Go to line with `<person>`
+            - `qq@pjq`
+        - Execute macro until end of file
+            - `999@q`
+        - Manually remove last `,` and add `[` and `]` delimiters
 
 - `q{character}` to start recording a macro in register `{character}`
 - `q` to stop recording
