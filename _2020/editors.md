@@ -11,22 +11,21 @@ video:
 文章を書くこととプログラミングは全く異なる営みです。
 英語のライティングがまとまった文章を書く作業であるのに対し、
 プログラミングではファイルを切り替え、コードを読み、辿り、そして編集します。
-そのため、英語という言語に適したエディタとプログラム言語に適したエディタがある
-のです。（例: Microsoft Word と Visual Studio Code）
+そのため、英語という言語に適したエディタとプログラム言語に適したエディタがあるのです。（例: Microsoft Word と Visual Studio Code）
 
-プログラマとして我々は大半の時間をコードの編集に費やすため、
+プログラマとして我々は大半の時間をコードの編集作業に費やすため、
 ニーズに合ったエディタに習熟することは非常に時間対効果が高いといえます。
 以下に新しいエディタの使い方を学ぶ際の一般的な方法論を紹介します。
 
 - チュートリアルを始める（例: 本講座 + 紹介資料）
-- （たとえ一時的に生産性を損ねても）あらゆるテキスト編集にそのエディタを使うことに拘る
+- （たとえ一時的に生産性を損ねても）あらゆる編集作業でそのエディタを使うことに拘る
 - 常により良い方法がないかを模索する。もしもっと良い方法がないかという考えが頭をよぎったら、それは必ず存在します。
 
 上記の方法に従い新たなプログラムをエディタの使い方を学ぶ題材にするならば、
 タイムラインはこのようになるでしょう。
-まず１、２時間以内にエディタの基礎機能（ファイルを開いて編集する、保存・終了する、バッファを操作する）
+まず 1、2 時間以内にエディタの基礎機能（ファイルを開いて編集する、保存・終了する、バッファを操作する）
 を習得します。
-２０時間も経てば元のエディタと同じくらいの速度で編集できるようになっているでしょう。
+20 時間も経てば元のエディタと同じくらいの速度で編集できるようになっているでしょう。
 新しいエディタに関する十分な知識を得て、使い方を身体で覚えたならば、
 その恩恵を受け膨大な時間を節約することができるようになっていきます。
 モダンなテキストエディタは素晴らしく強力なツールです。
@@ -40,19 +39,19 @@ video:
 での調査](https://insights.stackoverflow.com/survey/2019/#development-environments-and-tools)
 によると、
 [Visual Studio Code](https://code.visualstudio.com/) が全体で最も人気があり、
-[Vim](https://www.vim.org/) はCLI（コマンドラインインターフェース）のエディタの中で最も支持を集めています。
+[Vim](https://www.vim.org/) は CLI（コマンドラインインターフェース）のエディタの中で最も支持を集めています。
 （ただし、Stack Overflow のユーザは全プログラマを代表するものではないため調査結果にはバイアスが含まれています。)
 
 ## Vim
-この講座では全てのインストラクションに Vim を用います。
+本講座では全てのインストラクションに Vim を用います。
 Vim には長い歴史があります。
 Vim は元々 Vi（1976）として開発され、今日まで開発が継続されてきました。
-Vim はいくつかの素晴らしいアイデアが背景にあります。そのため、
-多くのツールが Vim の挙動をエミュレートするモードを採用しています
-（VSCode でも、１４０万のユーザが [Vim emulation for VS code](https://github.com/VSCodeVim/Vim) をインストールしています）。
+Vim はいくつかの素晴らしいアイデアに基づいて設計されているため、
+多くのツールが現在でも Vim の挙動をエミュレートするモードを採用しています
+（VSCode においても、140 万のユーザが [Vim emulation for VS code](https://github.com/VSCodeVim/Vim) をインストールしています）。
 つまり、たとえ他のエディタを最終的に使うことになるとしても、Vim は間違いなく学ぶ価値があるといえるでしょう。
 
-Vim の機能全てを５０分の講座で紹介し尽くすことは到底できません、
+Vim の機能全てを 50 分の講座で紹介し尽くすことは到底できません、
 そこで本講座は Vim の哲学とその基礎、より高度な機能の一部を紹介するに留めようと思います。
 講座の終わりでは Vim に更に習熟するための情報源をまとめて紹介します。
 
@@ -62,14 +61,14 @@ Vim の機能全てを５０分の講座で紹介し尽くすことは到底で�
 テキストの挿入と編集にはそれぞれ異なるモードが割り当てられています。
 また、Vim はプログラマブル（Vimscript や Python 等他のプログラミング言語で拡張機能を開発可能）
 であり、覚えやすいキーストロークやコマンドは全て組み合わせて実行することができます。
-Vim はマウスの使用を徹底して避けます。何故ならマウスでの操作はキーボードのそれと比較して余りにも遅いからです。
+Vim はマウスの使用を徹底して避けます。マウスでの操作はキーボードのそれと比較して余りにも遅いからです。
 更に Vim は矢印キーの使用を避けます、これもキーボード上で必要な移動量が大きすぎるためです。
-これらの思想から、思考のスピードで編集することが可能なエディタが完成しました。
+これらの思想を元に、思考のスピードで編集することが可能なエディタが完成しました。
 
 # モーダル編集
-Vim は多くのプログラマはまとまった長いテキストを書くよりも、
+多くのプログラマはまとまった長いテキストを書くよりも、
 コードを読み、ファイルを辿り、そして僅かに編集を加える
-という作業に大半の時間を費やしているという事実に着眼して設計されています。
+という作業に大半の時間を費やしているという事実に着眼して Vim は設計されています。
 このため、Vim は複数の操作モードを備えています。
 
 - **ノーマルモード**：ファイル上を移動し、編集を加える
@@ -78,8 +77,8 @@ Vim は多くのプログラマはまとまった長いテキストを書くよ�
 - **ビジュアルモード**：テキストをブロック選択する
 - **コマンドラインモード**：コマンドを実行する
 
-キーストロークは操作モード毎に異なる機能が割り当てられています。
-挿入モードでの x は単に文字 x の挿入を行いますが、ノーマルモードではカーソル下の文字を消去し、
+キーバインドは操作モード毎に異なる機能が割り当てられています。
+挿入モードでの `x` は単に文字 x の挿入を行いますが、ノーマルモードではカーソル下の文字を消去し、
 ビジュアルモードでは選択範囲を消去します。
 
 初期設定では、Vim の画面左下に現在のモードが表示されます。
@@ -100,20 +99,20 @@ instructions](https://vim.fandom.com/wiki/Map_caps_lock_to_escape_in_macOS)）�
 ノーマルモードから、`i` を押下して挿入モードに入ります。
 挿入モードでは、Vim は他のエディタと殆ど同じような挙動をしているでしょう。
 そこで `<ESC>` を押すとまたノーマルモードに戻ってきます。
-これが Vim によるファイル編集を始める全ての基本になります。
-（挿入モードで大半の編集作業を行わないよう注意し、速やかにノーマルモードに戻るようにして下さい。）
+これが Vim によるファイル編集の全ての基本になります。
+（挿入モードで大半の編集作業を行わず、速やかにノーマルモードに戻るようにして下さい。）
 
 ## バッファ、タブ、ウィンドウ
-Vim ではメモリ上に読み込まれたファイル群のことを”バッファ”と呼びます。
+Vim ではメモリ上に読み込まれたファイルのことを”バッファ”と呼びます。
 Vim のセッションはバッファの表示領域であるウィンドウと、そのウィンドウを集めたタブを管理しています。
-ウェブブラウザ等他のアプリケーションとは異なり、Vim のバッファとウィンドウには１対１の対応関係があるわけではありません。
+ウェブブラウザ等他のアプリケーションとは異なり、Vim のバッファとウィンドウには 1 対 1 の対応関係があるわけではありません。
 ウィンドウは単に表示領域に過ぎず、あるバッファの内容を同じタブ、複数のウィンドウに表示することもできます。
-これは例えばあるファイルの２つの領域を同時に見たいという場合に役立ちます。
+これは例えばあるファイルの 2 つの異なる領域を同時に表示したいという場合に役立ちます。
 
-デフォルトでは、Vim は１つのウィンドウを含む１つのタブを立ち上げます。
+デフォルトでは、1 つのウィンドウを含む 1 つのタブを立ち上げます。
 
 ## コマンドライン
-コマンドモードにはノーマルモードで `:` を入力することによって切り替えます。
+コマンドモードにはノーマルモードで `:` を入力して切り替えます。
 画面下に入力領域が移り、`:` 以降にコマンドを入力することができます。
 このモードはファイルを開く、保存する、閉じる、[Vimを終了する](https://twitter.com/iamdevloper/status/435555976687923200) といった多くの機能を担っています。
 
@@ -127,44 +126,28 @@ Vim のセッションはバッファの表示領域であるウィンドウと�
     - `:help w` （ノーマルモードでの移動）`w` に関してヘルプを開く
 
 # Vim のインタフェースはプログラム言語である
-Vim における最も重要なアイデアは、Vimのインタフェースそのものもプログラミング言語であるということです。
-キーストロークはコマンドであり、コマンドは組み合わせることができます。
-この仕様によって一度身体でコマンドを覚えれば、非常に効率的に移動や編集を行うことができるようになります。
+Vim における最も重要なアイデアは、Vimのインタフェース自体もプログラミング言語であるということです。
+キー入力にはコマンドが割り当てられ、各コマンドは組み合わせることができます。
+この仕様により、一度身体でコマンドを覚えれば、非常に効率的に移動や編集を行うことができるようになります。
 
 ## 移動
 編集作業中は、
-ノーマルモードにおいてバッファ上を移動コマンドで移動することに多くの時間を使っているべきです。
-Vim における移動は"名詞"とも呼ばれ、
+ノーマルモードにおいてバッファ上を移動することに多くの時間を使っているべきです。
+Vim における移動は操作するテキストの断片を参照するため、"名詞"とも呼ばれます。
 
-- 基本の移動: `hjkl` (left, down, up, right)
-- 単語: `w` (次の単語へ) 、`b`（単語の先頭へ）、`e`（単語の末尾へ）
-- 行: `0`（行の先頭へ）、`^`（行先頭の文字へ）`$`（行末へ）
-- スクリーン: `H` `M` `L`
-- スクロール: `Ctrl-u` `Ctrl-d`
-- ファイル: `gg` `G`
-- 行番号: `:{番号}<CR>` または `{number}G`
-- その他: `%` （括弧等対応する要素へ）
-- 探す: `f{character}`、`t{character}`、`F{character}`、`T{character}`
+- 基本の移動： `hjkl` (left, down, up, right)
+- 単語： `w`（次の単語へ）、`b`（単語の先頭へ）、`e`（単語の末尾へ）
+- 行： `0`（行の先頭へ）、`^`（行先頭の文字へ）`$`（行末へ）
+- スクリーン： `H` `M` `L`
+- スクロール： `Ctrl-u` `Ctrl-d`
+- ファイル： `gg` `G`
+- 行番号： `:{number}<CR>` または `{number}G`
+- その他： `%` （括弧等対応する要素へ）
+- 文字への移動： `f{character}`、`t{character}`、`F{character}`、`T{character}`
   - 探す　find/to forward/backward {character} on the currentline
-  - `,` / `;` for navigating matches
-- 探す: `/{regex}`、`n` / `N` for navigating matches
-
-You should spend most of your time in Normal mode, using movement commands to
-navigate the buffer. Movements in Vim are also called "nouns", because they
-refer to chunks of text.
-
-- Basic movement: `hjkl` (left, down, up, right)
-- Words: `w` (next word), `b` (beginning of word), `e` (end of word)
-- Lines: `0` (beginning of line), `^` (first non-blank character), `$` (end of line)
-- Screen: `H` (top of screen), `M` (middle of screen), `L` (bottom of screen)
-- Scroll: `Ctrl-u` (up), `Ctrl-d` (down)
-- File: `gg` (beginning of file), `G` (end of file)
-- Line numbers: `:{number}<CR>` or `{number}G` (line {number})
-- Misc: `%` (corresponding item)
-- Find: `f{character}`, `t{character}`, `F{character}`, `T{character}`
-    - find/to forward/backward {character} on the current line
-    - `,` / `;` for navigating matches
-- Search: `/{regex}`, `n` / `N` for navigating matches
+  - 現在の行において、次の該当文字上へ/該当文字の 1 文字前へ/前の該当文字へ 移動する
+  - `,` / `;` マッチした文字を移動する
+- 検索： `/{regex}`、`n` / `N` 正規表現で検索した文字列を前に/後に検索する
 
 ## 選択
 
@@ -179,85 +162,47 @@ refer to chunks of text.
 ## 編集
 
 今までマウスで行っていた作業は、
-編集コマンドと移動コマンドｗお組み合わせたキーボードによって行えるようになります。
-Vim のインタフェースがプログラミング言語のように見えるのは
+編集コマンドと移動コマンドを組み合わせることで全てキーボードで行えるようになります。
 Vim の編集コマンドは先で述べた名詞に対して機能させることができるため、”動詞”とも表現されます。
+Vim のインタフェースがプログラミング言語のように感じられてきたでしょう。
 
 - `i` 編集モードに入る
-  - テキストを操作/消去するにはバックスペース以上のものを使いたい
+  - ただし、テキストを操作/消去する際は backspace よりノーマルモードを利用しましょう
 - `o` / `O` 行を一行下に/一行上に挿入します
-- `d{motion}`{motion} を消去する
-  - 例: `dw` は文字を消去する、`d$` は行末まで文字を消去する、`d0` は行頭まで文字を消去する
+- `d{motion}` {motion} を消去する
+  - 例: `dw` 文字を消去する、`d$` 行末まで文字を消去する、`d0` 行頭まで文字を消去する
 - `c{motion}`  {motion} を変更する
   - 例: `cw` 単語を変更する（`d{motion}` + `i` と同等）
 - `x` 文字を消去する（`dl` と同等）
 - `s` 文字を置換する（`xi` と同等）
 - ビジュアルモード + 操作
   - テキストを選択し、`d` で消去または `c` で変更する
-- `u` もとに戻す、`<C-r>` やり直し
-- `y` コピーする / "yank"（`d` も消去した内容のコピーを行います）
+- `u` 元に戻す、`<C-r>` やり直し
+- `y` コピーする（`d` でも消去した内容のコピーを行います）
 - `p` 貼り付け
 - `~` 単語のキャピタライズを切り替える（大文字⇔小文字）
 
-Everything that you used to do with the mouse, you now do with the keyboard
-using editing commands that compose with movement commands. Here's where Vim's
-interface starts to look like a programming language. Vim's editing commands
-are also called "verbs", because verbs act on nouns.
-
-- `i` enter Insert mode
-    - but for manipulating/deleting text, want to use something more than
-    backspace
-- `o` / `O` insert line below / above
-- `d{motion}` delete {motion}
-    - e.g. `dw` is delete word, `d$` is delete to end of line, `d0` is delete
-    to beginning of line
-- `c{motion}` change {motion}
-    - e.g. `cw` is change word
-    - like `d{motion}` followed by `i`
-- `x` delete character (equal do `dl`)
-- `s` substitute character (equal to `xi`)
-- Visual mode + manipulation
-    - select text, `d` to delete it or `c` to change it
-- `u` to undo, `<C-r>` to redo
-- `y` to copy / "yank" (some other commands like `d` also copy)
-- `p` to paste
-- Lots more to learn: e.g. `~` flips the case of a character
-
 ## カウント
 
-名詞と動詞を数字カウントによっても組み合わせることができます。
-数字カウントによって、その回数分命令を繰り返すことができます。
+名詞と動詞は数字カウントを付加して組み合わせることができます。
+数字カウントによって、その回数分コマンドを繰り返すことができます。
 
 - `3w` ３単語先に移動する
 - `5j` ５行下に移動する
 - `7dw` ７単語消去する
 
-You can combine nouns and verbs with a count, which will perform a given action
-a number of times.
-
-- `3w` move 3 words forward
-- `5j` move 5 lines down
-- `7dw` delete 7 words
-
 ## 修飾子
 
-名詞の意味を変更する修飾子を付加することができます。
-いくつかの修飾子は `i` で、”inner”　”inside”　を意味し、"a" は "around" を意味します。
+名詞の機能を変更する修飾子を付加することができます。
+例えば `i` は ”inner”　”inside”　を意味し、`a` は "around" を意味します。
 
 - `ci(` 括弧内の内容を変更する
 - `ci[` 角括弧内の内容を変更する
-- `da'` シングルクオートで囲まれた文字をシングルクオートを含めて消去する
-
-You can use modifiers to change the meaning of a noun. Some modifiers are `i`,
-which means "inner" or "inside", and `a`, which means "around".
-
-- `ci(` change the contents inside the current pair of parentheses
-- `ci[` change the contents inside the current pair of square brackets
-- `da'` delete a single-quoted string, including the surrounding single quotes
+- `da'` シングルクオートで囲まれた文字を `'` を含めて消去する
 
 # Demo
 
-以下は、不完全な [fizz buzz](https://en.wikipedia.org/wiki/Fizz_buzz)
+これは不完全な [fizz buzz](https://en.wikipedia.org/wiki/Fizz_buzz)
 の実装です:
 
 ```python
@@ -306,14 +251,9 @@ def main():
   - `ci(` to "int(sys.argv[1])"
 {% endcomment %}
 
-講義ビデオを視聴し、上記の変更が Vim を用いてどのように修正されるかを確認してください。
-Vim で必要なキータイプが非常に少なく、まさに思考のスピードで編集できることが
+講義ビデオを視聴し、上記の変更が Vim を用いてどのように編集されるか、それが他のエディタを用いた場合といかに異なるかを確認してください。
+Vim で必要なキータイプ数が非常に少なく、習熟すればまさしく思考のスピードで編集できるということが
 実感できるでしょう。
-
-See the lecture video for the demonstration. Compare how the above changes are
-made using Vim to how you might make the same edits using another program.
-Notice how very few keystrokes are required in Vim, allowing you to edit at the
-speed you think.
 
 # Vim のカスタマイズ
 Vim は VimScript を含んだプレーンテキストの設定ファイル `~/.vimrc`
