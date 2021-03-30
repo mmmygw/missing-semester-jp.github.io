@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Editors (Vim)"
+title: "エディタ (Vim)"
 date: 2020-01-15
 ready: true
 video:
@@ -8,224 +8,202 @@ video:
   id: a6Q8Na575qc
 ---
 
-Writing English words and writing code are very different activities. When
-programming, you spend more time switching files, reading, navigating, and
-editing code compared to writing a long stream. It makes sense that there are
-different types of programs for writing English words versus code (e.g.
-Microsoft Word versus Visual Studio Code).
+文章を書くこととプログラミングは全く異なる営みです。
+英語のライティングがまとまった文章を書く作業であるのに対し、
+プログラミングではファイルを切り替え、コードを読み、辿り、そして編集します。
+そのため、英語という言語に適したエディタとプログラム言語に適したエディタがあるのです。（例: Microsoft Word と Visual Studio Code）
 
-As programmers, we spend most of our time editing code, so it's worth investing
-time mastering an editor that fits your needs. Here's how you learn a new
-editor:
+プログラマとして我々は大半の時間をコードの編集作業に費やすため、
+ニーズに合ったエディタに習熟することは非常に時間対効果が高いといえます。
+以下に新しいエディタの使い方を学ぶ際の一般的な方法論を紹介します。
 
-- Start with a tutorial (i.e. this lecture, plus resources that we point out)
-- Stick with using the editor for all your text editing needs (even if it slows
-you down initially)
-- Look things up as you go: if it seems like there should be a better way to do
-something, there probably is
+- チュートリアルを始める（例: 本講座 + 紹介資料）
+- （たとえ一時的に生産性を損ねても）あらゆる編集作業でそのエディタを使うことに拘る
+- 常により良い方法がないかを模索する。もしもっと良い方法がないかという考えが頭をよぎったら、それは必ず存在します。
 
-If you follow the above method, fully committing to using the new program for
-all text editing purposes, the timeline for learning a sophisticated text
-editor looks like this. In an hour or two, you'll learn basic editor functions
-such as opening and editing files, save/quit, and navigating buffers. Once
-you're 20 hours in, you should be as fast as you were with your old editor.
-After that, the benefits start: you will have enough knowledge and muscle
-memory that using the new editor saves you time. Modern text editors are fancy
-and powerful tools, so the learning never stops: you'll get even faster as you
-learn more.
+上記の方法に従い新たなプログラムをエディタの使い方を学ぶ題材にするならば、
+タイムラインはこのようになるでしょう。
+まず 1、2 時間以内にエディタの基礎機能（ファイルを開いて編集する、保存・終了する、バッファを操作する）
+を習得します。
+20 時間も経てば元のエディタと同じくらいの速度で編集できるようになっているでしょう。
+新しいエディタに関する十分な知識を得て、使い方を身体で覚えたならば、
+その恩恵を受け膨大な時間を節約することができるようになっていきます。
+モダンなテキストエディタは素晴らしく強力なツールです。
+あなたは学べば学ぶほどより速い編集能力を身につけることができるでしょう。
 
-# Which editor to learn?
+# どのエディタを学ぶべきですか？
 
-Programmers have [strong opinions](https://en.wikipedia.org/wiki/Editor_war)
-about their text editors.
-
-Which editors are popular today? See this [Stack Overflow
-survey](https://insights.stackoverflow.com/survey/2019/#development-environments-and-tools)
-(there may be some bias because Stack Overflow users may not be representative
-of programmers as a whole). [Visual Studio
-Code](https://code.visualstudio.com/) is the most popular editor.
-[Vim](https://www.vim.org/) is the most popular command-line-based editor.
+プログラマはテキストエディタに関して[様々な選択肢](https://en.wikipedia.org/wiki/Editor_war)があります。
+どのエディタが現在最も人気でしょうか？
+[Stack Overflow
+での調査](https://insights.stackoverflow.com/survey/2019/#development-environments-and-tools)
+によると、
+[Visual Studio Code](https://code.visualstudio.com/) が全体で最も人気があり、
+[Vim](https://www.vim.org/) は CLI（コマンドラインインターフェース）のエディタの中で最も支持を集めています。
+（ただし、Stack Overflow のユーザは全プログラマを代表するものではないため調査結果にはバイアスが含まれています。)
 
 ## Vim
+本講座では全てのインストラクションに Vim を用います。
+Vim には長い歴史があります。
+Vim は元々 Vi（1976）として開発され、今日まで開発が継続されてきました。
+Vim はいくつかの素晴らしいアイデアに基づいて設計されているため、
+多くのツールが現在でも Vim の挙動をエミュレートするモードを採用しています
+（VSCode においても、140 万のユーザが [Vim emulation for VS code](https://github.com/VSCodeVim/Vim) をインストールしています）。
+つまり、たとえ他のエディタを最終的に使うことになるとしても、Vim は間違いなく学ぶ価値があるといえるでしょう。
 
-All the instructors of this class use Vim as their editor. Vim has a rich
-history; it originated from the Vi editor (1976), and it's still being
-developed today. Vim has some really neat ideas behind it, and for this reason,
-lots of tools support a Vim emulation mode (for example, 1.4 million people
-have installed [Vim emulation for VS code](https://github.com/VSCodeVim/Vim)).
-Vim is probably worth learning even if you finally end up switching to some
-other text editor.
+Vim の機能全てを 50 分の講座で紹介し尽くすことは到底できません、
+そこで本講座は Vim の哲学とその基礎、より高度な機能の一部を紹介するに留めようと思います。
+講座の終わりでは Vim に更に習熟するための情報源をまとめて紹介します。
 
-It's not possible to teach all of Vim's functionality in 50 minutes, so we're
-going to focus on explaining the philosophy of Vim, teaching you the basics,
-showing you some of the more advanced functionality, and giving you the
-resources to master the tool.
+# Vim の哲学
+プログラミングをする際、我々は殆どの時間をコードを書くことではなく、読むことと編集に費やします。
+このため Vim は **モーダル** エディタとして設計されており、
+テキストの挿入と編集にはそれぞれ異なるモードが割り当てられています。
+また、Vim はプログラマブル（Vimscript や Python 等他のプログラミング言語で拡張機能を開発可能）
+であり、覚えやすいキーストロークやコマンドは全て組み合わせて実行することができます。
+Vim はマウスの使用を徹底して避けます。マウスでの操作はキーボードのそれと比較して余りにも遅いからです。
+更に Vim は矢印キーの使用を避けます、これもキーボード上で必要な移動量が大きすぎるためです。
+これらの思想を元に、思考のスピードで編集することが可能なエディタが完成しました。
 
-# Philosophy of Vim
+# モーダル編集
+多くのプログラマはまとまった長いテキストを書くよりも、
+コードを読み、ファイルを辿り、そして僅かに編集を加える
+という作業に大半の時間を費やしているという事実に着眼して Vim は設計されています。
+このため、Vim は複数の操作モードを備えています。
 
-When programming, you spend most of your time reading/editing, not writing. For
-this reason, Vim is a _modal_ editor: it has different modes for inserting text
-vs manipulating text. Vim is programmable (with Vimscript and also other
-languages like Python), and Vim's interface itself is a programming language:
-keystrokes (with mnemonic names) are commands, and these commands are
-composable. Vim avoids the use of the mouse, because it's too slow; Vim even
-avoids using the arrow keys because it requires too much movement.
+- **ノーマルモード**：ファイル上を移動し、編集を加える
+- **挿入モード**：テキストを挿入する
+- **置換モード**：テキストを置換する
+- **ビジュアルモード**：テキストをブロック選択する
+- **コマンドラインモード**：コマンドを実行する
 
-The end result is an editor that can match the speed at which you think.
+キーバインドは操作モード毎に異なる機能が割り当てられています。
+挿入モードでの `x` は単に文字 x の挿入を行いますが、ノーマルモードではカーソル下の文字を消去し、
+ビジュアルモードでは選択範囲を消去します。
 
-# Modal editing
+初期設定では、Vim の画面左下に現在のモードが表示されます。
+デフォルトのモードはノーマルモードです。
+基本的には、ノーマルモードと挿入モードを行き来することになります。
 
-Vim's design is based on the idea that a lot of programmer time is spent
-reading, navigating, and making small edits, as opposed to writing long streams
-of text. For this reason, Vim has multiple operating modes.
+`<ESC>` (Escキー) を押すと現在のモードからノーマルモードに切り替えることができます。
+ノーマルモードからは、`i` で挿入モード、`R` で置換モード、`v` でビジュアルモード、`V` でビジュアルブロックモード、
+`<C-v>`（Ctrl-V、`^V` とも表記）、コマンドラインモードに `:` で入ります。
 
-- **Normal**: for moving around a file and making edits
-- **Insert**: for inserting text
-- **Replace**: for replacing text
-- **Visual** (plain, line, or block): for selecting blocks of text
-- **Command-line**: for running a command
+Vim で編集する際は `<ESC>` を頻繁に使うため、
+Caps Lock キーを Escape に置換することを検討してみてもいいでしょう
+（[macOS
+instructions](https://vim.fandom.com/wiki/Map_caps_lock_to_escape_in_macOS)）。
 
-Keystrokes have different meanings in different operating modes. For example,
-the letter `x` in Insert mode will just insert a literal character 'x', but in
-Normal mode, it will delete the character under the cursor, and in Visual mode,
-it will delete the selection.
+# 基本
+## テキストを挿入する
+ノーマルモードから、`i` を押下して挿入モードに入ります。
+挿入モードでは、Vim は他のエディタと殆ど同じような挙動をしているでしょう。
+そこで `<ESC>` を押すとまたノーマルモードに戻ってきます。
+これが Vim によるファイル編集の全ての基本になります。
+（挿入モードで大半の編集作業を行わず、速やかにノーマルモードに戻るようにして下さい。）
 
-In its default configuration, Vim shows the current mode in the bottom left.
-The initial/default mode is Normal mode. You'll generally spend most of your
-time between Normal mode and Insert mode.
+## バッファ、タブ、ウィンドウ
+Vim ではメモリ上に読み込まれたファイルのことを”バッファ”と呼びます。
+Vim のセッションはバッファの表示領域であるウィンドウと、そのウィンドウを集めたタブを管理しています。
+ウェブブラウザ等他のアプリケーションとは異なり、Vim のバッファとウィンドウには 1 対 1 の対応関係があるわけではありません。
+ウィンドウは単に表示領域に過ぎず、あるバッファの内容を同じタブ、複数のウィンドウに表示することもできます。
+これは例えばあるファイルの 2 つの異なる領域を同時に表示したいという場合に役立ちます。
 
-You change modes by pressing `<ESC>` (the escape key) to switch from any mode
-back to Normal mode. From Normal mode, enter Insert mode with `i`, Replace mode
-with `R`, Visual mode with `v`, Visual Line mode with `V`, Visual Block mode
-with `<C-v>` (Ctrl-V, sometimes also written `^V`), and Command-line mode with
-`:`.
+デフォルトでは、1 つのウィンドウを含む 1 つのタブを立ち上げます。
 
-You use the `<ESC>` key a lot when using Vim: consider remapping Caps Lock to
-Escape ([macOS
-instructions](https://vim.fandom.com/wiki/Map_caps_lock_to_escape_in_macOS)).
+## コマンドライン
+コマンドモードにはノーマルモードで `:` を入力して切り替えます。
+画面下に入力領域が移り、`:` 以降にコマンドを入力することができます。
+このモードはファイルを開く、保存する、閉じる、[Vimを終了する](https://twitter.com/iamdevloper/status/435555976687923200) といった多くの機能を担っています。
 
-# Basics
+- `:q` 終了する（ウィンドウを閉じる）
+- `:w` 保存する ("write")
+- `:wq` 保存して閉じる
+- `:e {ファイル名}` ファイルを開いて編集する
+- `:ls` バッファの一覧を表示する
+- `:help {topic}` ヘルプを開く
+    - `:help :w` `:w` コマンドに関するヘルプを開く
+    - `:help w` （ノーマルモードでの移動）`w` に関してヘルプを開く
 
-## Inserting text
+# Vim のインタフェースはプログラム言語である
+Vim における最も重要なアイデアは、Vimのインタフェース自体もプログラミング言語であるということです。
+キー入力にはコマンドが割り当てられ、各コマンドは組み合わせることができます。
+この仕様により、一度身体でコマンドを覚えれば、非常に効率的に移動や編集を行うことができるようになります。
 
-From Normal mode, press `i` to enter Insert mode. Now, Vim behaves like any
-other text editor, until you press `<ESC>` to return to Normal mode. This,
-along with the basics explained above, are all you need to start editing files
-using Vim (though not particularly efficiently, if you're spending all your
-time editing from Insert mode).
+## 移動
+編集作業中は、
+ノーマルモードにおいてバッファ上を移動することに多くの時間を使っているべきです。
+Vim における移動は操作するテキストの断片を参照するため、"名詞"とも呼ばれます。
 
-## Buffers, tabs, and windows
+- 基本の移動： `hjkl` (left, down, up, right)
+- 単語： `w`（次の単語へ）、`b`（単語の先頭へ）、`e`（単語の末尾へ）
+- 行： `0`（行の先頭へ）、`^`（行先頭の文字へ）`$`（行末へ）
+- スクリーン： `H` `M` `L`
+- スクロール： `Ctrl-u` `Ctrl-d`
+- ファイル： `gg` `G`
+- 行番号： `:{number}<CR>` または `{number}G`
+- その他： `%` （括弧等対応する要素へ）
+- 文字への移動： `f{character}`、`t{character}`、`F{character}`、`T{character}`
+  - 探す　find/to forward/backward {character} on the currentline
+  - 現在の行において、次の該当文字上へ/該当文字の 1 文字前へ/前の該当文字へ 移動する
+  - `,` / `;` マッチした文字を移動する
+- 検索： `/{regex}`、`n` / `N` 正規表現で検索した文字列を前に/後に検索する
 
-Vim maintains a set of open files, called "buffers". A Vim session has a number
-of tabs, each of which has a number of windows (split panes). Each window shows
-a single buffer. Unlike other programs you are familiar with, like web
-browsers, there is not a 1-to-1 correspondence between buffers and windows;
-windows are merely views. A given buffer may be open in _multiple_ windows,
-even within the same tab. This can be quite handy, for example, to view two
-different parts of a file at the same time.
+## 選択
 
-By default, Vim opens with a single tab, which contains a single window.
+ビジュアルモード：
 
-## Command-line
+- ビジュアル
+- ビジュアルライン
+- ビジュアルブロック
 
-Command mode can be entered by typing `:` in Normal mode. Your cursor will jump
-to the command line at the bottom of the screen upon pressing `:`. This mode
-has many functionalities, including opening, saving, and closing files, and
-[quitting Vim](https://twitter.com/iamdevloper/status/435555976687923200).
+は移動キーを用いて選択を行うことができます。
 
-- `:q` quit (close window)
-- `:w` save ("write")
-- `:wq` save and quit
-- `:e {name of file}` open file for editing
-- `:ls` show open buffers
-- `:help {topic}` open help
-    - `:help :w` opens help for the `:w` command
-    - `:help w` opens help for the `w` movement
+## 編集
 
-# Vim's interface is a programming language
+今までマウスで行っていた作業は、
+編集コマンドと移動コマンドを組み合わせることで全てキーボードで行えるようになります。
+Vim の編集コマンドは先で述べた名詞に対して機能させることができるため、”動詞”とも表現されます。
+Vim のインタフェースがプログラミング言語のように感じられてきたでしょう。
 
-The most important idea in Vim is that Vim's interface itself is a programming
-language. Keystrokes (with mnemonic names) are commands, and these commands
-_compose_. This enables efficient movement and edits, especially once the
-commands become muscle memory.
+- `i` 編集モードに入る
+  - ただし、テキストを操作/消去する際は backspace よりノーマルモードを利用しましょう
+- `o` / `O` 行を一行下に/一行上に挿入します
+- `d{motion}` {motion} を消去する
+  - 例: `dw` 文字を消去する、`d$` 行末まで文字を消去する、`d0` 行頭まで文字を消去する
+- `c{motion}`  {motion} を変更する
+  - 例: `cw` 単語を変更する（`d{motion}` + `i` と同等）
+- `x` 文字を消去する（`dl` と同等）
+- `s` 文字を置換する（`xi` と同等）
+- ビジュアルモード + 操作
+  - テキストを選択し、`d` で消去または `c` で変更する
+- `u` 元に戻す、`<C-r>` やり直し
+- `y` コピーする（`d` でも消去した内容のコピーを行います）
+- `p` 貼り付け
+- `~` 単語のキャピタライズを切り替える（大文字⇔小文字）
 
-## Movement
+## カウント
 
-You should spend most of your time in Normal mode, using movement commands to
-navigate the buffer. Movements in Vim are also called "nouns", because they
-refer to chunks of text.
+名詞と動詞は数字カウントを付加して組み合わせることができます。
+数字カウントによって、その回数分コマンドを繰り返すことができます。
 
-- Basic movement: `hjkl` (left, down, up, right)
-- Words: `w` (next word), `b` (beginning of word), `e` (end of word)
-- Lines: `0` (beginning of line), `^` (first non-blank character), `$` (end of line)
-- Screen: `H` (top of screen), `M` (middle of screen), `L` (bottom of screen)
-- Scroll: `Ctrl-u` (up), `Ctrl-d` (down)
-- File: `gg` (beginning of file), `G` (end of file)
-- Line numbers: `:{number}<CR>` or `{number}G` (line {number})
-- Misc: `%` (corresponding item)
-- Find: `f{character}`, `t{character}`, `F{character}`, `T{character}`
-    - find/to forward/backward {character} on the current line
-    - `,` / `;` for navigating matches
-- Search: `/{regex}`, `n` / `N` for navigating matches
+- `3w` ３単語先に移動する
+- `5j` ５行下に移動する
+- `7dw` ７単語消去する
 
-## Selection
+## 修飾子
 
-Visual modes:
+名詞の機能を変更する修飾子を付加することができます。
+例えば `i` は ”inner”　”inside”　を意味し、`a` は "around" を意味します。
 
-- Visual
-- Visual Line
-- Visual Block
-
-Can use movement keys to make selection.
-
-## Edits
-
-Everything that you used to do with the mouse, you now do with the keyboard
-using editing commands that compose with movement commands. Here's where Vim's
-interface starts to look like a programming language. Vim's editing commands
-are also called "verbs", because verbs act on nouns.
-
-- `i` enter Insert mode
-    - but for manipulating/deleting text, want to use something more than
-    backspace
-- `o` / `O` insert line below / above
-- `d{motion}` delete {motion}
-    - e.g. `dw` is delete word, `d$` is delete to end of line, `d0` is delete
-    to beginning of line
-- `c{motion}` change {motion}
-    - e.g. `cw` is change word
-    - like `d{motion}` followed by `i`
-- `x` delete character (equal do `dl`)
-- `s` substitute character (equal to `xi`)
-- Visual mode + manipulation
-    - select text, `d` to delete it or `c` to change it
-- `u` to undo, `<C-r>` to redo
-- `y` to copy / "yank" (some other commands like `d` also copy)
-- `p` to paste
-- Lots more to learn: e.g. `~` flips the case of a character
-
-## Counts
-
-You can combine nouns and verbs with a count, which will perform a given action
-a number of times.
-
-- `3w` move 3 words forward
-- `5j` move 5 lines down
-- `7dw` delete 7 words
-
-## Modifiers
-
-You can use modifiers to change the meaning of a noun. Some modifiers are `i`,
-which means "inner" or "inside", and `a`, which means "around".
-
-- `ci(` change the contents inside the current pair of parentheses
-- `ci[` change the contents inside the current pair of square brackets
-- `da'` delete a single-quoted string, including the surrounding single quotes
+- `ci(` 括弧内の内容を変更する
+- `ci[` 角括弧内の内容を変更する
+- `da'` シングルクオートで囲まれた文字を `'` を含めて消去する
 
 # Demo
 
-Here is a broken [fizz buzz](https://en.wikipedia.org/wiki/Fizz_buzz)
-implementation:
+これは不完全な [fizz buzz](https://en.wikipedia.org/wiki/Fizz_buzz)
+の実装です:
 
 ```python
 def fizz_buzz(limit):
@@ -241,13 +219,12 @@ def main():
     fizz_buzz(10)
 ```
 
-We will fix the following issues:
-
-- Main is never called
-- Starts at 0 instead of 1
-- Prints "fizz" and "buzz" on separate lines for multiples of 15
-- Prints "fizz" for multiples of 5
-- Uses a hard-coded argument of 10 instead of taking a command-line argument
+我々は以下の問題を修正しなければなりません。
+- Main が呼ばれていない
+- イテレーションが 1 ではなく 0 から始まっている
+- 15 の倍数のとき、"fizz" "buzz" を別々の行に出力してしまう
+- 5 の倍数のとき、"fizz" を出力してしまう
+- コマンドライン引数ではなく、ハードコーディングされた入力(10) を使っている
 
 {% comment %}
 - main is never called
@@ -274,187 +251,161 @@ We will fix the following issues:
   - `ci(` to "int(sys.argv[1])"
 {% endcomment %}
 
-See the lecture video for the demonstration. Compare how the above changes are
-made using Vim to how you might make the same edits using another program.
-Notice how very few keystrokes are required in Vim, allowing you to edit at the
-speed you think.
+講義ビデオを視聴し、上記の変更が Vim を用いてどのように編集されるか、それが他のエディタを用いた場合といかに異なるかを確認してください。
+Vim で必要なキータイプ数が非常に少なく、習熟すればまさしく思考のスピードで編集できるということが
+実感できるでしょう。
 
-# Customizing Vim
+# Vim のカスタマイズ
+Vim は VimScript を含んだプレーンテキストの設定ファイル `~/.vimrc` によってカスタマイズすることができます。
+Vim では有効化することが推奨される基本設定が多くあります。
 
-Vim is customized through a plain-text configuration file in `~/.vimrc`
-(containing Vimscript commands). There are probably lots of basic settings that
-you want to turn on.
+そこで我々は入門用として、（ドキュメンテーションされた）基本のコンフィグファイルを用意しました。
+やや扱いづらいデフォルトの挙動を修正するこのコンフィグをまず利用することをおすすめします。
+**[ここ](/2020/files/vimrc)からファイルをダウンロードし、`~/.vimrc` に保存してください。**
 
-We are providing a well-documented basic config that you can use as a starting
-point. We recommend using this because it fixes some of Vim's quirky default
-behavior. **Download our config [here](/2020/files/vimrc) and save it to
-`~/.vimrc`.**
-
-Vim is heavily customizable, and it's worth spending time exploring
-customization options. You can look at people's dotfiles on GitHub for
-inspiration, for example, your instructors' Vim configs
+Vim は隅々までカスタマイズが可能で、カスタマイズオプションを調査しつくす価値は大いに有ります。
+GitHub 上で他のユーザの dotfiles を参考にしてもいいでしょう。
+例えばインストラクターのコンフィグも GitHub に公開しています
 ([Anish](https://github.com/anishathalye/dotfiles/blob/master/vimrc),
-[Jon](https://github.com/jonhoo/configs/blob/master/editor/.config/nvim/init.vim) (uses [neovim](https://neovim.io/)),
-[Jose](https://github.com/JJGO/dotfiles/blob/master/vim/.vimrc)). There are
-lots of good blog posts on this topic too. Try not to copy-and-paste people's
-full configuration, but read it, understand it, and take what you need.
+[Jon](https://github.com/jonhoo/configs/blob/master/editor/.config/nvim/init.vim) ([neovim](https://neovim.io/) ユーザ),
+[Jose](https://github.com/JJGO/dotfiles/blob/master/vim/.vimrc))。
+また、ネット上には Vim の設定について多くのブログ記事が公開されています。
+ただし、単に他のユーザの設定をコピーペーストするのではなく、熟読し、内容を理解し、必要な設定だけを取り入れるようにしましょう。
 
-# Extending Vim
+# Vim を拡張する
 
-There are tons of plugins for extending Vim. Contrary to outdated advice that
-you might find on the internet, you do _not_ need to use a plugin manager for
-Vim (since Vim 8.0). Instead, you can use the built-in package management
-system. Simply create the directory `~/.vim/pack/vendor/start/`, and put
-plugins in there (e.g. via `git clone`).
+Vim では非常に多くの拡張プラグインが開発されています。
+まずプラグインマネージャを導入する、という解説記事を多く目にするかもしれませんが、
+Vim 8.0 以降では必ずしもプラグインマネージャを使用する必要はありません。
+その代わりに、Vim 組み込みのパッケージ管理システムを利用することができます。
+新規にディレクトリ `~/.vim/pack/vendor/start/` を作成し、このディレクトリにプラグインを（`git clone` 等で）
+配置してください。
 
-Here are some of our favorite plugins:
+我々が愛用しているプラグインの一部を紹介します。
 
 - [ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim): fuzzy file finder
 - [ack.vim](https://github.com/mileszs/ack.vim): code search
 - [nerdtree](https://github.com/scrooloose/nerdtree): file explorer
 - [vim-easymotion](https://github.com/easymotion/vim-easymotion): magic motions
 
-We're trying to avoid giving an overwhelmingly long list of plugins here. You
-can check out the instructors' dotfiles
+プラグインの膨大なリストをここで紹介するのは敢えて避けたいと思います。
+インストラクタの dotfiles をまず参照し
 ([Anish](https://github.com/anishathalye/dotfiles),
 [Jon](https://github.com/jonhoo/configs),
-[Jose](https://github.com/JJGO/dotfiles)) to see what other plugins we use.
-Check out [Vim Awesome](https://vimawesome.com/) for more awesome Vim plugins.
-There are also tons of blog posts on this topic: just search for "best Vim
-plugins".
+[Jose](https://github.com/JJGO/dotfiles)) どんなプラグインを我々が使っているか見てみて下さい。
+[Vim Awesome](https://vimawesome.com/) では更に多くのプラグインを発見できます。
+"best Vim plugins" で検索すれば、優れたプラグインについて多くの記事が見つかるはずです。
 
-# Vim-mode in other programs
+# ソフトウェアにおける Vim モード
 
-Many tools support Vim emulation. The quality varies from good to great;
-depending on the tool, it may not support the fancier Vim features, but most
-cover the basics pretty well.
+多くのツールが Vim のエミュレーションモードをサポートしています。
+その質はツールによって様々ですが、
+素晴らしい機能の全てとはいかないまでも基本的な機能は大抵網羅されています。
 
-## Shell
+## シェル
 
-If you're a Bash user, use `set -o vi`. If you use Zsh, `bindkey -v`. For Fish,
-`fish_vi_key_bindings`. Additionally, no matter what shell you use, you can
-`export EDITOR=vim`. This is the environment variable used to decide which
-editor is launched when a program wants to start an editor. For example, `git`
-will use this editor for commit messages.
+もし Bash を使っているならば、 `set -o vi` を、`Zsh` を使っているなら `bindkey -v` を、
+`Fish` を使っているなら `fish_vi_key_bindings` で vi モードを使用してみましょう。
+加えて、どのシェルを使っていようとも、 `export EDITOR=vim` を環境変数に設定しましょう。
+これはあらゆるプログラムがエディタを呼び出す際に、どのエディタを使うかを定める環境変数です。
+例えば、 `git` はコミットメッセージを入力する際この環境変数で設定されているエディタをデフォルトで起動します。
 
 ## Readline
-
-Many programs use the [GNU
-Readline](https://tiswww.case.edu/php/chet/readline/rltop.html) library for
-their command-line interface. Readline supports (basic) Vim emulation too,
-which can be enabled by adding the following line to the `~/.inputrc` file:
+多くのプログラムはコマンドラインインタフェースのためのライブラリ [GNU
+Readline](https://tiswww.case.edu/php/chet/readline/rltop.html)
+を使っています。Readline は基本的な vi キーバインドをサポートしています。
+`~/.inputrc` ファイルに以下の行を追加すると、vi モードを有効化できます。
 
 ```
 set editing-mode vi
 ```
 
-With this setting, for example, the Python REPL will support Vim bindings.
+この設定を有効化すると、例えば Python の REPL も Vim キーバインドをサポートします。
 
-## Others
+## その他
 
-There are even vim keybinding extensions for web
-[browsers](http://vim.wikia.com/wiki/Vim_key_bindings_for_web_browsers) - some
-popular ones are
+[Web ブラウザ](http://vim.wikia.com/wiki/Vim_key_bindings_for_web_browsers) にも Vim のキーバインドをエミュレートする拡張機能があります。
+有名なものでは Google Chrome 用の
 [Vimium](https://chrome.google.com/webstore/detail/vimium/dbepggeogbaibhgnhhndojpepiihcmeb?hl=en)
-for Google Chrome and [Tridactyl](https://github.com/tridactyl/tridactyl) for
-Firefox. You can even get Vim bindings in [Jupyter
-notebooks](https://github.com/lambdalisue/jupyter-vim-binding).
+や Firefox 用の [Tridactyl](https://github.com/tridactyl/tridactyl) があります。
+[Jupyter
+notebooks](https://github.com/lambdalisue/jupyter-vim-binding) でも Vim のキーバインドが提供されています。
 
-# Advanced Vim
+# 発展的な Tips
 
-Here are a few examples to show you the power of the editor. We can't teach you
-all of these kinds of things, but you'll learn them as you go. A good
-heuristic: whenever you're using your editor and you think "there must be a
-better way of doing this", there probably is: look it up online.
+このエディタの真価の一端をいくつか紹介します。
+全てを教えつくすことはできませんが、Vim を使用するにつれ自然と他のテクニックについても習熟していくでしょう。
+Vim での編集作業中、もっと良い方法があるのではという考えが頭をよぎったら、
+必ずその方法は存在します。ネットで検索して常に最適な方法を模索する癖を付けましょう。
 
-## Search and replace
+## 検索と置換
 
-`:s` (substitute) command ([documentation](http://vim.wikia.com/wiki/Search_and_replace)).
+`:s` (substitute) コマンド ([documentation](http://vim.wikia.com/wiki/Search_and_replace)).
 
 - `%s/foo/bar/g`
-    - replace foo with bar globally in file
+    - ドキュメント中全ての foo を bar に置換する
 - `%s/\[.*\](\(.*\))/\1/g`
-    - replace named Markdown links with plain URLs
+    - Markdown のリンクテキストをリンク内の URL に置換する
 
-## Multiple windows
+## 複数ウィンドウ
+- `:sp` / `:vsp` ウィンドウを分割する
+- 同じバッファに対して複数のビューを持つこともできます。
 
-- `:sp` / `:vsp` to split windows
-- Can have multiple views of the same buffer.
+## マクロ
 
-## Macros
-
-- `q{character}` to start recording a macro in register `{character}`
-- `q` to stop recording
-- `@{character}` replays the macro
-- Macro execution stops on error
-- `{number}@{character}` executes a macro {number} times
-- Macros can be recursive
-    - first clear the macro with `q{character}q`
-    - record the macro, with `@{character}` to invoke the macro recursively
-    (will be a no-op until recording is complete)
-- Example: convert xml to json ([file](/2020/files/example-data.xml))
-    - Array of objects with keys "name" / "email"
-    - Use a Python program?
-    - Use sed / regexes
-        - `g/people/d`
-        - `%s/<person>/{/g`
-        - `%s/<name>\(.*\)<\/name>/"name": "\1",/g`
-        - ...
-    - Vim commands / macros
-        - `Gdd`, `ggdd` delete first and last lines
-        - Macro to format a single element (register `e`)
-            - Go to line with `<name>`
-            - `qe^r"f>s": "<ESC>f<C"<ESC>q`
-        - Macro to format a person
-            - Go to line with `<person>`
-            - `qpS{<ESC>j@eA,<ESC>j@ejS},<ESC>q`
-        - Macro to format a person and go to the next person
-            - Go to line with `<person>`
-            - `qq@pjq`
-        - Execute macro until end of file
-            - `999@q`
+- `q{character}` レジスタ {character} へマクロのレコーディングを開始
+- `q` レコーディングを停止
+- `@{character}` レジスタ {character} の内容を実行する
+- `{number}@{character}` マクロを {number} 回繰り返す
+- マクロは再帰的にも実行される
+  - まず `q{character}q` でマクロをクリアする
+  - マクロを記録し、`@{character}` でマクロを実行する（レコーディングが完了するまで何もしない）
+- 例: xml を json にする ([ファイル](/2020/files/example-data.xml))
+  - "name" / "email" キーを持つオブジェクトの配列
+  - Python のプログラムを使うか？
+  - sed / 正規表現を使うか？
+      - `g/people/d`
+      - `%s/<person>/{/g`
+      - `%s/<name>\(.*\)<\/name>/"name": "\1",/g`
+      - ...
+  - Vim コマンド / マクロを使うか？
+      - `Gdd`, `ggdd` 最初と最後の行を削除する
+      - 1 つの要素を整形するためのマクロをレジスタ `e` に登録する
+        - `<name>` の行に移動
+        - `qe^r"f>s": "<ESC>f<C"<ESC>q`
+      - `<person>` を整形する
+        - `<person>` の行に移動
+        - `qpS{<ESC>j@eA,<ESC>j@ejS},<ESC>q`
+      - `<person>` を整形し次の `<person>` へ移動
+        - `<person>` の行に移動
+        - `qq@pjq`
+      - マクロを最終行まで実行する
+        - `999@q`
+      - 手動で最後の `,` を消去し、`[` `]` を追加する
         - Manually remove last `,` and add `[` and `]` delimiters
 
-# Resources
+# 参考
 
-- `vimtutor` is a tutorial that comes installed with Vim - if Vim is installed, you should be able to run `vimtutor` from your shell
-- [Vim Adventures](https://vim-adventures.com/) is a game to learn Vim
+- `vimtutor` はVimと共にインストールされるチュートリアルです。もしVimが既にインストールされている環境ならば、シェルで `vimtutor` を実行することができます。
+- [Vim Adventures](https://vim-adventures.com/) は Vim を学ぶことができるゲームです。
 - [Vim Tips Wiki](http://vim.wikia.com/wiki/Vim_Tips_Wiki)
-- [Vim Advent Calendar](https://vimways.org/2019/) has various Vim tips
-- [Vim Golf](http://www.vimgolf.com/) is [code golf](https://en.wikipedia.org/wiki/Code_golf), but where the programming language is Vim's UI
+- [Vim Advent Calendar](https://vimways.org/2019/) では様々な Vim Tips が紹介されています。
+- [Vim Golf](http://www.vimgolf.com/) は Vimの[コードゴルフ](https://en.wikipedia.org/wiki/Code_golf)場です。
 - [Vi/Vim Stack Exchange](https://vi.stackexchange.com/)
 - [Vim Screencasts](http://vimcasts.org/)
 - [Practical Vim](https://pragprog.com/titles/dnvim2/) (book)
 
-# Exercises
-
-1. Complete `vimtutor`. Note: it looks best in a
-   [80x24](https://en.wikipedia.org/wiki/VT100) (80 columns by 24 lines)
-   terminal window.
-1. Download our [basic vimrc](/2020/files/vimrc) and save it to `~/.vimrc`. Read
-   through the well-commented file (using Vim!), and observe how Vim looks and
-   behaves slightly differently with the new config.
-1. Install and configure a plugin:
-   [ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim).
-   1. Create the plugins directory with `mkdir -p ~/.vim/pack/vendor/start`
-   1. Download the plugin: `cd ~/.vim/pack/vendor/start; git clone
-      https://github.com/ctrlpvim/ctrlp.vim`
-   1. Read the
-      [documentation](https://github.com/ctrlpvim/ctrlp.vim/blob/master/readme.md)
-      for the plugin. Try using CtrlP to locate a file by navigating to a
-      project directory, opening Vim, and using the Vim command-line to start
-      `:CtrlP`.
-    1. Customize CtrlP by adding
-       [configuration](https://github.com/ctrlpvim/ctrlp.vim/blob/master/readme.md#basic-options)
-       to your `~/.vimrc` to open CtrlP by pressing Ctrl-P.
-1. To practice using Vim, re-do the [Demo](#demo) from lecture on your own
-   machine.
-1. Use Vim for _all_ your text editing for the next month. Whenever something
-   seems inefficient, or when you think "there must be a better way", try
-   Googling it, there probably is. If you get stuck, come to office hours or
-   send us an email.
-1. Configure your other tools to use Vim bindings (see instructions above).
-1. Further customize your `~/.vimrc` and install more plugins.
-1. (Advanced) Convert XML to JSON ([example file](/2020/files/example-data.xml))
-   using Vim macros. Try to do this on your own, but you can look at the
-   [macros](#macros) section above if you get stuck.
+# 演習
+1. `vimtutor` を完了させましょう。[80x24](https://en.wikipedia.org/wiki/VT100) (80 columns by 24 lines) のターミナルで行うのが良いでしょう。
+1. [基本の vimrc](/2020/files/vimrc) を`~/.vimrc` に保存し、コメント含めファイル全体を（**Vim を使って**）読み、設定ファイルによって Vim の挙動がどのように変化するかを確認して下さい。
+1. プラグインのインストール、設定を行いましょう。
+   1. プラグインのディレクトリを作成 `mkdir -p ~/.vim/pack/vendor/start`
+   1. プラグインのダウンロード `cd ~/.vim/pack/vendor/start; gitclone https://github.com/ctrlpvim/ctrlp.vim`
+   1. [プラグインのドキュメント](https://github.com/ctrlpvim/ctrlp.vim/blob/master/readme.md)
+      を読みます。まず CtrlP を使ってファイルを見つけてみましょう。プロジェクトディレクトリに移動し、Vimを開いて `:CtrlP` を入力します。
+   1. [configuration](https://github.com/ctrlpvim/ctrlp.vim/blob/master/readme.md#basic-options) を参考に、`~/.vimrc` へ設定を追加してみましょう。`Ctrl-P` で CtrlP を開けるようにします。
+1. [Demo](#demo) をあなたのマシンで復習しましょう。
+1. 次の月から**全ての**テキスト編集にVimを使います。何かが非行率または "もっと良い方法があるはずだ" と感じる度にベストな方法を検索する癖を付けましょう。
+1. 他のツールを Vim のキーバインディングを使用するように設定してみましょう。
+1. `~/.vimrc` を更にカスタマイズしましょう。好みのプラグインを入れてみてもいいでしょう。
+1. （発展）XMLをJSON（[example file](/2020/files/example-data.xml)）に Vim マクロを使って変換してみましょう。躓いたら、[マクロ](#マクロ) のセクションがヒントになるはずです。
