@@ -258,7 +258,7 @@ ffmpeg -loglevel panic -i /dev/video0 -frames 1 -f image2 -
    ```
    そして、
    ```
-   Logs begin at ...
+   systemd[577]: Startup finished in ...
    ```
 
    macOSでは、[ここを見てみましょう](https://eclecticlight.co/2018/03/21/macos-unified-log-3-finding-your-way/):
