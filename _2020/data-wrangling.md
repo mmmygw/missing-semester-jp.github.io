@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Data Wrangling"
+title: "データラングリング"
 date: 2020-01-16
 ready: true
 video:
@@ -8,69 +8,38 @@ video:
   id: sz_dsktIjt4
 ---
 
-Have you ever wanted to take data in one format and turn it into a
-different format? Of course you have! That, in very general terms, is
-what this lecture is all about. Specifically, massaging data, whether in
-text or binary format, until you end up with exactly what you wanted.
+あるフォーマットのデータを、他のフォーマットに変換したいと思ったことはありませんか？もちろんありますよね！すごくざっくり言うと、この講義ではそのフォーマット変換を取り上げます。具体的には、テキスト形式かバイナリ形式かを問わず、自分の欲しいフォーマットが得られるまで、データをマッサージする (処理する) ことを取り上げます。
 
-We've already seen some basic data wrangling in past lectures. Pretty
-much any time you use the `|` operator, you are performing some kind of
-data wrangling. Consider a command like `journalctl | grep -i intel`. It
-finds all system log entries that mention Intel (case insensitive). You
-may not think of it as wrangling data, but it is going from one format
-(your entire system log) to a format that is more useful to you (just
-the intel log entries). Most data wrangling is about knowing what tools
-you have at your disposal, and how to combine them.
+これまでの講義で、基本的なデータの扱い方を見てきました。パイプ演算子 `|` を使うときは、いつも何らかのデータラングリングを行っています。`journalctl | grep -i intel` というコマンドを考えてみましょう。このコマンドは Intel (大文字小文字は区別しません) という単語を含む、全てのシステムログエントリを抽出します。データラングリングには見えないかもしれませんが、これはあるフォーマット (システムログ全体) から、より有用なフォーマット (intel ログエントリだけを抽出したもの) に変換しています。このように、データラングリングとは多くの場合、自分が自由に使えるツールを知り、それらの良い組み合わせ方を知ることです。
 
-Let's start from the beginning. To wrangle data, we need two things:
-data to wrangle, and something to do with it. Logs often make for a good
-use-case, because you often want to investigate things about them, and
-reading the whole thing isn't feasible. Let's figure out who's trying to
-log into my server by looking at my server's log:
+最初から始めましょう。データラングリングには次のふたつ: 扱うデータと、そのデータを使ってやることが必要です。ログは、良いユースケースとなり得ます。なぜなら、調査をしたい対象ではあるが、全部を読むことは不可能なことが多いからです。私のサーバーのログを見て、誰がログインしようとしているか調べてみましょう。
 
 ```bash
 ssh myserver journalctl
 ```
 
-That's far too much stuff. Let's limit it to ssh stuff:
+これでは、出力があまりにも多すぎます。ssh関連に限定しましょう:
 
 ```bash
 ssh myserver journalctl | grep sshd
 ```
 
-Notice that we're using a pipe to stream a _remote_ file through `grep`
-on our local computer! `ssh` is magical, and we will talk more about it
-in the next lecture on the command-line environment. This is still way
-more stuff than we wanted though. And pretty hard to read. Let's do
-better:
+パイプを使い、 _リモート_　のファイルを、ローカルコンピュータ上の `grep` を通して、リモートからローカルへストリームして (送って) いることに注目してください！ `ssh` はまるで魔法のようです。次回の「コマンドライン環境」講義で、もっと詳しく取り上げます。しかし、この出力はまだ不要な情報がたくさんあり、とても読みにくいです。もっとうまくやりましょう:
 
 ```bash
 ssh myserver 'journalctl | grep sshd | grep "Disconnected from"' | less
 ```
 
-Why the additional quoting? Well, our logs may be quite large, and it's
-wasteful to stream it all to our computer and then do the filtering.
-Instead, we can do the filtering on the remote server, and then massage
-the data locally. `less` gives us a "pager" that allows us to scroll up
-and down through the long output. To save some additional traffic while
-we debug our command-line, we can even stick the current filtered logs
-into a file so that we don't have to access the network while
-developing:
+なぜ引用符部分を追加したのでしょうか。ログはかなり大量かもしれず、すべてローカルコンピュータに送り、それからフィルタをするのは無駄が多いからです。代わりに、リモートサーバでフィルタを行った後、ローカルでデータを処理することができます。 `less` は、長い出力を上下にスクロールする「ページャ」を提供します。さらに、コマンドラインのデバッグ中に発生する通信を減らすため、現在のフィルタされたログをローカルのファイルに保存し、ネットワークにアクセスせず作業を進めることもできます:
 
 ```console
 $ ssh myserver 'journalctl | grep sshd | grep "Disconnected from"' > ssh.log
 $ less ssh.log
 ```
 
-There's still a lot of noise here. There are _a lot_ of ways to get rid
-of that, but let's look at one of the most powerful tools in your
-toolkit: `sed`.
+この出力にも、まだ不要な情報が山ほど残っています。取り除く方法はたくさんありますが、あなたのツールキット中で最も強力なコマンドのひとつ、 `sed` を見てみましょう。
 
-`sed` is a "stream editor" that builds on top of the old `ed` editor. In
-it, you basically give short commands for how to modify the file, rather
-than manipulate its contents directly (although you can do that too).
-There are tons of commands, but one of the most common ones is `s`:
-substitution. For example, we can write:
+`sed` は、古い `ed` エディタの上に開発された「ストリームエディタ」です。基本、短いコマンドを使って、ファイルの内容を直接は編集せず（編集もできますが）、ファイルの内容に手を加えられます。コマンドはたくさんありますが、最もよく使うものの一つは `s`: substitution（置換）です。例えば、次のように書きます:
 
 ```bash
 ssh myserver journalctl
@@ -79,127 +48,71 @@ ssh myserver journalctl
  | sed 's/.*Disconnected from //'
 ```
 
-What we just wrote was a simple _regular expression_; a powerful
-construct that lets you match text against patterns. The `s` command is
-written on the form: `s/REGEX/SUBSTITUTION/`, where `REGEX` is the
-regular expression you want to search for, and `SUBSTITUTION` is the
-text you want to substitute matching text with.
+今書いたのはシンプルな正規表現です。正規表現は、テキストをパターンに一致させられる強力な構文です。`s` コマンドは `s/REGEX/SUBSTITUTION/` という形式で書かれています。 `REGEX` は検索したい正規表現、`SUBSTITUTION` はパターンに一致したテキストを置き換えるテキストです。
 
-(You may recognize this syntax from the "Search and replace" section of our Vim
-[lecture notes](/2020/editors/#advanced-vim)! Indeed, Vim uses a syntax for
-searching and replacing that is similar to `sed`'s substitution command.
-Learning one tool often helps you become more proficient with others.)
+(この構文は、Vimの[講義ノート](/2020/editors/#advanced-vim)の「検索と置換」セクションで見られたかもしれません。実際、Vim は検索と置換に `sed` の置換コマンドに似た構文を使います。一つのツールを学ぶと、他のツールを使いこなせるようになるのは、よくあることですね。)
 
-## Regular expressions
+## 正規表現
 
-Regular expressions are common and useful enough that it's worthwhile to
-take some time to understand how they work. Let's start by looking at
-the one we used above: `/.*Disconnected from /`. Regular expressions are
-usually (though not always) surrounded by `/`. Most ASCII characters
-just carry their normal meaning, but some characters have "special"
-matching behavior. Exactly which characters do what vary somewhat
-between different implementations of regular expressions, which is a
-source of great frustration. Very common patterns are:
+正規表現は、よく知られ、かつ有用なので、時間をかけて仕組みを理解する価値は十分にあります。まず、上で使ったものを見てみましょう: `/.*Disconnected from /` です。正規表現は、通常（必ずではありませんが） `/` で囲まれています。ほとんどのASCII文字はその文字そのものの意味を持ちますが、中には「特別な」一致動作をする文字があります。どの文字が何をするかは、正確には正規表現の実装により多少異なるため、大きなフラストレーションの原因となります。よく使われるのは以下です:
 
- - `.` means "any single character" except newline
- - `*` zero or more of the preceding match
- - `+` one or more of the preceding match
- - `[abc]` any one character of `a`, `b`, and `c`
- - `(RX1|RX2)` either something that matches `RX1` or `RX2`
- - `^` the start of the line
- - `$` the end of the line
+ - `.` 改行を除く「すべての一文字」
+ - `*` 直前の一致内容がないか、一つ以上繰り返す
+ - `+` 直前の一致内容を一つ以上の繰り返す
+ - `[abc]` `a`、 `b`、`c` いずれかの文字
+ - `(RX1|RX2)`  `RX1` と `RX2` のいずれか
+ - `^` 行頭
+ - `$` 行末
 
-`sed`'s regular expressions are somewhat weird, and will require you to
-put a `\` before most of these to give them their special meaning. Or
-you can pass `-E`.
+ `sed` の正規表現は少し変わっています。ほとんどの特別な意味を持たせる文字の前には `\` を置く、または `-E` を渡します。
 
-So, looking back at `/.*Disconnected from /`, we see that it matches
-any text that starts with any number of characters, followed by the
-literal string "Disconnected from &rdquo;. Which is what we wanted. But
+`/.*Disconnected from /` を改めて考えると、任意の文字数で始まるテキストにマッチし、その後リテラル文字列 "Disconnected from" が続くとわかります。私たちが求めていたものですね。しかし正規表現は一筋縄ではいきませんから、注意してください。誰かがもし、ユーザ名"Disconnected from"でログインを試みたらどうなるでしょう？すると:
+
 {% comment %}
 note: the spelling of "trixy" below is intentional; see https://github.com/missing-semester/missing-semester/pull/84
 {% endcomment %}
-beware, regular expressions are trixy. What if someone tried to log in
-with the username "Disconnected from"? We'd have:
 
 ```
 Jan 17 03:13:00 thesquareplanet.com sshd[2631]: Disconnected from invalid user Disconnected from 46.97.239.16 port 55920 [preauth]
 ```
 
-What would we end up with? Well, `*` and `+` are, by default, "greedy".
-They will match as much text as they can. So, in the above, we'd end up
-with just
+何が起こるでしょう。`*` と `+` は、通常「貪欲」に動作します。つまり、できるだけ多くの文字に一致するよう振る舞います。そのため、さきほどのログは以下に変換されます:
 
 ```
 46.97.239.16 port 55920 [preauth]
 ```
 
-Which may not be what we wanted. In some regular expression
-implementations, you can just suffix `*` or `+` with a `?` to make them
-non-greedy, but sadly `sed` doesn't support that. We _could_ switch to
-perl's command-line mode though, which _does_ support that construct:
+これは求めた結果ではなさそうです。正規表現の実装によっては、`*` や `+` の後ろに `?` を付けて「貪欲でない（non-greedy）」 動作ができます。残念ながら `sed` はこの表現をサポートしていません。この表現をサポートする、perlのコマンドラインモードに切り替えても良いでしょう:
 
 ```bash
 perl -pe 's/.*?Disconnected from //'
 ```
 
-We'll stick to `sed` for the rest of this, because it's by far the more
-common tool for these kinds of jobs. `sed` can also do other handy
-things like print lines following a given match, do multiple
-substitutions per invocation, search for things, etc. But we won't cover
-that too much here. `sed` is basically an entire topic in and of itself,
-but there are often better tools.
+ここでは `sed` を使い続けます。なぜなら、この手の仕事には現状 `sed` の方がよく使われるからです。 `sed` は他にも、指定のテキスト一致に続く行を表示する、呼び出しごとに複数の置換を行う、検索するなどの便利なことができます。しかし、ここではあまり取り上げません。 `sed` は、それ自体がひとつの独立したトピックになり得ます。ただ、同じ目的には、より良いツールがあることも多いです。
 
-Okay, so we also have a suffix we'd like to get rid of. How might we do
-that? It's a little tricky to match just the text that follows the
-username, especially if the username can have spaces and such! What we
-need to do is match the _whole_ line:
+さて、ここで削除したい接尾辞があるとしましょう。どうすれば良いのでしょうか？ユーザ名の後ろに続くテキストのみ一致させるのは、少し厄介です。特にユーザ名がスペース名等を含むとしたら！必要なのは、行 _全体_ を一致させることです:
 
 ```bash
  | sed -E 's/.*Disconnected from (invalid |authenticating )?user .* [^ ]+ port [0-9]+( \[preauth\])?$//'
 ```
 
-Let's look at what's going on with a [regex
-debugger](https://regex101.com/r/qqbZqh/2). Okay, so the start is still
-as before. Then, we're matching any of the "user" variants (there are
-two prefixes in the logs). Then we're matching on any string of
-characters where the username is. Then we're matching on any single word
-(`[^ ]+`; any non-empty sequence of non-space characters). Then the word
-"port" followed by a sequence of digits. Then possibly the suffix
-`[preauth]`, and then the end of the line.
+[正規表現のデバッガ](https://regex101.com/r/qqbZqh/2)で、何が起こっているか見てみましょう。スタートはこれまでと同じです。次に、"user"の変種（ログには2種類の接頭辞があります）のいずれかに一致します。次に、ユーザ名が含まれる文字列の中から任意の文字列に一致します。次に、任意の単一の単語(`[^ ]+`; 空白でない空白文字の連続)に一致します。次に、"port"という単語の後に数字の列が続きます。そして、行末の前に、接尾辞 `[preauth]` が付くことと、付かないことがあります。
 
-Notice that with this technique, as username of "Disconnected from"
-won't confuse us any more. Can you see why?
+この方法なら、ユーザ名"Disconnected from"が使われたとしても、もう混乱が起きませんね。なぜだかわかりますか？
 
-There is one problem with this though, and that is that the entire log
-becomes empty. We want to _keep_ the username after all. For this, we
-can use "capture groups". Any text matched by a regex surrounded by
-parentheses is stored in a numbered capture group. These are available
-in the substitution (and in some engines, even in the pattern itself!)
-as `\1`, `\2`, `\3`, etc. So:
+しかし、この方法にはひとつ問題があります。それは、一致した全部が消去されてしまうことです。最終的に、ユーザ名は _残して_ おきたいのです。そのためには「キャプチャグループ」を使います。括弧で囲まれた正規表現でマッチしたテキストは、番号付きのキャプチャグループに保存されます。これらは、`\1`, `\2`, `\3` 等で呼び出せます。（いくつかのエンジンでは、一致パターン自体にも使えます！）ですから:
 
 ```bash
  | sed -E 's/.*Disconnected from (invalid |authenticating )?user (.*) [^ ]+ port [0-9]+( \[preauth\])?$/\2/'
 ```
 
-As you can probably imagine, you can come up with _really_ complicated
-regular expressions. For example, here's an article on how you might
-match an [e-mail
-address](https://www.regular-expressions.info/email.html). It's [not
-easy](https://emailregex.com/). And there's [lots of
-discussion](https://stackoverflow.com/questions/201323/how-to-validate-an-email-address-using-a-regular-expression/1917982).
-And people have [written
-tests](https://fightingforalostcause.net/content/misc/2006/compare-email-regex.php).
-And [test matrices](https://mathiasbynens.be/demo/url-regex). You can
-even write a regex for determining if a given number [is a prime
-number](https://www.noulakaz.net/2007/03/18/a-regular-expression-to-check-for-prime-numbers/).
+ご想像の通り、 _とっても_ 複雑な正規表現を作れてしまいます。例えば、ここでは [Eメールアドレスを一致させる方法](https://www.regular-expressions.info/email.html) についての記事を紹介します。これは [簡単ではありません](https://emailregex.com/)。そして、[多くの議論](https://stackoverflow.com/questions/201323/how-to-validate-an-email-address-using-a-regular-expression/1917982)があります。[テストコードを書いた](https://fightingforalostcause.net/content/misc/2006/compare-email-regex.php)人がいます。[テスト結果の表](https://mathiasbynens.be/demo/url-regex)を書いた人もいます。与えられた数が[素数かどうか判定する正規表現](https://www.noulakaz.net/2007/03/18/a-regular-expression-to-check-for-prime-numbers/)も書けます。
 
-Regular expressions are notoriously hard to get right, but they are also
-very handy to have in your toolbox!
+正規表現を正しく書くことは非常に難しいですが、あなたのツールボックスに持っておくと、とても便利に使えます。
 
-## Back to data wrangling
+## データラングリングに戻る
 
-Okay, so we now have
+さて、ここまで揃ってきました。
 
 ```bash
 ssh myserver journalctl
@@ -208,14 +121,9 @@ ssh myserver journalctl
  | sed -E 's/.*Disconnected from (invalid |authenticating )?user (.*) [^ ]+ port [0-9]+( \[preauth\])?$/\2/'
 ```
 
-`sed` can do all sorts of other interesting things, like injecting text
-(with the `i` command), explicitly printing lines (with the `p`
-command), selecting lines by index, and lots of other things. Check `man
-sed`!
+`sed` は、テキストの上書き (`i` コマンド)、明示的な行の表示 (`p` コマンド)、インデックスによる行の選択など、他にも色々と面白い使い方ができます。`man sed` をご確認ください。
 
-Anyway. What we have now gives us a list of all the usernames that have
-attempted to log in. But this is pretty unhelpful. Let's look for common
-ones:
+ともかく、これでログインしようとした全ユーザ名リストが表示されます。しかし、これではまだ扱いづらいです。一般的な他の処理を考えてみましょう:
 
 ```bash
 ssh myserver journalctl
@@ -225,10 +133,7 @@ ssh myserver journalctl
  | sort | uniq -c
 ```
 
-`sort` will, well, sort its input. `uniq -c` will collapse consecutive
-lines that are the same into a single line, prefixed with a count of the
-number of occurrences. We probably want to sort that too and only keep
-the most common usernames:
+`sort` は、入力を並べ替えます。`uniq -c` は、連続する同じ内容の行を一行にまとめ、その前に出現回数を付けます。今回の全ユーザ名リストも並べ替えて、頻出のユーザ名だけを残すと良さそうですね:
 
 ```bash
 ssh myserver journalctl
@@ -239,17 +144,11 @@ ssh myserver journalctl
  | sort -nk1,1 | tail -n10
 ```
 
-`sort -n` will sort in numeric (instead of lexicographic) order. `-k1,1`
-means "sort by only the first whitespace-separated column". The `,n`
-part says "sort until the `n`th field, where the default is the end of
-the line. In this _particular_ example, sorting by the whole line
-wouldn't matter, but we're here to learn!
+`sort -n` は、(字句解析ではなく) 数値順にソートします。`-k1,1` は「空白で区切られた最初の列だけでソートする」という意味です。`,n` は、`n`番目のフィールドまで使ってソートします。デフォルトは行末まで使います。 _今回の_ 例では、行全体でソートしても問題ないでしょう。でも、ここは学びの場ですからね!
 
-If we wanted the _least_ common ones, we could use `head` instead of
-`tail`. There's also `sort -r`, which sorts in reverse order.
+_最も_　一般的で _ない_ ものを並べたい場合は、`tail` の代わりに `head` を使うことができます。また、逆順にソートする `sort -r` もあります。
 
-Okay, so that's pretty cool, but what if we'd like these extract only the usernames
-as a comma-separated list instead of one per line, perhaps for a config file?
+これはとてもクールですが、ユーザ名だけをコンマで区切ったリストとして抽出し、例えば設定ファイルに使いたい場合はどうでしょうか？
 
 ```bash
 ssh myserver journalctl
@@ -261,40 +160,23 @@ ssh myserver journalctl
  | awk '{print $2}' | paste -sd,
 ```
 
-Let's start with `paste`: it lets you combine lines (`-s`) by a given
-single-character delimiter (`-d`; `,` in this case). But what's this `awk` business?
+`paste` から見ていきましょう: これは、与えられた一文字の区切り文字 (`-d`; この場合は `,`) で行 (`-s`) を結合してくれます。では、この `awk` とは何者でしょうか？
 
-## awk -- another editor
+## awk -- もうひとつのエディタ
 
-`awk` is a programming language that just happens to be really good at
-processing text streams. There is _a lot_ to say about `awk` if you were
-to learn it properly, but as with many other things here, we'll just go
-through the basics.
+`awk` は、テキストストリームを処理するのが得意なプログラミング言語です。 `awk` を正しく学ぶなら話すことは _たくさん_ ありますが、ここで扱う他のトピック同様、基本的なことだけを説明します。
 
-First, what does `{print $2}` do? Well, `awk` programs take the form of
-an optional pattern plus a block saying what to do if the pattern
-matches a given line. The default pattern (which we used above) matches
-all lines. Inside the block, `$0` is set to the entire line's contents,
-and `$1` through `$n` are set to the `n`th _field_ of that line, when
-separated by the `awk` field separator (whitespace by default, change
-with `-F`). In this case, we're saying that, for every line, print the
-contents of the second field, which happens to be the username!
+まず、`{print $2}` は何をするのでしょう？ `awk` のプログラムは、任意で記述できるパターンと、パターンが指定行にマッチした場合の振る舞いを示すブロック、という並びで記述されます。デフォルトのパターン (上で使ったもの) はすべての行にマッチします。ブロック中では、`$0` はその行の内容全体に設定され、`$1` から `$n` はその行の `n` 番目のフィールドに設定され、 `awk `フィールドセパレータ (デフォルトでは空白、`-F` で変更) で区切られます。この場合は、すべての行について2番目のフィールド内容を表示する、つまりユーザ名を表示する、ということです。
 
-Let's see if we can do something fancier. Let's compute the number of
-single-use usernames that start with `c` and end with `e`:
+では、もっと簡単なことができるか見てみましょう。`c` で始まり `e` で終わる、一度しか現れないユーザ名の数を計算してみましょう:
 
 ```bash
  | awk '$1 == 1 && $2 ~ /^c[^ ]*e$/ { print $2 }' | wc -l
 ```
 
-There's a lot to unpack here. First, notice that we now have a pattern
-(the stuff that goes before `{...}`). The pattern says that the first
-field of the line should be equal to 1 (that's the count from `uniq
--c`), and that the second field should match the given regular
-expression. And the block just says to print the username. We then count
-the number of lines in the output with `wc -l`.
+ここは、たくさん説明することがあります。まず、パターン（`{...}`の前の記述）がありますね。このパターンは、行の最初のフィールドは1に等しいこと（これは `uniq -c` からのカウントです）、また2番目のフィールドは与えられた正規表現に一致すること、と指定しています。そして、ブロックはユーザ名を表示せよ、と言っているだけです。そして、出力行数を `wc -l` でカウントします。
 
-However, `awk` is a programming language, remember?
+しかし、`awk` はプログラミング言語でしたね。覚えていますか？
 
 ```awk
 BEGIN { rows = 0 }
@@ -302,33 +184,24 @@ $1 == 1 && $2 ~ /^c[^ ]*e$/ { rows += $1 }
 END { print rows }
 ```
 
-`BEGIN` is a pattern that matches the start of the input (and `END`
-matches the end). Now, the per-line block just adds the count from the
-first field (although it'll always be 1 in this case), and then we print
-it out at the end. In fact, we _could_ get rid of `grep` and `sed`
-entirely, because `awk` [can do it
-all](https://backreference.org/2010/02/10/idiomatic-awk/), but we'll
-leave that as an exercise to the reader.
+`BEGIN` は入力の開始にマッチするパターンです（`END` は終了にマッチします）。さて、行単位のブロックは最初のフィールドからのカウントを追加し（この場合は常に1）、最後にそれを出力します。実際は、`grep` と `sed` を完全に削除することもできます。
+なぜなら、`awk` は[なんでもできる](https://backreference.org/2010/02/10/idiomatic-awk/)からです。ただ、これは読者の皆さんの練習問題としておきましょう。
 
-## Analyzing data
+## データの分析
 
-You can do math directly in your shell using `bc`, a calculator that can read 
-from STDIN! For example, add the numbers on each line together by concatenating
-them together, delimited by `+`:
+STDIN! から読み込める電卓 `bc` を使えば、シェル内で直接計算ができます。例えば、各行の数字を `+` で区切り、連結することで、足し算ができます:
 
 ```bash
  | paste -sd+ | bc -l
 ```
 
-Or produce more elaborate expressions:
+または、もう少し詳しい表現を試してみましょう:
 
 ```bash
 echo "2*($(data | paste -sd+))" | bc -l
 ```
 
-You can get stats in a variety of ways.
-[`st`](https://github.com/nferraz/st) is pretty neat, but if you already
-have [R](https://www.r-project.org/):
+計算には色々な方法があります。[`st`](https://github.com/nferraz/st) はもとても良いですし、もし[R言語](https://www.r-project.org/)が使えるなら:
 
 ```bash
 ssh myserver journalctl
@@ -339,13 +212,9 @@ ssh myserver journalctl
  | awk '{print $1}' | R --slave -e 'x <- scan(file="stdin", quiet=TRUE); summary(x)'
 ```
 
-R is another (weird) programming language that's great at data analysis
-and [plotting](https://ggplot2.tidyverse.org/). We won't go into too
-much detail, but suffice to say that `summary` prints summary statistics
-for a vector, and we created a vector containing the input stream of
-numbers, so R gives us the statistics we wanted!
+R言語は、データ分析と[プロット](https://ggplot2.tidyverse.org/)に優れた別の（奇妙な）プログラミング言語です。ここではあまり詳細に立ち入りませんが、`summary`　は配列の要約統計量を表示するということに触れれば十分でしょう。これで、数値の入力ストリームを含む配列を作成しました。R言語が、私たちのほしい統計計算をしてくれたということですね。
 
-If you just want some simple plotting, `gnuplot` is your friend:
+もし単純なプロット（グラフ描画）がしたいなら、`gnuplot` がお勧めです。
 
 ```bash
 ssh myserver journalctl
@@ -357,28 +226,19 @@ ssh myserver journalctl
  | gnuplot -p -e 'set boxwidth 0.5; plot "-" using 1:xtic(2) with boxes'
 ```
 
-## Data wrangling to make arguments
+## 論拠を作るためのデータラングリング
 
-Sometimes you want to do data wrangling to find things to install or
-remove based on some longer list. The data wrangling we've talked about
-so far + `xargs` can be a powerful combo.
+長いリストに基づき、インストールしたり削除したりする対象を見つけるため、データを検索したいこともあるでしょう。これまでに説明したデータ検索と `xargs` の組み合わせは強力なコンボです。
 
-For example, as seen in lecture, I can use the following command to uninstall
-old nightly builds of Rust from my system by extracting the old build names
-using data wrangling tools and then passing them via `xargs` to the
-uninstaller:
+例えば以前の講義で見たように、古いビルド名をデータラングリングツールで抽出し、`xargs` を使ってアンインストーラーに渡すことで、システムから古いナイトリービルドの Rust をアンインストールすることができます:
 
 ```bash
 rustup toolchain list | grep nightly | grep -vE "nightly-x86" | sed 's/-x86.*//' | xargs rustup toolchain uninstall
 ```
 
-## Wrangling binary data
+## バイナリデータのラングリング
 
-So far, we have mostly talked about wrangling textual data, but pipes
-are just as useful for binary data. For example, we can use ffmpeg to
-capture an image from our camera, convert it to grayscale, compress it,
-send it to a remote machine over SSH, decompress it there, make a copy,
-and then display it.
+ここまでは、ほぼテキストデータの扱いを話してきました。パイプはバイナリデータにも同じように使えます。例えば、ffmpeg を使ってカメラから画像をキャプチャし、それをグレースケールに変換して圧縮、SSHでリモートマシンに送り解凍した後、コピーを作成して表示することができます。
 
 ```bash
 ffmpeg -loglevel panic -i /dev/video0 -frames 1 -f image2 -
@@ -387,57 +247,38 @@ ffmpeg -loglevel panic -i /dev/video0 -frames 1 -f image2 -
  | ssh mymachine 'gzip -d | tee copy.jpg | env DISPLAY=:0 feh -'
 ```
 
-# Exercises
+# 演習
 
-1. Take this [short interactive regex tutorial](https://regexone.com/).
-2. Find the number of words (in `/usr/share/dict/words`) that contain at
-   least three `a`s and don't have a `'s` ending. What are the three
-   most common last two letters of those words? `sed`'s `y` command, or
-   the `tr` program, may help you with case insensitivity. How many
-   of those two-letter combinations are there? And for a challenge:
-   which combinations do not occur?
-3. To do in-place substitution it is quite tempting to do something like
-   `sed s/REGEX/SUBSTITUTION/ input.txt > input.txt`. However this is a
-   bad idea, why? Is this particular to `sed`? Use `man sed` to find out
-   how to accomplish this.
-4. Find your average, median, and max system boot time over the last ten
-   boots. Use `journalctl` on Linux and `log show` on macOS, and look
-   for log timestamps near the beginning and end of each boot. On Linux,
-   they may look something like:
+1. この[短くインタラクティブな正規表現チュートリアル](https://regexone.com/)を試しましょう
+2. 少なくとも3つの `a` を持ち、 `'s` を語尾に持たない ( `/usr/share/dict/words` に含まれる) 単語の数を求めましょう。それらの単語で、最後の2文字として最もよく使われる3つの文字は何ですか？大文字小文字を区別したくない場合、 `sed` の `y` コマンド、または、`tr`プログラムが便利です。これらの2文字の組み合わせはいくつありますか？チャレンジ課題として:逆に、どの組み合わせが起こり得ないでしょうか？
+3. in-placeな置換を行うには、`sed s/REGEX/SUBSTITUTION/ input.txt > input.txt` のようにしたくなるものです。しかし、これは筋の悪い方法です。なぜでしょうか？これは `sed` 固有でしょうか。 `man sed` で、どうしたら良いか調べましょう。
+4. 過去10回のシステム起動時間の平均値、中央値、最大値を求めます。ブート時間の平均値、中央値、最大値を調べてください。Linuxでは`journalctl`を、macOSでは`log show`を使用して、開始時刻に近いログのタイムスタンプを探してください。各ブートの最初と最後にログのタイムスタンプを探します。Linuxの場合、次のようなものがあります:
    ```
    Logs begin at ...
    ```
-   and
+   そして、
    ```
-   systemd[577]: Startup finished in ...
+   Logs begin at ...
    ```
-   On macOS, [look
-   for](https://eclecticlight.co/2018/03/21/macos-unified-log-3-finding-your-way/):
+
+   macOSでは、[ここを見てみましょう](https://eclecticlight.co/2018/03/21/macos-unified-log-3-finding-your-way/):
    ```
    === system boot:
    ```
-   and
-   ```
+   と、
+　　```
    Previous shutdown cause: 5
    ```
-5. Look for boot messages that are _not_ shared between your past three
-   reboots (see `journalctl`'s `-b` flag). Break this task down into
-   multiple steps. First, find a way to get just the logs from the past
-   three boots. There may be an applicable flag on the tool you use to
-   extract the boot logs, or you can use `sed '0,/STRING/d'` to remove
-   all lines previous to one that matches `STRING`. Next, remove any
-   parts of the line that _always_ varies (like the timestamp). Then,
-   de-duplicate the input lines and keep a count of each one (`uniq` is
-   your friend). And finally, eliminate any line whose count is 3 (since
-   it _was_ shared among all the boots).
-6. Find an online data set like [this
-   one](https://stats.wikimedia.org/EN/TablesWikipediaZZ.htm), [this
-   one](https://ucr.fbi.gov/crime-in-the-u.s/2016/crime-in-the-u.s.-2016/topic-pages/tables/table-1),
-   or maybe one [from
-   here](https://www.springboard.com/blog/free-public-data-sets-data-science-project/).
-   Fetch it using `curl` and extract out just two columns of numerical
-   data. If you're fetching HTML data,
-   [`pup`](https://github.com/EricChiang/pup) might be helpful. For JSON
-   data, try [`jq`](https://stedolan.github.io/jq/). Find the min and
-   max of one column in a single command, and the difference of the sum
-   of each column in another.
+5. 過去3回のリブートで共通しないブートメッセージを探してください（`journalctl` の `-b` フラグを参照してください）
+   この作業を複数のステップに分けます。まず、過去3回のブートからのログだけを取得する方法を見つけます。
+   ブートログ抽出に使うツールに、該当するフラグがあるかもしれません。
+   または、`sed '0,/STRING/d'` を使って、`STRING` に一致する行より前の、全行を削除できます。
+   次に、 _常に変化する_ 行の部分（タイムスタンプなど）を削除します。
+   次に入力行の重複を取り除き、それぞれの行を数えます (`uniq` があなたの友人です)。
+   最後に、カウントが3の行を削除します。なぜなら、その行は全ブートで共通だったと言えるからです。
+6.  [これ](https://stats.wikimedia.org/EN/TablesWikipediaZZ.htm)や、[これ](https://ucr.fbi.gov/crime-in-the-u.s/2016/crime-in-the-u.s.-2016/topic-pages/tables/table-1)のようなもの、または[ここから](https://www.springboard.com/blog/free-public-data-sets-data-science-project/)オンラインデータセットを探します。
+   それを `curl` を使って取得し、数値データの2列だけを抽出します。
+   もしHTMLデータを取得するなら、[`pup`](https://github.com/EricChiang/pup)が役に立つかもしれません。
+   JSONデータの場合は、[`jq`](https://stedolan.github.io/jq/)を試してみてください。
+   ワンコマンドで1つの列の最小値と最大値を出す方法、そして各列の合計の差を出す別コマンドを見つけましょう。
+
