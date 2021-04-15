@@ -38,6 +38,7 @@ docker run --rm --volume="$PWD:/srv/jekyll" -p 4000:4000 -it jekyll/jekyll jekyl
 - [@Katsumata210](https://github.com/Katsumata210) ([バージョン管理 (Git)](https://missing-semester-jp.github.io/2020/version-control/))
 - [@denkiwakame](https://github.com/denkiwakame) ([エディタ (Vim)](https://missing-semester-jp.github.io/2020/editors/))
 - [@kshibayama](https://github.com/kshibayama) ([講座概要 + シェル](https://missing-semester-jp.github.io/2020/course-shell/))
+- [@tomo-makes](https://github.com/tomo-makes) ([データラングリング](https://missing-semester-jp.github.io/2020/data-wrangling/))
 
 ## License
 
