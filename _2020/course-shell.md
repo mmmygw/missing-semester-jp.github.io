@@ -211,7 +211,7 @@ $ echo 1 | sudo tee /sys/class/leds/input6::scrolllock/brightness
 
 これらの課題の正答例はありません。何か詰まってしまったことがあれば、その時点までに試みたことを添えてご自由にメールしてください。私たち講師陣が助けになりましょう。
 
- 1. この講座では、Bash や ZSH のような Unix のシェルを使う必要はありません。もしあなたが Linux か macOS を使っているなら、特に何もする必要はありません。もし Windows を使っているなら、 cmd.exe あるいは PowerShell を実行していないことを確認する必要があります。代わりに [Windows Subsystem for
+ 1. この講座では、Bash や ZSH のような Unix のシェルを使う必要があります。もしあなたが Linux か macOS を使っているなら、特に何もする必要はありません。もし Windows を使っているなら、 cmd.exe あるいは PowerShell を実行していないことを確認する必要があります。代わりに [Windows Subsystem for
     Linux](https://docs.microsoft.com/en-us/windows/wsl/) か、Linux の仮想マシンを使って Unix 方式のコマンドラインツールを利用できます。適切なシェルを使っていることを確認するために、 `echo $SHELL` というコマンドを実行してみてください。もし `/bin/bash` か `/usr/bin/zsh` のような応答があれば、正しいプログラムを実行できていると言えます。
  1. `/tmp` というディレクトリの下に `missing` という新しいディレクトリを作成してください。
  1. `touch` というプログラムについて調べてください。`man` というプログラムが助けになります。
