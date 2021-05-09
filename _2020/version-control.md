@@ -449,8 +449,8 @@ index 94bab17..f0013b2 100644
 
 - `git config`: Gitを[もっとカスタマイズする](https://git-scm.com/docs/git-config)
 - `git clone --depth=1`: バージョン履歴全体は持ってこない、浅いクローン（ダウンロード）
-- `git add -p`: 双方向のステージング
-- `git rebase -i`: 双方向のステージング
+- `git add -p`: 対話的なステージング
+- `git rebase -i`: 対話的なリベース
 - `git blame`: どの行を誰が最後に編集したのかを表示する
 - `git stash`: 作業ディレクトリへの変更を一時的に削除する
 - `git bisect`: 履歴のバイナリサーチ（二分探索）を行う（回帰など）
