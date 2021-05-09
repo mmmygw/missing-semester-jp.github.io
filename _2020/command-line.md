@@ -558,7 +558,7 @@ Host vm
     LocalForward 9999 localhost:8888
 ```
 1. `ssh-copy-id vm` を使用して、 ssh 鍵をサーバにコピーしましょう。
-1. Start a webserver in your VM by executing `python -m http.server 8888` を実行して、VMで Web サーバを開始しましょう。
+1. `python -m http.server 8888` を実行して、VMで Web サーバを開始しましょう。
    自分のマシンで `http://localhost:9999` に移動し、VMのウェブサーバにアクセスしましょう。
 1. `sudo vim /etc/ssh/sshd_config` を実行してSSHサーバ設定を編集し、
    `PasswordAuthentication` の値を編集してパスワード認証を無効にしましょう。
