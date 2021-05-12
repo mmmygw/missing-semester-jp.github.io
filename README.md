@@ -9,10 +9,7 @@
 issues/PRによる貢献は歓迎です。実際に各セクションの翻訳を行いたい場合は次の手順に従ってください。
 
 ## How to translate
-- 翻訳をしたい方は[@matsui528](https://github.com/matsui528)にgithubアカウントをお伝えください。
-- [issues](https://github.com/missing-semester-jp/missing-semester-jp.github.io/issues)にて、翻訳対象のファイルごとにissueが立っています。closeされているものはもう翻訳が終わっています。対象のissueにて自分自身をassignしてください（更新が被ることを防ぐため）。ちなみにissueで既に誰かがassignされていた場合は既にその人が翻訳中です。
-- ブランチを作り、翻訳を行い、PRを作ってください。PR中では上記issueをメンションしてください。
-
+- 2021/4に全ての章の翻訳が完了しました :tada: もし誤字・脱字を見つけられた場合は、直接PRを出していただいて構いません。
 
 ## Development
 
